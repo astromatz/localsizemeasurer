@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LocalSizeMeasurer Web – Größenmessung im Astrofoto</title>
+<meta name="description" content="Projizierte Größe von Nebeln, Galaxien, Sternhaufen, Mond und Planeten im eigenen Astrofoto messen – direkt im Browser, ohne Upload.">
+<style>
+:root{--bg:#0b1020;--p:#141b30;--p2:#1b2440;--t:#e6eaf5;--m:#9aa6c4;--a:#6ea8ff;--g:#3ecf8e;--y:#f5c542;--r:#ff6b6b;--b:#2a3558}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#1a2550,#0b1020);color:var(--t);font:15px/1.5 system-ui,Segoe UI,sans-serif;min-height:100vh}
+a{color:var(--a)}
+.w{max-width:1000px;margin:auto;padding:16px}h1{font-size:21px;margin:4px 0}h1 small{display:block;color:var(--m);font-weight:400;font-size:14px}
+.st{display:flex;gap:8px;margin:12px 0}.st div{flex:1;padding:8px;border-radius:10px;background:var(--p);border:1px solid var(--b);text-align:center;color:var(--m);cursor:pointer;font-size:13px}
+.st .on{border-color:var(--a);color:var(--t);background:var(--p2)}
+.card{background:var(--p);border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:12px}
+h2{margin:0 0 8px;font-size:17px}label{display:block;margin:10px 0 3px;font-weight:600;font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>div{flex:1;min-width:150px}
+input,select,button{background:#0e1428;color:var(--t);border:1px solid var(--b);border-radius:8px;padding:8px;font:inherit;width:100%}
+.u{display:flex;align-items:center;gap:6px}.u span{color:var(--m);min-width:34px;font-size:13px}
+button{cursor:pointer;width:auto;background:var(--p2)}button.pr{background:var(--a);color:#06122b;border:0;font-weight:700}button.sel{border-color:var(--a);background:#24336a}
+.why,.hint,.echo{color:var(--m);font-size:12.5px;margin:3px 0 0}.why:before{content:"Warum fragen wir das? ";color:var(--a);font-weight:600}.echo{margin-top:4px}
+.opt{font-weight:400;color:var(--m)}
+.chk{display:inline-flex;gap:6px;align-items:center;font-weight:400;margin:0}.chk input{width:auto}.chk select{width:auto;padding:4px 6px}
+.box{border-left:4px solid;border-radius:8px;padding:8px 12px;margin:8px 0;background:#10172c;font-size:14px}
+.g{border-color:var(--g)}.y{border-color:var(--y)}.r{border-color:var(--r)}.i{border-color:var(--a)}
+.live{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:10px}.live div{background:#0e1428;border-radius:8px;padding:8px}.live b{display:block;font-size:17px;color:var(--a)}
+#drop{border:2px dashed var(--b);border-radius:12px;padding:20px;text-align:center;color:var(--m);cursor:pointer}#drop.h{border-color:var(--a)}
+canvas{width:100%;background:#000;border-radius:10px;touch-action:none;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:5px;border-bottom:1px solid var(--b);text-align:left;vertical-align:top}
+.nav{display:flex;justify-content:space-between;margin-top:8px}.hide{display:none}.tb{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px}.zl{color:var(--m);font-size:13px;margin-left:4px}
+.ft{font-size:13px;color:var(--m)}.ft b{color:var(--t)}
+</style></head><body><div class="w">
+<h1>LocalSizeMeasurer Web <small>Größe von Himmelsobjekten im eigenen Astrofoto messen · Deine Bilddaten bleiben im Browser</small></h1>
+<div class="st" id="st"></div>
+
+<div class="card" id="s1"><h2>1 · Bild prüfen</h2>
+<div id="drop">Bild hierher ziehen oder klicken (JPG, PNG, WebP). FITS/XISF bitte vorher als JPG oder PNG exportieren.<input type="file" id="file" accept="image/*" class="hide"></div>
+<div class="tb" style="margin-top:8px"><button id="demo">Mit Beispielbild ausprobieren</button><span class="hint" style="margin:0">Ein generiertes Bild zum Kennenlernen der Bedienung – die Messwerte daran haben keine Bedeutung.</span></div>
+<p id="imginfo" class="hint" style="margin-top:8px"></p><canvas id="pv" class="hide" style="width:auto;max-width:100%;max-height:220px;margin:6px 0"></canvas>
+<label>Ist das unverändertes Originalbild?</label>
+<div class="tb"><button data-o="yes">Ja, unverändert</button><button data-o="crop">Nur zugeschnitten</button><button data-o="no">Nein, anders verändert</button></div>
+<p class="why">Zuschneiden ändert den Maßstab nicht (nur das Bildfeld). Skalieren, Binning, Drizzle und Super-Pixel-Debayer ändern ihn. Ein unbemerkt falscher Maßstab ist der häufigste Fehler.</p>
+<div id="chg" class="hide"><label>Was wurde gemacht?</label>
+<select id="chgT"><option value="">– bitte wählen –</option><option value="scale">Skaliert / Resampling</option><option value="bin">Gebinnt</option><option value="drz">Gedrizzelt</option><option value="sp">Super-Pixel-Debayer</option></select>
+<div id="fac" class="row"><div><label>Pixel wurden größer um Faktor</label><div class="u"><input id="fF" inputmode="decimal" placeholder="z. B. 2"><span>×</span></div><p class="hint">Binning 2×2 oder Super-Pixel = 2; 2×-Drizzle = 0,5.</p></div>
+<div id="fWw"><label>… oder ursprüngliche Bildbreite</label><div class="u"><input id="fW" inputmode="decimal"><span>px</span></div><p class="hint">Alternative zum Faktor, falls du die Originalbreite kennst.</p></div></div>
+<label class="chk" style="margin-top:10px"><input type="checkbox" id="cropToo"> Zusätzlich zugeschnitten (z. B. Stacking-Rand)</label><p class="hint">Stacking beschneidet meist die Ränder. Dann darf die Bildbreite vom Faktor abweichen; der Maßstab folgt allein dem Faktor (die Originalbreite wird ignoriert).</p></div>
+<div id="c1"></div></div>
+
+<div class="card hide" id="s2"><h2>2 · Optik</h2>
+<div class="row"><div><label>Teleskop</label><select id="tel"></select></div>
+<div><label>Brennweite</label><div class="u"><input id="fl" class="in" inputmode="decimal"><span>mm</span></div></div>
+</div>
+<div class="row"><div><label>Reducer / Flattener / Extender</label><div class="u"><input id="acc" class="in" value="1" inputmode="decimal"><span>×</span></div><p class="hint">z. B. 0,8 für Reducer. Ändert die effektive Brennweite.</p></div>
+<div><label>Barlow</label><div class="u"><input id="bar" class="in" value="1" inputmode="decimal"><span>×</span></div></div></div>
+<div class="row"><div><label>Kamera</label><select id="cam"></select><p class="hint">Werte nach Herstellerangaben – bitte mit dem Datenblatt deiner Kamera abgleichen.</p></div>
+<div><label>Pixelgröße angeben</label><select id="pm" class="in"><option value="c">aus Sensorbreite und Pixelzahl</option><option value="d">direkt in µm</option></select><p class="hint">Beide Wege führen zum selben Maßstab. Die Pixelgröße steht im Datenblatt der Kamera.</p></div></div>
+<div class="row"><div id="pxdw"><label>Pixelgröße</label><div class="u"><input id="pxd" class="in" inputmode="decimal" placeholder="z. B. 3,76"><span>µm</span></div><p class="hint">Pixelgröße des Sensors ohne Binning. Komma und Punkt gelten beide als Dezimalzeichen.</p></div>
+<div id="sww"><label>Sensorbreite</label><div class="u"><input id="sw" class="in" inputmode="decimal"><span>mm</span></div></div>
+<div><label>Sensor-Pixelbreite<span id="spOpt" class="opt"> (optional)</span></label><div class="u"><input id="sp" class="in" inputmode="decimal"><span>px</span></div><p class="why">Damit prüft die App, ob das Bild gebinnt, skaliert oder zugeschnitten wurde.</p></div></div>
+<div class="row"><div><label>Sensortyp</label><select id="col" class="in"><option value="c">Farbe (Bayer)</option><option value="m">Mono</option></select></div>
+<div id="dbw"><label>Debayer-Verfahren</label><select id="deb" class="in"><option value="">– bitte wählen –</option><option value="n">Normal (Bildbreite bleibt)</option><option value="s">Super-Pixel (halbe Breite)</option><option value="d">Drizzle</option></select><p class="why">Super-Pixel halbiert die Auflösung und verdoppelt die Pixelgröße.</p></div></div>
+<div class="row"><div><label>Maßstab aus Plate-Solve <span class="opt">(optional)</span></label><div class="u"><input id="ps" class="in" inputmode="decimal" placeholder="z. B. 1,24"><span>″/px</span></div><p class="why">Wurde das Bild astrometrisch gelöst (z. B. ImageSolver, ASTAP, astrometry.net), ist die gelöste Bildskala die beste Gegenprobe zu Brennweite und Pixelgröße.</p></div>
+<div><label class="chk" style="margin-top:34px"><input type="checkbox" id="psUse" class="in" checked> Plate-Solve-Skala für die Messung verwenden</label><p class="hint">Nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde.</p></div></div>
+<p class="hint">Alle Werte kannst du überschreiben.</p>
+<div class="live" id="lv2"></div>
+<div class="tb" style="margin-top:10px"><button id="svP">Profil speichern</button><select id="ldP" style="width:auto"><option value="">Profil laden …</option></select></div>
+<div id="c2"></div></div>
+
+<div class="card hide" id="s3"><h2>3 · Entfernung</h2>
+<div class="row"><div><label>Objekt aus Katalog <span class="opt">(optional)</span></label><input id="cat" list="catL" placeholder="z. B. M42, Orionnebel, NGC 7000" autocomplete="off"><datalist id="catL"></datalist><p class="hint">Füllt Objektart, Entfernung und Fehlerangabe vor. Alle Werte bleiben änderbar.</p><div id="catInfo"></div></div></div>
+<div class="row"><div><label>Objektart</label><select id="ot" class="in"><option value="n">Nebel</option><option value="o">Offener Sternhaufen</option><option value="k">Kugelsternhaufen</option><option value="g">Galaxie</option><option value="s">Mond / Planet / Sonne</option></select><p class="why">Setzt einen Erwartungsbereich und entscheidet, ob in Lichtjahren oder in Kilometern gerechnet wird.</p></div></div>
+
+<div id="dsw"><div class="row">
+<div><label>Entfernung des Objekts</label><div class="u"><input id="d" class="in" inputmode="decimal" placeholder="z. B. 2.537.000"><select id="du" class="in" style="width:80px"><option>Lj</option><option>pc</option><option>km</option><option>AE</option></select></div><p class="why">Ohne Entfernung gibt es kein Ergebnis. Komma und Punkt werden beide erkannt – prüfe die gelesene Zahl darunter.</p><p id="dEcho" class="echo"></p></div>
+<div><label>Fehlerangabe</label><div class="u"><input id="er" class="in" inputmode="decimal" value="10"><span>%</span></div><p class="why">Entfernungen von Deepsky-Objekten sind unsicher. Daraus entsteht die Ergebnisspanne.</p></div>
+</div></div>
+
+<div id="sbw">
+<div class="row">
+<div><label>Himmelskörper</label><select id="sb" class="in"></select><p class="why">Jeder Körper hat einen bekannten Abstandsbereich. So fallen unmögliche Eingaben auf.</p></div>
+<div><label>Entfernungs-Stufe</label><select id="stg" class="in"><option value="0">Minimal (Erdnähe)</option><option value="1" selected>Mittelwert (Referenz)</option><option value="2">Maximal (Erdferne)</option><option value="f">Freie Eingabe</option></select><p class="why">Die Entfernung schwankt mit dem Aufnahmetag. Die Stufe setzt den Wert und die Ergebnisspanne.</p></div>
+</div>
+<div class="row">
+<div><label>Entfernung</label><div class="u"><input id="dkm" class="in" inputmode="decimal"><span>km</span></div><p id="kmEcho" class="echo"></p></div>
+<div><label>… oder in AE</label><div class="u"><input id="dau" class="in" inputmode="decimal"><span>AE</span></div><p class="hint">Beide Felder rechnen sich gegenseitig um. Tippen schaltet auf „Freie Eingabe“.</p></div>
+<div id="erw2"><label>Fehlerangabe</label><div class="u"><input id="er2" class="in" inputmode="decimal" value="5"><span>%</span></div><p class="why">Nur bei freier Eingabe: Woher kommt dein Wert und wie genau ist er?</p></div>
+</div>
+<div id="solDesc" class="box i"></div>
+</div>
+
+<div class="box i">Quellen für Entfernungen: SIMBAD, Gaia, Wikipedia; für Sonnensystem-Objekte am Aufnahmetag eine Ephemeride wie JPL Horizons. <b>Die Entfernung stammt von dir oder aus dem eingebauten Katalog (Richtwert)</b> und wird von der App nur auf Plausibilität geprüft.</div>
+<div id="c3"></div></div>
+
+<div class="card hide" id="s4"><h2>4 · Messen</h2>
+<div class="tb"><button data-t="h" class="sel" title="Taste V">✋ Verschieben</button><button data-t="l" title="Taste L">📏 Linie</button><button data-t="c" title="Taste K">⭕ Kreis (Fläche)</button><button id="fit" title="Taste F">Einpassen</button><button id="one" title="Taste 1">1:1</button><span id="zl" class="zl"></span></div>
+<div class="tb"><button id="undo" title="Entf / Rücktaste">Letzte löschen</button><button id="clr">Alle löschen</button><label class="chk"><input type="checkbox" id="shL" checked> Beschriftung</label><label class="chk"><input type="checkbox" id="shG" checked> Legende</label><label class="chk">Winkel <select id="au"><option value="a">automatisch</option><option value="s">Bogensekunden ″</option><option value="m">Bogenminuten ′</option><option value="d">Grad °</option></select></label></div>
+<canvas id="cv" height="500"></canvas>
+<p class="hint" style="margin:4px 0">Linke Maustaste: je nach Werkzeug · Mittlere Maustaste: verschieben · Rechtsklick oder Esc: laufende Messung abbrechen · Mausrad oder + / −: Zoom · Tasten: L Linie, K Kreis, V Verschieben, F Einpassen, 1 = 100 %, Pfeile verschieben, Entf letzte Messung löschen. Kreis: Mittelpunkt klicken, zum Rand ziehen.</p>
+<div class="live" id="lv4"><div>Ziehe eine Messung auf …</div></div>
+<h2 style="margin-top:14px">Ergebnisse</h2><div id="res"></div>
+<h2 style="margin-top:14px">Zusammenfassung</h2><div id="sum"></div></div>
+
+<div class="nav"><button id="bk">← Zurück</button><button id="nx" class="pr">Weiter →</button></div>
+
+<div class="card ft" style="margin-top:16px"><b>LocalSizeMeasurer Web v1.0</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
+<b>Credits:</b> Idee und ursprünglicher Excel-Rechner von Rainer und Daniel – <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank" rel="noopener">„Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen“</a> (YouTube). Danke und Gruß an die beiden!<br><br>
+<b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
+</div>
+<script>
+// ===== Daten =====
+var VERSION="1.0";
+// Kameras: [Hersteller, Modell, Pixel horizontal, Pixel vertikal, Sensorbreite mm, Typ c/m] – nach Herstellerangaben
+var CAMS={"Astrokameras":[["ZWO","ASI2600MC",6248,4176,23.5,"c"],["ZWO","ASI294MC",4144,2822,19.2,"c"],["ZWO","ASI533MC",3008,3008,11.31,"c"],["ZWO","ASI183MM",5496,3672,13.2,"m"]],
+"Spiegelreflex/Systemkameras":[["Canon","EOS 6D",5472,3648,35.8,"c"],["Canon","EOS 550D",5184,3456,22.3,"c"],["Sony","A7 III",6000,4000,35.6,"c"]]};
+var TELS=[["Skywatcher Evostar 72ED",420,72],["Newton 200/1000",1000,200],["Celestron EdgeHD 8",2032,203],["William Optics RedCat 51",250,51]];
+// Sonnensystem: [Name, Minimum km, Mittel km, Maximum km, Begriff Minimum, Begriff Maximum] – Werte aus LocalSizeMeasurer 2.2
+var BODY=[
+["Mond",363300,384400,405500,"Perigäum","Apogäum"],
+["Sonne (1 AE)",147098074,149597871,152097701,"Perihel","Aphel"],
+["Merkur",77300000,0,221900000,"Größte Erdnähe","Größte Erdferne"],
+["Venus",38200000,0,261000000,"Unterer Durchgang","Oberer Durchgang"],
+["Mars",55700000,0,401300000,"Perihel-Opposition","Konjunktion"],
+["Jupiter",588500000,0,968100000,"Opposition","Konjunktion"],
+["Saturn",1195000000,0,1660000000,"Opposition","Konjunktion"],
+["Uranus",2580000000,0,3160000000,"Opposition","Konjunktion"],
+["Neptun",4300000000,0,4690000000,"Opposition","Konjunktion"],
+["Komet / Asteroid / Sonde (frei)",1000,0,1e11,"—","—"]];
+for(var _b=0;_b<BODY.length;_b++)if(!BODY[_b][2])BODY[_b][2]=.5*(BODY[_b][1]+BODY[_b][3]);
+// Deepsky-Katalog aus LocalSizeMeasurer 2.2: [Name, Entfernung Lj, Unsicherheit ± Lj, Quelle, Objektart, Suchschlüssel]
+var DSO=[["IC 1805 – Herznebel (Heart Nebula)",7500,300,"Gaia EDR3","n",["IC1805","HEARTOHEART","HEART","SH2-190","HERZNEBEL","HEARTNEBULA"]],
+["IC 1848 – Seelennebel (Soul Nebula)",6500,300,"Gaia EDR3","n",["IC1848","SOUL","SH2-199","SEELENNEBEL","SOULNEBULA"]],
+["M31 – Andromeda-Galaxie",2537000,50000,"Cepheiden (HST)","g",["M31","ANDROMEDA","NGC224","ANDROMEDAGALAXIE","ANDROMEDAGALAXY"]],
+["M33 – Dreiecksnebel (Triangulum)",2730000,100000,"Cepheiden","g",["M33","TRIANGULUM","NGC598"]],
+["M42 – Großer Orionnebel",1344,20,"Gaia DR2","n",["M42","ORION","NGC1976","ORIONNEBEL","ORIONNEBULA","GROSSERORIONNEBEL"]],
+["M45 – Plejaden (Siebengestirn)",444,6,"Gaia EDR3","o",["M45","PLEIADES","PLEJADEN","SIEBENGESTIRN"]],
+["M51 – Whirlpool-Galaxie",23500000,2000000,"Tully-Fisher / SN","g",["M51","WHIRLPOOL","NGC5194","WHIRLPOOLGALAXIE","WHIRLPOOLGALAXY"]],
+["M81 – Bodes Galaxie",11740000,400000,"HST Cepheiden","g",["M81","BODE","NGC3031"]],
+["M82 – Zigarren-Galaxie",11500000,500000,"TRGB","g",["M82","CIGAR","NGC3034"]],
+["NGC 7000 – Nordamerika-Nebel",2590,70,"Gaia DR2","n",["NGC7000","NORTH AMERICA","NORDAMERIKA"]],
+["NGC 2359 – Thors Helm (Thor's Helmet)",15000,1500,"Gaia EDR3 (WR 7)","n",["NGC2359","THOR","THORSHELM","SH2-298"]],
+["NGC 6888 – Sichelnebel (Crescent Nebula)",5000,400,"Gaia EDR3 (WR 136)","n",["NGC6888","CRESCENT","SH2-105"]],
+["NGC 7635 – Blasennebel (Bubble Nebula)",9100,800,"Gaia EDR3 (BD+60 2522)","n",["NGC7635","BUBBLE","SH2-162"]],
+["IC 1396 – Elefantenrüssel-Nebel",2400,100,"Gaia EDR3","n",["IC1396","ELEPHANT","ELEFANT"]],
+["M16 – Adlernebel (Säulen der Schöpfung)",7000,300,"Gaia EDR3","n",["M16","EAGLE","NGC6611"]],
+["M101 – Feuerrad-Galaxie (Pinwheel)",20900000,600000,"HST Cepheiden","g",["M101","PINWHEEL","NGC5457"]],
+["NGC 3521 – Bubble-Galaxie (Löwe)",37300000,2000000,"HST Cepheiden / NED","g",["NGC3521"]],
+["NGC 2237 – Rosettennebel",5200,200,"Gaia EDR3","n",["NGC2237","ROSETTE","NGC2244"]],
+["NGC 6960 – Cirrusnebel (Sturmvogel)",2400,100,"Gaia EDR3","n",["NGC6960","VEIL","CIRRUS"]],
+["M13 – Großer Herkuleshaufen",22200,500,"Gaia EDR3","k",["M13","HERCULES","NGC6205"]],
+["M57 – Ringnebel in der Leier",2570,150,"Gaia EDR3","n",["M57","RING","NGC6720"]],
+["M27 – Hantelnebel (Dumbbell)",1360,50,"Gaia EDR3","n",["M27","DUMBBELL","HANTEL","NGC6853"]],
+["NGC 891 – Silver Sliver Galaxie",31600000,2000000,"Tully-Fisher","g",["NGC891"]],
+["NGC 6820 – Emissionsnebel in der Füchsin (Sh2-86)",6000,300,"Gaia EDR3 (NGC 6823)","n",["NGC6820","SH2-86","NGC6823"]],
+["Sh2-132 – Löwennebel (Lion Nebula)",10400,600,"Gaia EDR3","n",["SH2-132","SH2132","LION","LBN473"]]];
+// Konstanten wie im Script
+var ARC=648000/Math.PI,KMLY=9.4607304725808e12,KMAU=149597870.7,AUPLY=63241.077088,LYPC=3.2615638,C_KM_S=299792.458;
+var SS_AU=100,EARTH_D=12742,EARTH_DISK=Math.PI*6371*6371;
+var $=function(i){return document.getElementById(i)};
+function PN(s,grp){ // Portiert aus LocalSizeMeasurer 2.2 (parseNumber)
+ if(s===null||typeof s==="undefined")return NaN;
+ var t=String(s).replace(/[\s  ']/g,"");
+ if(t.length===0)return NaN;
+ if(grp!==false&&/^[+-]?\d{1,3}(\.\d{3})+(,\d+)?$/.test(t))t=t.replace(/\./g,"").replace(",",".");
+ else if(/^[+-]?\d{1,3}(,\d{3}){2,}(\.\d+)?$/.test(t))t=t.replace(/,/g,"");
+ else t=t.replace(",",".");
+ if(!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(t))return NaN;
+ return Number(t)}
+var N=function(i){return PN($(i).value,false)};  // Optik: 3.75 ist eine Dezimalzahl
+var S={cat:null,step:0,img:null,orig:null,shapes:[],tool:"h",v:{s:1,x:0,y:0},cur:null},COL=["#ffc000","#00d0ff","#ff7a00","#ff55ff","#90ff90","#ffffff"];
+// ===== Zahlenformate (deutsch, mit Tsd./Mio./Mrd. und Exponent) =====
+function fmt(n,s){return isFinite(n)?n.toLocaleString("de-DE",{maximumSignificantDigits:s||4}):"–"}
+function fx(v,d){return isFinite(v)?v.toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d}):"–"}
+function sup(n){var m="⁰¹²³⁴⁵⁶⁷⁸⁹";return String(n).split("").map(function(c){return c==="-"?"⁻":m[+c]}).join("")}
+function fExp(v,d){if(!isFinite(v))return "–";if(v===0)return "0";var p=v.toExponential(d).split("e");return p[0].replace(".",",")+" · 10"+sup(+p[1])}
+function fAu(a){return !isFinite(a)?"–":a>=1e6?fx(a/1e6,2)+" Mio. AE":a>=1e4?fx(a,0)+" AE":a>=100?fx(a,1)+" AE":a>=.01?fx(a,4)+" AE":fx(a,6)+" AE"}
+function fLy(l){return !isFinite(l)?"–":l>=1e9?fx(l/1e9,2)+" Mrd. Lj":l>=1e6?fx(l/1e6,2)+" Mio. Lj":l>=1e4?fx(l/1e3,1)+" Tsd. Lj":l>=10?fx(l,0)+" Lj":l>=.01?fx(l,2)+" Lj":l>=1e-4?fx(l,4)+" Lj":fAu(l*AUPLY)}
+function fKm(k){return !isFinite(k)?"–":k>=1e9?fx(k/1e9,3)+" Mrd. km":k>=1e6?fx(k/1e6,2)+" Mio. km":k>=1000?fx(k,0)+" km":k>=1?fx(k,1)+" km":fx(k,3)+" km"}
+function fAu2(a){return !isFinite(a)?"–":a>=1e9?fExp(a,2)+" AE²":a>=1e6?fx(a/1e6,2)+" Mio. AE²":a>=100?fx(a,0)+" AE²":a>=.001?fx(a,4)+" AE²":fx(a,6)+" AE²"}
+function fLy2(l){return !isFinite(l)?"–":l>=1e9?fx(l/1e9,2)+" Mrd. Lj²":l>=1e6?fx(l/1e6,2)+" Mio. Lj²":l>=1e4?fx(l/1e3,1)+" Tsd. Lj²":l>=1?fx(l,2)+" Lj²":l>=.01?fx(l,4)+" Lj²":fAu2(l*AUPLY*AUPLY)}
+function fKm2(k){return !isFinite(k)?"–":k>=1e15?fExp(k,2)+" km²":k>=1e12?fx(k/1e12,2)+" Bio. km²":k>=1e9?fx(k/1e9,2)+" Mrd. km²":k>=1e6?fx(k/1e6,2)+" Mio. km²":k>=1000?fx(k,0)+" km²":fx(k,2)+" km²"}
+function fMul(n){return !isFinite(n)?"–":n>=1e9?fx(n/1e9,2)+" Mrd.":n>=1e6?fx(n/1e6,2)+" Mio.":n>=1e4?fx(n/1e3,1)+" Tsd.":n>=100?fx(n,0):n>=1?fx(n,2):n>=.001?fx(n,4):fExp(n,2)}
+function fAng(a){var u=$("au").value;if(!isFinite(a))return "–";
+ if(u==="s")return fx(a,2)+" ″";if(u==="m")return fx(a/60,3)+" ′";if(u==="d")return fx(a/3600,4)+" °";
+ return a<120?fx(a,2)+" ″":a<10800?fx(a/60,2)+" ′":fx(a/3600,3)+" °"}
+function fLT(s){return !isFinite(s)?"–":s<60?fx(s,2)+" s":s<3600?fx(s/60,2)+" min":fx(s/3600,2)+" h"}
+// ===== Bild =====
+function sample(){var c=document.createElement("canvas");c.width=1600;c.height=1000;var g=c.getContext("2d");g.fillStyle="#02030a";g.fillRect(0,0,1600,1000);
+[[800,500,420,"110,60,160"],[950,560,260,"200,70,110"],[640,420,230,"60,110,200"]].forEach(function(n){var r=g.createRadialGradient(n[0],n[1],10,n[0],n[1],n[2]);r.addColorStop(0,"rgba("+n[3]+",.75)");r.addColorStop(1,"rgba("+n[3]+",0)");g.fillStyle=r;g.fillRect(0,0,1600,1000)});
+var x=42;function rnd(){x=(x*16807)%2147483647;return x/2147483647}
+for(var i=0;i<900;i++){var r=Math.pow(rnd(),4)*2.6+.4,a=.3+rnd()*.7;g.fillStyle="rgba(255,"+(220+rnd()*35|0)+",230,"+a+")";g.beginPath();g.arc(rnd()*1600,rnd()*1000,r,0,7);g.fill()}
+S.img={el:c,w:1600,h:1000,name:"Beispielbild (generiert, nur zum Ausprobieren)"};S.shapes=[];info();upd()}
+function msg(t){var e=$("imginfo");e.textContent=t;e.style.color="#ff6b6b"}
+function loadFile(f){if(!f)return;var e=$("imginfo");e.style.color="";e.textContent="Lade "+f.name+" …";
+if(!/^image\/(jpeg|png|gif|webp|bmp)/.test(f.type)&&!/\.(jpe?g|png|gif|webp|bmp)$/i.test(f.name)){msg("Format nicht unterstützt ("+(f.type||f.name)+"). Bitte JPG oder PNG verwenden.");return}
+var fr=new FileReader();
+fr.onerror=function(){msg("Datei konnte nicht gelesen werden.")};
+fr.onload=function(){var im=new Image();
+im.onload=function(){try{S.img={el:im,w:im.naturalWidth,h:im.naturalHeight,name:f.name};S.shapes=[];e.style.color="";info();upd()}catch(x){msg("Fehler nach dem Laden: "+x.message)}};
+im.onerror=function(){msg("Der Browser konnte das Bild nicht dekodieren (zu groß, beschädigt oder falsches Format).")};
+im.src=fr.result};
+fr.readAsDataURL(f)}
+function info(){var p=$("pv");if(!S.img){$("imginfo").textContent="Noch kein Bild geladen.";p.classList.add("hide");return}
+$("imginfo").style.color="";$("imginfo").textContent=S.img.name+": "+S.img.w.toLocaleString("de-DE")+" × "+S.img.h.toLocaleString("de-DE")+" px";p.classList.remove("hide");p.width=360;p.height=Math.max(1,Math.round(360*S.img.h/S.img.w));p.getContext("2d").drawImage(S.img.el,0,0,p.width,p.height)}
+// ===== Berechnung =====
+function calc(){var o={};o.fl=N("fl");o.acc=N("acc")||1;o.bar=N("bar")||1;o.efl=o.fl*o.acc*o.bar;
+o.pm=$("pm").value;o.sp=N("sp");o.spOk=o.sp>0;
+if(o.pm==="d"){o.px=N("pxd");o.sw=o.spOk?o.px*o.sp/1000:NaN}else{o.sw=N("sw");o.px=o.sw/o.sp*1000}
+o.cw=S.img?S.img.w:NaN;var t=$("chgT").value,f=N("fF"),ow=N("fW"),crop2=$("cropToo").checked;
+o.ratio=o.spOk&&S.img?o.sp/o.cw:1;o.rsrc=o.spOk?"aus Sensor- und Bildbreite":"Bild = Sensorauflösung angenommen";
+if(S.orig==="no"){if(f>0){o.ratio=f;o.rsrc="Faktor "+fmt(f)+"×"}else if(ow>0&&!crop2&&S.img){o.ratio=ow/o.cw;o.rsrc="Originalbreite "+fmt(ow,6)+" px"}}
+if(S.orig==="yes"&&o.spOk)o.rsrc="Original: Sensorbreite ÷ Bildbreite";
+if(S.orig==="crop"){o.ratio=1;o.rsrc="Zuschnitt (Maßstab unverändert)"}
+o.epx=o.px*o.ratio;o.scOpt=ARC/1000*o.epx/o.efl;
+o.ps=N("ps");o.psOk=o.ps>0;o.psUse=o.psOk&&$("psUse").checked;
+o.sc=o.psUse?o.ps:o.scOpt;o.scSrc=o.psUse?"Plate-Solve":"Brennweite und Pixelgröße";
+o.dev=o.psOk&&o.scOpt>0?Math.abs(o.scOpt-o.ps)/o.ps*100:NaN;
+o.fov=o.cw*o.sc/3600;
+if($("ot").value==="s"){var b=BODY[+$("sb").value]||BODY[0],st=$("stg").value;
+ o.dkm=PN($("dkm").value,true);o.body=b;o.stage=st;
+ if(st==="f"||b[1]===1000){var e2=(PN($("er2").value,false)||0)/100;o.dLo=o.dkm*(1-e2);o.dHi=o.dkm*(1+e2);o.span="± "+fmt(e2*100)+" % (freie Eingabe)"}
+ else{o.dLo=b[1];o.dHi=b[3];o.span=b[4]+" bis "+b[5]}
+}else{var d=PN($("d").value,true),u=$("du").value;
+ o.dkm=u==="Lj"?d*KMLY:u==="pc"?d*LYPC*KMLY:u==="km"?d:d*KMAU;
+ var e=(PN($("er").value,false)||0)/100;o.dLo=o.dkm*(1-e);o.dHi=o.dkm*(1+e);o.span="± "+fmt(e*100)+" %"}
+o.dly=o.dkm/KMLY;return o}
+function proj(d,th){if(!(th>0))return 0;return th>=Math.PI?d*th:2*d*Math.tan(th/2)}  // exakt wie im Script
+function size(o,px){var th=px*o.sc/ARC;return {k:proj(o.dkm,th),lo:proj(o.dLo,th),hi:proj(o.dHi,th),th:th,as:px*o.sc}}
+function SOL(){return $("ot").value==="s"}
+function fSize(k){return SOL()?fKm(k):fLy(k/KMLY)}
+function fArea(k){var r=k/2,km2=Math.PI*r*r;return SOL()?fKm2(km2):fLy2(km2/KMLY/KMLY)}
+function fCmp(k,circ){if(SOL())return circ?fMul(Math.PI*k*k/4/EARTH_DISK)+" × Erdscheibe":fMul(k/EARTH_D)+" × Erddurchmesser";var q=k/KMAU/SS_AU;return circ?fMul(q*q)+" × Sonnensystem-Fläche":fMul(q)+" × Sonnensystem"}
+function shortTxt(s,o){var z=size(o,len(s));return s.t==="c"?"Ø "+fAng(z.as)+" | A: "+fArea(z.k):fAng(z.as)+" | "+fSize(z.k)}
+function legTxt(s,i,o){var z=size(o,len(s));return "#"+(i+1)+"  "+(s.t==="c"?"Kreis: Ø "+fAng(z.as)+" | "+fSize(z.k)+" | Fläche "+fArea(z.k)+" (≈ "+fCmp(z.k,1)+")":"Linie: "+fAng(z.as)+" | "+fSize(z.k)+" | ≈ "+fCmp(z.k,0))}
+function details(k,circ){var a=[];
+ if(SOL()){a.push(fKm(k));a.push("≈ "+fCmp(k,0)+" (12.742 km)");if(circ){a.push("Fläche "+fKm2(Math.PI*k*k/4));a.push("≈ "+fCmp(k,1))}return a.join(" · ")}
+ var ly=k/KMLY,au=k/KMAU;a.push(fLy(ly));a.push(fx(ly*365.25,ly*365.25>=100?0:2)+" Lichttage");a.push(fAu(au));a.push(fExp(k,3)+" km");a.push("≈ "+fCmp(k,0)+" (100 AE)");
+ if(circ){var r=k/2,km2=Math.PI*r*r;a.push("Fläche "+fLy2(km2/KMLY/KMLY)+" = "+fAu2(km2/KMAU/KMAU)+" = "+fKm2(km2));a.push("≈ "+fCmp(k,1)+" (Ø 100 AE)")}
+ return a.join(" · ")}
+// ===== Prüfungen =====
+function checks(){var o=calc(),a=[],L=function(l,m){a.push({l:l,m:m})};
+if(!S.img)L("r","Schritt 1: Noch kein Bild geladen.");
+if(S.orig===null)L("r","Schritt 1: „Unverändertes Originalbild?“ ist nicht beantwortet.");
+if(S.orig==="no"&&!$("chgT").value)L("r","Schritt 1: Bitte angeben, was am Bild verändert wurde.");
+if(S.orig==="no"&&$("chgT").value&&!$("cropToo").checked&&!(N("fF")>0)&&!(N("fW")>0))L("y","Kein Faktor und keine Originalbreite angegeben – es gilt der Breitenvergleich mit dem Sensor.");
+if(S.orig==="no"&&$("cropToo").checked&&!(N("fF")>0))L("r","Bei zusätzlichem Zuschnitt bitte den Faktor angeben (die Originalbreite reicht nicht, weil sie sich auf das ungeschnittene Bild bezieht).");
+if($("col").value==="c"&&!$("deb").value)L("y","Farbkamera: Debayer-Verfahren nicht beantwortet.");
+if($("col").value==="c"&&$("deb").value==="s"&&S.orig==="yes")L("y","Super-Pixel-Debayer angegeben, Bild aber als unverändert markiert – bitte Schritt 1 prüfen.");
+if(!(o.sc>0)){L("r","Maßstab nicht berechenbar – Optik/Kamera unvollständig.");return a}
+var r=o.sp/o.cw;
+if(!o.spOk&&o.pm==="d")L("i","Ohne Sensor-Pixelbreite kann die App Binning, Skalierung und Zuschnitt nicht gegen den Sensor prüfen. Bei „unverändert“ oder „nur zugeschnitten“ gilt die Pixelgröße 1:1.");
+if(o.spOk&&S.img){
+if(!(o.cw<=o.sp*1.02)&&!($("chgT").value==="drz"||$("chgT").value==="scale"))L("y","Das Bild ist breiter als der Sensor – Drizzle oder Hochskalierung?");
+if(S.orig==="yes"&&Math.abs(r-1)>.02)L("y","Bildbreite ("+o.cw+" px) passt nicht zur Sensorbreite ("+o.sp+" px) – Bild skaliert oder gebinnt? Falls es nur zugeschnitten wurde, wähle oben „Nur zugeschnitten“.");
+if(S.orig==="crop"){if(o.cw>o.sp*1.02)L("y","Das Bild ist breiter als der Sensor – wurde es wirklich nur zugeschnitten (oder hochskaliert/gedrizzelt)?");else L("g","Zuschnitt: "+o.cw+" von "+o.sp+" px Sensorbreite ("+fmt(o.cw/o.sp*100)+" %). Der Maßstab bleibt unverändert.")}
+[2,3,4,.5].forEach(function(f){if(Math.abs(r/f-1)<.03&&S.orig==="yes")L("y","Verhältnis Sensor ÷ Bild ≈ "+fmt(f)+" – passt zu "+(f===.5?"2×-Drizzle":"Binning "+f+"×"+f+(f===2?", Super-Pixel-Debayer oder 2×-Drizzle":"")))});
+if(S.orig==="no"&&$("cropToo").checked&&N("fF")>0){var ex=o.sp/N("fF");if(o.cw>ex*1.02)L("y","Das Bild ist breiter als nach dem Faktor zu erwarten ("+fmt(ex)+" px) – wurde es wirklich nur zugeschnitten?");else L("g","Zuschnitt zusätzlich zum Faktor: erwartete volle Breite "+fmt(ex)+" px, Bild "+o.cw+" px ("+fmt(o.cw/ex*100)+" %). Der Maßstab folgt dem Faktor.")}
+if(S.orig==="no"&&!$("cropToo").checked&&N("fF")>0&&Math.abs(r/N("fF")-1)>.05&&Math.abs(r-1)>.02)L("y","Dein Faktor ("+fmt(N("fF"))+") passt nicht zum Breitenverhältnis ("+fmt(r)+") – bitte prüfen. Falls das Bild zusätzlich zugeschnitten wurde: Haken „Zusätzlich zugeschnitten“ setzen.");
+}
+if(o.psOk){if(o.ps<.01||o.ps>1000)L("y","Plate-Solve-Skala "+fmt(o.ps)+" ″/px ist unplausibel – Einheit prüfen (Bogensekunden pro Pixel).");
+ else if(o.scOpt>0){if(o.dev>2){var q=o.ps/o.scOpt,cause="";
+   [2,3,4].forEach(function(f){if(Math.abs(q/f-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu Binning "+f+"×"+f+(f===2?" oder Super-Pixel-Debayer":"")+". In Schritt 1 nicht angegeben?"});
+   if(Math.abs(q/.5-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu 2×-Drizzle oder Hochskalierung. In Schritt 1 nicht angegeben?";
+   L("y","Brennweite und Pixelgröße ergeben "+fx(o.scOpt,4)+" ″/px, der Plate-Solve "+fx(o.ps,4)+" ″/px – Abweichung "+fx(o.dev,1)+" %."+cause+" Mögliche Ursachen: Binning, Debayer (Super-Pixel), Resampling, Drizzle, Reducer. "+(o.psUse?"Die Plate-Solve-Skala wird verwendet; sie ist nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde.":"Die Plate-Solve-Skala wird NICHT verwendet – die Messwerte sind womöglich falsch."))}
+  else L("g","Plate-Solve und Optik stimmen überein (Abweichung "+fx(o.dev,2)+" %).")}}
+var scLo=$("ot").value==="s"?.05:.3;if(o.sc<scLo||o.sc>10)L("y","Maßstab "+fmt(o.sc)+" ″/px ist ungewöhnlich (erwartet "+fmt(scLo)+"–10 für diese Objektart) – Brennweite/Pixelgröße in falscher Einheit?");
+if(!o.psUse){if(o.px<.3||o.px>50)L("y","Pixelgröße "+fmt(o.px)+" µm liegt außerhalb des Plausibilitätsbereichs (0,3–50) – µm statt mm?");else if(o.px<1||o.px>20)L("y","Pixelgröße "+fmt(o.px)+" µm ist für Astrokameras ungewöhnlich (üblich 1–20) – bitte prüfen.");
+if(o.fl>0&&o.fl<5)L("y","Brennweite "+fmt(o.fl)+" mm ist unplausibel – Meter statt Millimeter eingegeben?");else if(o.fl>20000)L("y","Brennweite "+fmt(o.fl)+" mm ist unplausibel hoch – Einheit prüfen.");else if(o.fl>=5&&o.fl<100)L("i","Brennweite "+fmt(o.fl)+" mm: Weitwinkel- oder Objektivaufnahme – plausibel, aber ungewöhnlich für Teleskope.")}
+var R={n:[100,3e4],o:[100,2e4],k:[5e3,15e4],g:[1e5,1e11],s:[0,1e-3]},t=$("ot").value,rg=R[t];
+if(!(o.dkm>0))L("r","Entfernung fehlt oder ist keine gültige Zahl – Schritt 3 ausfüllen. Ohne Entfernung gibt es kein Ergebnis.");else if(o.dly>2e10)L("y","Entfernung "+fmt(o.dly)+" Lj liegt jenseits des beobachtbaren Universums – Einheit prüfen.");else if(t==="s"){var bd=BODY[+$("sb").value]||BODY[0];
+ if(bd[1]!==1000){var lo=bd[1]*.95,hi=bd[3]*1.05;
+  if(o.dkm<lo||o.dkm>hi)L("y","Entfernung "+fmt(o.dkm,4)+" km liegt außerhalb des Bereichs für „"+bd[0]+"“ ("+fmt(bd[1],4)+" – "+fmt(bd[3],4)+" km) – Einheit oder Himmelskörper korrekt?")}
+ else if(o.dkm<1000||o.dkm>1e11)L("y","Entfernung "+fmt(o.dkm,4)+" km ist für ein Sonnensystem-Objekt ungewöhnlich.")}
+else if(o.dly<rg[0]||o.dly>rg[1])L("y","Entfernung "+fmt(o.dly)+" Lj liegt außerhalb des Erwartungsbereichs ("+fmt(rg[0])+"–"+fmt(rg[1])+" Lj) für diese Objektart – Rückfrage: Einheit oder Objektart korrekt?");
+if(o.dHi>0&&o.dHi/o.dkm>=1.5)L("y","Die Entfernungsspanne ist sehr weit – das Ergebnis ist nur eine grobe Größenordnung.");
+S.shapes.forEach(function(s){if(len(s)<5&&!a.some(function(x){return /5 px/.test(x.m)}))L("y","Eine Messung ist unter 5 px – von Bildrauschen dominiert.")});
+if(!a.some(function(x){return x.l==="r"||x.l==="y"}))L("g","Alle Konsistenzprüfungen bestanden.");return a}
+function show(id,a){$(id).innerHTML=a.map(function(x){return '<div class="box '+x.l+'">'+(x.l==="r"?"🔴 ":x.l==="y"?"🟡 ":x.l==="i"?"ℹ️ ":"🟢 ")+x.m+'</div>'}).join("")}
+function len(s){var d=Math.hypot(s.b.x-s.a.x,s.b.y-s.a.y);return s.t==="c"?2*d:d}
+// ===== UI =====
+function upd(){var o=calc(),tiles=[["Effektive Brennweite",fmt(o.efl)+" mm"],["Pixelgröße (Sensor)",fmt(o.px)+" µm"],["Effektive Pixelgröße",fmt(o.epx)+" µm"],["Maßstab aus Optik",fx(o.scOpt,4)+" ″/px"]];
+if(o.psOk)tiles.push(["Maßstab aus Plate-Solve",fx(o.ps,4)+" ″/px"]);
+tiles.push(["Verwendeter Maßstab",fx(o.sc,4)+" ″/px<span style=\"font-size:12px;color:var(--m);display:block;font-weight:400\">Quelle: "+o.scSrc+"</span>"]);
+if(S.img)tiles.push(["Bildfeld (Breite)",fAng(o.fov*3600)]);
+tiles.push(["Faktor",o.psUse?"durch Plate-Solve berücksichtigt":o.rsrc]);
+$("lv2").innerHTML=tiles.map(function(x){return "<div>"+x[0]+"<b>"+x[1]+"</b></div>"}).join("");
+var isS=$("ot").value==="s";$("sbw").style.display=isS?"":"none";$("dsw").style.display=isS?"none":"";
+ var _b=BODY[+$("sb").value]||BODY[0],_free=(_b[1]===1000);
+ $("stg").disabled=_free;if(_free)$("stg").value="f";
+ $("erw2").style.display=($("stg").value==="f")?"":"none";
+ if(isS){var km=PN($("dkm").value,true);
+  $("kmEcho").textContent=isFinite(km)&&km>0?"gelesen als "+km.toLocaleString("de-DE")+" km":"";
+  var sec=km/C_KM_S;
+  $("solDesc").innerHTML=_free?"Freie Eingabe für Kometen, Asteroiden oder Sonden."+(isFinite(sec)?" Lichtlaufzeit: <b>"+fLT(sec)+"</b>":""):
+   _b[4]+": "+fKm(_b[1])+" · Mittel: "+fKm(_b[2])+" · "+_b[5]+": "+fKm(_b[3])+
+   (isFinite(sec)?" · Lichtlaufzeit: <b>"+fLT(sec)+"</b>":"")+
+   "<br><span style=\"color:var(--m)\">Richtwerte. Für eine genaue Messung die tagesaktuelle Entfernung aus einer Ephemeride (JPL Horizons) als freie Eingabe verwenden.</span>"}
+ else{var dv=PN($("d").value,true);$("dEcho").textContent=isFinite(dv)&&dv>0?"gelesen als "+dv.toLocaleString("de-DE")+" "+$("du").value:""}
+var _d=$("pm").value==="d";$("pxdw").style.display=_d?"":"none";$("sww").style.display=_d?"none":"";$("spOpt").style.display=_d?"":"none";
+$("dbw").style.display=$("col").value==="c"?"":"none";var c=checks();show("c1",c);show("c2",c);show("c3",c);$("chg").classList.toggle("hide",S.orig!=="no");$("fWw").style.display=$("cropToo").checked?"none":"";
+document.querySelectorAll("[data-o]").forEach(function(b){b.classList.toggle("sel",b.dataset.o===S.orig)});
+if(S.step===3){drawAll();results(c)}}
+function go(n){n=Math.max(0,Math.min(3,n));if(n>0&&!S.img){msg("Bitte zuerst ein Bild laden oder das Beispielbild verwenden.");n=0}
+S.step=n;for(var i=0;i<4;i++){$("s"+(i+1)).classList.toggle("hide",i!==S.step)}
+$("st").innerHTML=["Bild prüfen","Optik","Entfernung","Messen"].map(function(t,i){return '<div class="'+(i===S.step?"on":"")+'" data-g="'+i+'">'+(i+1)+" · "+t+"</div>"}).join("");
+$("bk").style.visibility=S.step?"visible":"hidden";$("nx").style.visibility=S.step<3?"visible":"hidden";if(S.step===3)setTimeout(function(){fit();upd()},0);else upd()}
+// ===== Canvas =====
+var cv=$("cv"),g=cv.getContext("2d");
+function fit(){if(!S.img)return;var w=cv.clientWidth||900;cv.width=w;cv.height=500;S.v.s=Math.min(w/S.img.w,500/S.img.h);S.v.x=(w-S.img.w*S.v.s)/2;S.v.y=(500-S.img.h*S.v.s)/2;drawAll()}
+function zoomAt(ns,sx,sy){if(!S.img)return;ns=Math.max(.01,Math.min(32,ns));var ix=(sx-S.v.x)/S.v.s,iy=(sy-S.v.y)/S.v.s;S.v.x=sx-ix*ns;S.v.y=sy-iy*ns;S.v.s=ns;drawAll()}
+function toI(e){var r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width,y=(e.clientY-r.top)*cv.height/r.height,ix=(x-S.v.x)/S.v.s,iy=(y-S.v.y)/S.v.s;
+ if(S.img){ix=Math.max(0,Math.min(S.img.w,ix));iy=Math.max(0,Math.min(S.img.h,iy))}return{x:ix,y:iy,sx:x,sy:y}}
+function shp(s,col){var v=S.v,ax=s.a.x*v.s+v.x,ay=s.a.y*v.s+v.y,bx=s.b.x*v.s+v.x,by=s.b.y*v.s+v.y,dx=bx-ax,dy=by-ay;g.strokeStyle=col;g.lineWidth=2;g.beginPath();
+if(s.t==="c"){var r=Math.hypot(dx,dy);g.arc(ax,ay,r,0,2*Math.PI);g.moveTo(ax-5,ay);g.lineTo(ax+5,ay);g.moveTo(ax,ay-5);g.lineTo(ax,ay+5);g.moveTo(ax,ay);g.lineTo(bx,by);g.stroke();return{x:ax,y:ay-r-8,c:1}}
+var l=Math.hypot(dx,dy),nx=0,ny=1;if(l>.5){nx=-dy/l;ny=dx/l}
+g.moveTo(ax,ay);g.lineTo(bx,by);g.moveTo(ax-5*nx,ay-5*ny);g.lineTo(ax+5*nx,ay+5*ny);g.moveTo(bx-5*nx,by-5*ny);g.lineTo(bx+5*nx,by+5*ny);g.stroke();return{x:(ax+bx)/2+8,y:(ay+by)/2-8,c:0}}
+function tag(x,y,txt,col,center){g.font="bold 12px system-ui,sans-serif";var w=g.measureText(txt).width;if(center)x-=w/2;x=Math.max(4,Math.min(cv.width-w-8,x));y=Math.max(16,Math.min(cv.height-6,y));
+ g.fillStyle="rgba(0,0,0,.75)";g.fillRect(x-4,y-13,w+8,18);g.fillStyle=col;g.fillText(txt,x,y)}
+function legend(o){if(!$("shG").checked||!S.shapes.length)return;g.font="12px system-ui,sans-serif";var max=12,st=Math.max(0,S.shapes.length-max),rows=[{t:"Messungen ("+S.shapes.length+") – "+(SOL()?"Sonnensystem":"Deepsky"),c:"#ffffff"}];
+ if(st>0)rows.push({t:"… "+st+" ältere nicht angezeigt",c:"#b0b0b0"});
+ for(var i=st;i<S.shapes.length;i++)rows.push({t:legTxt(S.shapes[i],i,o),c:S.shapes[i].col,sw:1});
+ var rh=18,pad=8,w=0;rows.forEach(function(r){w=Math.max(w,g.measureText(r.t).width+(r.sw?18:0))});w=Math.min(w+2*pad,cv.width-20);
+ var h=rows.length*rh+10,x=10,y=Math.max(4,cv.height-10-h);g.fillStyle="rgba(0,0,0,.8)";g.fillRect(x,y,w,h);
+ rows.forEach(function(r,j){var top=y+5+j*rh,tx=x+pad;if(r.sw){g.fillStyle=r.c;g.fillRect(tx,top+4,10,10);tx+=18}g.fillStyle=r.c;g.fillText(r.t,tx,top+13)})}
+function drawAll(){if(!S.img)return;var o=calc(),ok=o.sc>0&&o.dkm>0;g.clearRect(0,0,cv.width,cv.height);g.imageSmoothingEnabled=S.v.s<1;g.drawImage(S.img.el,S.v.x,S.v.y,S.img.w*S.v.s,S.img.h*S.v.s);
+S.shapes.forEach(function(s,i){var an=shp(s,s.col);if($("shL").checked)tag(an.x,an.y,"#"+(i+1)+(ok?"  "+shortTxt(s,o):""),s.col,an.c)});
+if(S.cur){var an=shp(S.cur,"#00e000");if(ok)tag(an.x,an.y,shortTxt(S.cur,o),"#00e000",an.c)}
+if(ok)legend(o);$("zl").textContent="Zoom "+fx(S.v.s*100,0)+" %"}
+function liveVals(s){var o=calc(),px=len(s),z=size(o,px),c=s.t==="c";var h="<div>"+(c?"Durchmesser":"Länge")+"<b>"+fx(px,1)+" px</b></div><div>Winkel<b>"+fAng(z.as)+"</b></div><div>Größe<b>"+fSize(z.k)+"</b></div><div>Vergleich<b>≈ "+fCmp(z.k,0)+"</b></div>";
+if(c)h+="<div style=\"grid-column:1/-1\">Fläche<b>"+fArea(z.k)+" (≈ "+fCmp(z.k,1)+")</b></div>";$("lv4").innerHTML=h;
+if(px<5)$("lv4").innerHTML+='<div class="box y" style="grid-column:1/-1">Unter 5 px – von Bildrauschen dominiert.</div>'}
+var drag=null;
+function cancelM(){if(S.cur||drag){S.cur=null;drag=null;$("lv4").innerHTML="<div>Laufende Messung abgebrochen</div>";drawAll()}}
+cv.oncontextmenu=function(e){e.preventDefault()};
+cv.onmousedown=function(e){if(e.button===1)e.preventDefault()};
+cv.onpointerdown=function(e){if(!S.img)return;if(e.button===2){cancelM();return}if(e.button!==0&&e.button!==1)return;cv.setPointerCapture(e.pointerId);var p=toI(e);
+ if(e.button===1||S.tool==="h"){e.preventDefault();drag={pan:1,x:p.sx,y:p.sy,vx:S.v.x,vy:S.v.y};return}
+ S.cur={t:S.tool,a:{x:p.x,y:p.y},b:{x:p.x,y:p.y}};drag={};liveVals(S.cur)};
+cv.onpointermove=function(e){if(!drag)return;var p=toI(e);if(drag.pan){S.v.x=drag.vx+p.sx-drag.x;S.v.y=drag.vy+p.sy-drag.y}else if(S.cur){S.cur.b={x:p.x,y:p.y};liveVals(S.cur)}drawAll()};
+cv.onpointerup=function(){if(drag&&!drag.pan&&S.cur){if(len(S.cur)>=.5){S.cur.col=COL[S.shapes.length%6];S.shapes.push(S.cur)}S.cur=null}drag=null;upd()};
+cv.onwheel=function(e){e.preventDefault();var p=toI(e);zoomAt(S.v.s*(e.deltaY<0?1.2:1/1.2),p.sx,p.sy)};
+function setTool(t){S.tool=t;document.querySelectorAll("[data-t]").forEach(function(x){x.classList.toggle("sel",x.dataset.t===t)})}
+function undo(){if(!S.shapes.length)return;S.shapes.pop();$("lv4").innerHTML="<div>Letzte Messung gelöscht</div>";upd()}
+document.addEventListener("keydown",function(e){if(S.step!==3||e.ctrlKey||e.metaKey||e.altKey)return;var tn=e.target.tagName;if(tn==="INPUT"||tn==="SELECT"||tn==="TEXTAREA")return;
+ var k=e.key,h=true,c=cv.width/2,m=cv.height/2;
+ if(k==="Escape")cancelM();else if(k==="l"||k==="L")setTool("l");else if("kKcC".indexOf(k)>-1)setTool("c");else if("vVhH".indexOf(k)>-1)setTool("h");
+ else if(k==="f"||k==="F")fit();else if(k==="1")zoomAt(1,c,m);else if(k==="+"||k==="=")zoomAt(S.v.s*1.25,c,m);else if(k==="-"||k==="_")zoomAt(S.v.s*.8,c,m);
+ else if(k==="Backspace"||k==="Delete")undo();
+ else if(k==="ArrowLeft"){S.v.x+=40;drawAll()}else if(k==="ArrowRight"){S.v.x-=40;drawAll()}else if(k==="ArrowUp"){S.v.y+=40;drawAll()}else if(k==="ArrowDown"){S.v.y-=40;drawAll()}
+ else h=false;if(h)e.preventDefault()});
+function results(c){var o=calc(),ok=o.sc>0&&o.dkm>0;$("res").innerHTML=S.shapes.length&&ok?"<table><tr><th></th><th>Art</th><th>Pixel</th><th>Winkel</th><th>Größe (Spanne)</th><th>Fläche (Kreis)</th><th>Details</th></tr>"+S.shapes.map(function(s,i){var px=len(s),z=size(o,px),ci=s.t==="c";
+return '<tr><td><span class="sw" style="background:'+s.col+'"></span>#'+(i+1)+"</td><td>"+(ci?"Kreis Ø":"Linie")+"</td><td>"+fx(px,1)+"</td><td>"+fAng(z.as)+"</td><td><b>"+fSize(z.k)+"</b><br>("+fSize(z.lo)+" – "+fSize(z.hi)+")</td><td>"+(ci?fArea(z.k):"–")+"</td><td>"+details(z.k,ci)+"</td></tr>"}).join("")+"</table>":'<p class="hint">'+(ok?"Noch keine Messung.":"Ohne gültigen Maßstab und Entfernung gibt es keine Ergebnisse – siehe Schritte 2 und 3.")+'</p>';
+var ch=S.orig==="yes"?"unverändert":S.orig==="crop"?"zugeschnitten (Maßstab unverändert)":S.orig==="no"?"verändert (Faktor "+fmt(o.ratio)+", "+o.rsrc+($("cropToo").checked?", zusätzlich zugeschnitten":"")+")":"nicht angegeben";
+var scTxt=o.psUse?"aus Plate-Solve":fmt(o.efl)+" mm eff. Brennweite, "+fmt(o.epx)+" µm eff. Pixel";
+$("sum").innerHTML='<div class="box i">Dein Ergebnis beruht auf: Maßstab <b>'+fx(o.sc,4)+' ″/px</b> ('+scTxt+'), Entfernung <b>'+(SOL()?fKm(o.dkm):fLy(o.dly))+'</b> ('+o.span+', '+(S.cat!=null&&!SOL()?'Katalogwert, Quelle: '+DSO[S.cat][3]+' – bitte prüfen':'Eingabe von dir')+'), Bild <b>'+ch+'</b>. Größen exakt nach 2 · d · tan(θ/2).</div>'+c.map(function(x){return '<div class="box '+x.l+'">'+x.m+'</div>'}).join("")}
+// ===== Katalog =====
+function NK(s){return String(s).toUpperCase().replace(/[\s\-_]/g,"")}
+function findDSO(q){var k=NK(q),i,j;if(k.length<2)return -1;
+ for(i=0;i<DSO.length;i++){if(NK(DSO[i][0])===k||NK(DSO[i][0].split(" – ")[0])===k)return i;for(j=0;j<DSO[i][5].length;j++)if(NK(DSO[i][5][j])===k)return i}
+ if(k.length>=5)for(i=0;i<DSO.length;i++)if(NK(DSO[i][0]).indexOf(k)>-1)return i;return -1}
+function catBox(){var e=$("catInfo");if(S.cat==null){e.innerHTML="";return}var c=DSO[S.cat];
+ e.innerHTML='<div class="box y">Katalogwert für <b>'+c[0]+'</b>: '+fLy(c[1])+' ± '+fLy(c[2])+' (≈ '+fmt(c[2]/c[1]*100,2)+' %) · Quelle: '+c[3]+'<br><span style="color:var(--m)">Richtwert – Entfernungen streuen je nach Quelle teils stark. Bitte gegen SIMBAD/Gaia prüfen.</span></div>'}
+function catPick(){var v=$("cat").value,i=findDSO(v);
+ if(!v.trim()){S.cat=null;catBox();upd();return}
+ if(i<0){S.cat=null;$("catInfo").innerHTML='<p class="echo">Nicht im Katalog – Entfernung bitte selbst eintragen.</p>';upd();return}
+ var c=DSO[i];S.cat=i;$("ot").value=c[4];$("d").value=c[1].toLocaleString("de-DE");$("du").value="Lj";$("er").value=String(Math.round(c[2]/c[1]*1000)/10).replace(".",",");catBox();upd()}
+// ===== Init =====
+$("catL").innerHTML=DSO.map(function(c){return '<option value="'+c[0]+'">'+fLy(c[1])+'</option>'}).join("");
+$("cat").addEventListener("change",catPick);$("cat").addEventListener("input",function(){if(findDSO(this.value)>-1||!this.value.trim())catPick()});
+["d","du","er"].forEach(function(id){$(id).addEventListener("input",function(){if(S.cat!=null){S.cat=null;$("catInfo").innerHTML='<p class="echo">Katalogwert überschrieben – es gilt deine Eingabe.</p>'}})});
+$("st").onclick=function(e){if(e.target.dataset.g)go(+e.target.dataset.g)};
+$("nx").onclick=function(){if(S.step===2&&!(calc().dkm>0)){upd();$("c3").scrollIntoView({block:"nearest"});return}go(S.step+1)};$("bk").onclick=function(){go(S.step-1)};
+$("tel").innerHTML=TELS.map(function(t,i){return "<option value="+i+">"+t[0]+"</option>"}).join("")+"<option value=m>Manuell …</option>";
+$("tel").onchange=function(){if(this.value!=="m"){$("fl").value=String(TELS[this.value][1]).replace(".",",")}upd()};
+var h="",flat=[];Object.keys(CAMS).forEach(function(k){h+="<optgroup label='"+k+"'>";CAMS[k].forEach(function(c){h+="<option value="+flat.length+">"+c[0]+" "+c[1]+"</option>";flat.push(c)});h+="</optgroup>"});$("cam").innerHTML=h+"<option value=m>Manuell …</option>";
+$("cam").onchange=function(){if(this.value!=="m"){var c=flat[this.value];$("sp").value=c[2];$("sw").value=String(c[4]).replace(".",",");$("pxd").value=String(Math.round(c[4]/c[2]*1e6)/1000).replace(".",",");$("col").value=c[5]}upd()};
+$("pm").addEventListener("change",function(){if(this.value==="d"&&!(N("pxd")>0)){var v=N("sw")/N("sp")*1000;if(v>0)$("pxd").value=String(Math.round(v*1000)/1000).replace(".",",")}upd()});
+$("sb").innerHTML=BODY.map(function(b,i){return "<option value="+i+">"+b[0]+"</option>"}).join("");
+function setSolar(){var b=BODY[+$("sb").value],st=$("stg").value;if(st==="f")return;
+ var km=st==="0"?b[1]:st==="2"?b[3]:b[2];$("dkm").value=String(km).replace(".",",");$("dau").value=(km/KMAU).toFixed(6).replace(".",",")}
+$("sb").addEventListener("change",function(){if(BODY[+this.value][1]===1000)$("stg").value="f";setSolar();upd()});
+$("stg").addEventListener("change",function(){setSolar();upd()});
+$("dkm").addEventListener("input",function(){$("stg").value="f";var km=PN(this.value,true);if(isFinite(km)&&km>0)$("dau").value=(km/KMAU).toFixed(6).replace(".",",");upd()});
+$("dau").addEventListener("input",function(){$("stg").value="f";var au=PN(this.value,true);if(isFinite(au)&&au>0)$("dkm").value=(au*KMAU).toFixed(1).replace(".",",");upd()});
+$("ot").addEventListener("change",function(){if(this.value==="s")setSolar();upd()});
+setSolar();
+$("tel").value=0;$("tel").onchange();$("cam").onchange();
+document.querySelectorAll(".in,#fF,#fW,#chgT,#cropToo").forEach(function(e){e.oninput=upd;e.onchange=upd});
+document.querySelectorAll("[data-o]").forEach(function(b){b.onclick=function(){S.orig=b.dataset.o;upd()}});
+document.querySelectorAll("[data-t]").forEach(function(b){b.onclick=function(){setTool(b.dataset.t)}});
+["shL","shG","au"].forEach(function(id){$(id).onchange=function(){upd()}});
+$("fit").onclick=fit;$("one").onclick=function(){zoomAt(1,cv.width/2,cv.height/2)};$("undo").onclick=undo;
+$("clr").onclick=function(){if(S.shapes.length<2||confirm("Alle Messungen löschen?")){S.shapes=[];upd()}};
+$("demo").onclick=sample;
+var dr=$("drop");dr.onclick=function(){$("file").click()};$("file").onclick=function(e){e.stopPropagation()};$("file").onchange=function(){loadFile(this.files[0]);this.value=""};
+dr.ondragover=function(e){e.preventDefault();dr.classList.add("h")};dr.ondragleave=function(){dr.classList.remove("h")};dr.ondrop=function(e){e.preventDefault();dr.classList.remove("h");loadFile(e.dataTransfer.files[0])};
+function profs(){try{return JSON.parse(localStorage.getItem("lsmProfiles")||"{}")}catch(e){return{}}}
+function fillP(){var p=profs();$("ldP").innerHTML="<option value=''>Profil laden …</option>"+Object.keys(p).map(function(k){var n=k.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");return '<option value="'+n+'">'+n+"</option>"}).join("")}
+$("svP").onclick=function(){var n=prompt("Profilname:");if(!n)return;try{var p=profs();p[n]={};["fl","acc","bar","pm","pxd","sw","sp","col","deb"].forEach(function(i){p[n][i]=$(i).value});localStorage.setItem("lsmProfiles",JSON.stringify(p));fillP()}catch(e){alert("Speichern im Browser nicht möglich.")}};
+$("ldP").onchange=function(){var p=profs()[this.value];if(p){for(var k in p)if($(k))$(k).value=p[k];upd()}};
+try{fillP()}catch(e){}
+window.onresize=function(){if(S.step===3)fit()};
+info();go(0);
+</script></body></html>
