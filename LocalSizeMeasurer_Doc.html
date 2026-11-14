@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>LocalSizeMeasurer – Benutzerdokumentation</title>
+<style>
+  :root {
+    --bg-color: #181b1f;
+    --card-bg: #22262c;
+    --card-border: #323842;
+    --accent: #2e86de;
+    --accent-hover: #489bf0;
+    --accent-cyan: #00d2d3;
+    --accent-gold: #feca57;
+    --accent-green: #1dd1a1;
+    --text-primary: #f1f2f6;
+    --text-secondary: #a4b0be;
+    --code-bg: #111417;
+    --kbd-bg: #2f3542;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e272e 0%, #2f3542 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 30px 40px;
+  }
+  header h1 {
+    margin: 0 0 6px 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+  }
+  header p.subtitle {
+    margin: 0;
+    color: var(--accent-cyan);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .version-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px 60px 20px;
+  }
+  h2 {
+    color: #ffffff;
+    font-size: 21px;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 8px;
+    margin-top: 36px;
+    margin-bottom: 16px;
+  }
+  h3 {
+    color: var(--accent-cyan);
+    font-size: 17px;
+    margin-top: 24px;
+    margin-bottom: 10px;
+  }
+  p, li {
+    color: var(--text-secondary);
+  }
+  strong, b {
+    color: #ffffff;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .highlight-card {
+    background: #1e2a38;
+    border: 1px solid var(--accent);
+    border-left: 5px solid var(--accent);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+  .badge-deepsky { background: #5f27cd; color: #fff; }
+  .badge-solar { background: #ff9f43; color: #222; }
+  .badge-online { background: #00d2d3; color: #111; }
+  .badge-tool { background: #1dd1a1; color: #111; }
+
+  kbd {
+    background: var(--kbd-bg);
+    border: 1px solid #485460;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    color: #fff;
+    display: inline-block;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    padding: 2px 6px;
+    margin: 0 2px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: var(--card-bg);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 14px;
+  }
+  th {
+    background: #1b1e22;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  code {
+    background: var(--code-bg);
+    color: var(--accent-gold);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+    color: #dcdde1;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+  }
+  .formula-box {
+    background: #14171a;
+    border-left: 4px solid var(--accent-cyan);
+    padding: 12px 18px;
+    margin: 14px 0;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+    color: #f1f2f6;
+  }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  li { margin-bottom: 6px; }
+  a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+    color: var(--accent-hover);
+  }
+  footer {
+    border-top: 1px solid var(--card-border);
+    text-align: center;
+    padding: 25px;
+    color: #718093;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LocalSizeMeasurer <span class="version-tag">v2.3</span></h1>
+  <p class="subtitle">Interaktives physikalisches Mess-Lineal &amp; Fl&auml;chenberechnung f&uuml;r PixInsight</p>
+</header>
+
+<main>
+
+  <div class="highlight-card">
+    <strong>&Uuml;berblick:</strong> <code>LocalSizeMeasurer</code> erm&ouml;glicht das interaktive Ziehen von Messlinien und Kreisfl&auml;chen direkt auf astronomischen Aufnahmen in PixInsight. Aus den Aufnahmeparametern (bevorzugt die Plate-Solve-Skala, sonst Brennweite, Sensor-Pixelgr&#246;&#223;e und Binning) und der Objektentfernung werden Pixelma&szlig;st&auml;be, Winkelausdehnungen sowie <b>echte physikalische Raumdimensionen</b> und Fl&auml;chen berechnet &ndash; f&uuml;r Deepsky-Nebel, Galaxien, Planeten und Mondstrukturen.
+  </div>
+
+  <h2>1. Schnellanleitung (Workflow)</h2>
+  <p><b>Installation:</b> Die Script-Datei (<code>.js</code>) und <code>LocalSizeMeasurer_Doc.html</code> m&#252;ssen im <b>selben Ordner</b> liegen, sonst findet der Button &#8222;Dokumentation&#8220; die Hilfe nicht.</p>
+  <ol>
+    <li><b>Bild &ouml;ffnen:</b> &Ouml;ffnen Sie ein beliebiges astronomisches Bild (FITS oder XISF) in PixInsight und aktivieren Sie die Zielansicht.</li>
+    <li><b>Skript starten:</b> Starten Sie <code>Utilities &gt; LocalSizeMeasurer</code>. Das Skript liest automatisch Header-Metadaten (Brennweite, Pixelgr&ouml;&szlig;e, Objektname, Astrometrie) aus.</li>
+    <li><b>Modus &amp; Entfernung w&auml;hlen:</b> Best&auml;tigen oder w&auml;hlen Sie im Parameter-Dialog den passenden Modus (<i>Deepsky</i> oder <i>Sonnensystem</i>). Nutzen Sie die <b>Online-Suche (SIMBAD/NED)</b> oder den integrierten Referenzkatalog.</li>
+    <li><b>Ma&#223;stab pr&#252;fen:</b> Der Parameter-Dialog zeigt die Skala aus Plate-Solve und aus Brennweite/Pixelgr&#246;&#223;e. Bei Abweichungen &#252;ber 2 % erscheint eine orangefarbene Warnung, wenn m&#246;glich mit der wahrscheinlichen Ursache (siehe Abschnitt 3). Ohne Plate-Solve muss die Frage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; beantwortet werden.</li>
+    <li><b>Interaktiv Messen:</b> Im Viewer-Fenster k&ouml;nnen Sie mit der Maus Strecken (Taste <kbd>L</kbd>) oder Kreisfl&auml;chen (Taste <kbd>K</kbd>) ziehen.</li>
+    <li><b>Exportieren:</b> Mit <b>&bdquo;Bild speichern &hellip;&ldquo;</b> exportieren Sie die Ansicht mit allen sichtbaren Annotationen, Skalen, Legende und Metadaten-Banner als PNG oder JPEG.</li>
+  </ol>
+
+  <h2>2. Die beiden Betriebsmodi</h2>
+
+  <div class="card">
+    <h3><span class="badge badge-deepsky">Deepsky</span> Deepsky-Modus (Lichtjahre &amp; Raumdimensionen)</h3>
+    <p>Konzipiert f&uuml;r Gasnebel, Sternentstehungsgebiete, Molek&uuml;lwolken, Sternhaufen und Galaxien au&szlig;erhalb des Sonnensystems.</p>
+    <ul>
+      <li><b>Entfernungsma&szlig;stab:</b> Lichtjahre (lj), Lichttage, Lichtstunden und Astronomische Einheiten (AE).</li>
+      <li><b>Fl&auml;chenma&szlig;stab:</b> Quadrat-Lichtjahre (lj&sup2;).</li>
+      <li><b>Vergleichsgr&ouml;&szlig;e:</b> Vielfaches des Sonnensystems (definiert als 100 AE Scheibendurchmesser, Fl&auml;che ca. 7.854 AE&sup2;).</li>
+      <li><b>Objekt-Erkennung:</b> Integrierter Gaia-EDR3- und Cepheiden-Katalog sowie direkte <b>SIMBAD-TAP- und NED-Online-Abfrage</b>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge badge-solar">Sonnensystem</span> Sonnensystem-Modus (Kilometer &amp; Erddurchmesser)</h3>
+    <p>Konzipiert f&uuml;r Aufnahmen der Sonne, des Mondes, der Planeten, Asteroiden und Kometen.</p>
+    <ul>
+      <li><b>Messwerte:</b> Gemessene Strecken, Durchmesser und Radien nur in Kilometern (km). Astronomische Einheiten (AE) erscheinen nur bei der <b>Objektentfernung</b> (Eingabefeld, Kopf des Messfensters, Konsole, Banner).</li>
+      <li><b>Fl&auml;chenma&szlig;stab:</b> Quadratkilometer (km&sup2;).</li>
+      <li><b>Vergleichsgr&ouml;&szlig;e:</b> Vielfaches des <b>Erddurchmessers</b> (12.742 km) bzw. der <b>Erdscheiben-Fl&auml;che</b> (A<sub>&#8853;</sub> = &#960; &#183; R<sub>&#8853;</sub>&#178; &#8776; 1,275 &#215; 10<sup>8</sup> km&#178;).</li>
+      <li><b>Dynamische Abst&auml;nde:</b> Vordefinierte Stufen f&uuml;r <i>Minimal</i> (Erdn&auml;he/Perig&auml;um/Opposition), <i>Mittelwert</i> und <i>Maximal</i> (Erdferne/Apog&auml;um/Konjunktion) sowie freie Eingabe. Die Werte sind Richtwerte (bei Planeten ist &#8222;Mittelwert&#8220; die Mitte zwischen Minimum und Maximum); f&#252;r genaue Messungen die tagesaktuelle Entfernung aus einer Ephemeride (z. B. JPL Horizons) als freie Eingabe verwenden.</li>
+      <li><b>Selbstkontrolle beim Mond:</b> Mond- und Planetenbilder lassen sich mit dem ImageSolver meist nicht l&#246;sen, der Ma&#223;stab h&#228;ngt dann allein an Brennweite und Pixelgr&#246;&#223;e. Eine Linie &#252;ber den ganzen Monddurchmesser muss ca. <b>3.474 km</b> ergeben (scheinbar 29,4&#8242; bis 33,5&#8242; je nach Entfernung). Weicht das Ergebnis deutlich ab, stimmen Brennweite oder Pixelgr&#246;&#223;e nicht &#8211; z. B. weil sie im Header fehlten und Werte der letzten Sitzung vorbelegt wurden.</li>
+    </ul>
+  </div>
+
+  <h2>3. Ma&#223;stab: Plate-Solve oder Optik</h2>
+  <div class="card">
+    <p>Jeder Messwert ergibt sich aus <b>Entfernung &#215; Winkel</b>. Den Winkel pro Pixel (den Bildma&#223;stab) bezieht das Script aus einer von zwei Quellen:</p>
+    <ul>
+      <li><b>Plate-Solve (empfohlen):</b> Ist im Bild eine astrometrische L&#246;sung vorhanden (z. B. durch den <i>ImageSolver</i>), liest das Script daraus den Ma&#223;stab. Gepr&#252;ft werden in dieser Reihenfolge: die L&#246;sung des Bildfensters, die XISF-Eigenschaft <code>AstrometricSolution:LinearTransformationMatrix</code>, <code>Astrometry:Resolution</code> und die FITS-WCS-Keywords (<code>s = &#8730;|det CD| &#183; 3600</code>, alternativ CDELT &#215; PC). Diese Skala ist nur dann richtig, wenn die L&#246;sung <b>zum aktuellen Bild</b> geh&#246;rt, also nach dem letzten Resampling, Super-Pixel-Debayer oder Drizzle erstellt oder von PixInsight mitgef&#252;hrt wurde.</li>
+      <li><b>Optik:</b> Ohne L&#246;sung wird <code>s = p &#215; 206,265 / F</code> aus Pixelgr&#246;&#223;e und Brennweite berechnet, gegebenenfalls mal dem Faktor aus der R&#252;ckfrage (siehe unten).</li>
+    </ul>
+
+    <h3>Was Bearbeitungsschritte mit Header und Ma&#223;stab machen</h3>
+    <p>Die ersten vier Zeilen sind mit PixInsight 1.9.x an echten Aufnahmen gepr&#252;ft (ASI2600MC, ASI533MC, ASI585MC); Zuschnitt und Kamera-Binning folgen aus der FITS-Konvention:</p>
+    <table>
+      <thead>
+        <tr><th>Bearbeitung</th><th>Bildpixel</th><th>Pixelgr&#246;&#223;e im Header (XPIXSZ)</th><th>Plate-Solve im Header</th><th>Richtig im Script</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Debayer VNG / Bilinear</td><td>unver&#228;ndert</td><td>unver&#228;ndert</td><td>bleibt g&#252;ltig</td><td>nichts zu tun</td></tr>
+        <tr><td>Debayer SuperPixel</td><td>halbe Breite und H&#246;he</td><td><b>nicht</b> angepasst</td><td>wird &#252;bernommen, ist aber <b>veraltet</b></td><td>&#8222;Nein&#8220;, Faktor 2 (vorbelegt)</td></tr>
+        <tr><td>IntegerResample 50 %</td><td>halbe Breite und H&#246;he</td><td>angepasst (z. B. 3,8 &#8594; 7,6 &#181;m)</td><td>geht verloren</td><td>&#8222;Ja&#8220;</td></tr>
+        <tr><td>Drizzle 2&#215; (WBPP/DrizzleIntegration)</td><td>doppelte Breite und H&#246;he</td><td>angepasst (z. B. 2,9 &#8594; 1,45 &#181;m)</td><td>keine</td><td>&#8222;Ja&#8220;</td></tr>
+        <tr><td>Zuschnitt (Crop)</td><td>Ausschnitt</td><td>unver&#228;ndert</td><td>Skala bleibt richtig</td><td>&#8222;Ja&#8220;</td></tr>
+        <tr><td>Binning in der Kamera</td><td>weniger Pixel</td><td>FITS-Konvention: inklusive Binning</td><td>&#8211;</td><td>Hinweis pr&#252;fen</td></tr>
+      </tbody>
+    </table>
+    <p>PixInsight verh&#228;lt sich hier also <b>nicht einheitlich</b>. Deshalb fragt das Script nach, statt still einen Faktor anzuwenden. In jedem Fall gilt: Ein mit dem ImageSolver neu gel&#246;stes Bild hat immer den richtigen Ma&#223;stab.</p>
+
+    <h3>Was das Script dazu pr&#252;ft</h3>
+    <ul>
+      <li><b>Beide Skalen im Vergleich:</b> Der Parameter-Dialog zeigt beide Werte. Weichen sie um mehr als 2 % ab, erscheint eine orangefarbene Warnung, im Parameter-Dialog und im Kopf des Messfensters. Die Quelle des Ma&#223;stabs steht im Messfenster, in der Konsole und im Banner des exportierten Bildes.</li>
+      <li><b>Faktor-Erkennung:</b> Liegt das Verh&#228;ltnis &#8222;gel&#246;ste Skala &#247; Optik-Skala&#8220; nahe 2, 3, 4 oder 0,5 (Toleranz 3 %), nennt die Warnung die wahrscheinliche Ursache (z. B. Binning 2&#215;2, Super-Pixel-Debayer, Verkleinerung auf 50 %, 2&#215;-Drizzle oder eine fehlende Barlow) und die Abhilfe.</li>
+      <li><b>Veraltete L&#246;sung erkennen:</b> Das Script vergleicht die Bildgr&#246;&#223;e mit <code>NAXIS1</code>/<code>NAXIS2</code> im Header (ersatzweise <code>IMAGEW</code>/<code>IMAGEH</code>). Ist das Bild in beiden Richtungen um denselben Faktor kleiner oder gr&#246;&#223;er und hat das Bildfenster keine eigene aktive L&#246;sung, stammen die Plate-Solve-Daten im Header von vor der &#196;nderung. Sie werden dann <b>nicht verwendet</b>; die Konsole zeigt sie als &#8222;Veraltet&#8220; mit dem umgerechneten Wert an. Weichen Breite und H&#246;he unterschiedlich ab, gilt das als Zuschnitt und &#228;ndert nichts am Ma&#223;stab.</li>
+      <li><b>R&#252;ckfrage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220;</b> (nur ohne verwendbaren Plate-Solve): <i>Ja</i> = Originalaufl&#246;sung oder die Pixelgr&#246;&#223;e oben enth&#228;lt die &#196;nderung schon; <i>Nein</i> = Bild ver&#228;ndert, die Pixelgr&#246;&#223;e oben gilt f&#252;r den Sensor &#8211; dann den Faktor angeben, um den die Bildpixel gr&#246;&#223;er wurden (2 bei Binning 2&#215;2, Super-Pixel oder 50 %, 0,5 bei 2&#215;-Drizzle); <i>Wei&#223; ich nicht</i> = Messung m&#246;glich, aber als &#8222;Ma&#223;stab ungepr&#252;ft&#8220; gekennzeichnet. Ohne Antwort l&#228;sst sich der Dialog nicht best&#228;tigen. Den aus der Bildgr&#246;&#223;e erkannten Faktor tr&#228;gt das Script als Vorschlag ins Faktorfeld ein.</li>
+      <li><b>Warnung vor doppelter Korrektur:</b> Wird &#8222;Nein&#8220; mit Faktor gew&#228;hlt, obwohl die Pixelgr&#246;&#223;e unver&#228;ndert der Header-Wert ist, warnt das Script &#8211; der Header k&#246;nnte die &#196;nderung schon enthalten (z. B. XPIXSZ nach IntegerResample oder Drizzle). Bei erkanntem Super-Pixel-Debayer entf&#228;llt diese Warnung, weil PixInsight XPIXSZ dort nicht anpasst.</li>
+      <li><b>Debayer-Hinweis:</b> Aus <code>BAYERPAT</code> bzw. <code>PCL:CFASourcePattern</code> und <code>PCL:CFASourceInterpolation</code> erkennt das Script, ob ein Bild debayert wurde und mit welchem Verfahren. Normales Debayer (VNG, Bilinear) &#228;ndert den Ma&#223;stab nicht, Super-Pixel-Debayer verdoppelt ihn.</li>
+      <li><b>Drizzle-Hinweis:</b> Drizzle-Ergebnisse werden an <code>PCL:Signature:Integration</code> bzw. <code>Image:Id</code> erkannt. Die Pixelgr&#246;&#223;e im Header ist dort bereits an den Drizzle-Ma&#223;stab angepasst; zur Kontrolle mit der Sensor-Pixelgr&#246;&#223;e laut Datenblatt vergleichen.</li>
+      <li><b>Exakte &#220;bereinstimmung:</b> Stimmen Optik und Plate-Solve auf unter 0,05 % &#252;berein, weist das Script darauf hin, dass die Aufnahmesoftware (z. B. ASIAIR) die Brennweite vermutlich aus ihrem eigenen Plate-Solve berechnet hat. Dann ist der Vergleich keine unabh&#228;ngige Pr&#252;fung.</li>
+      <li><b>Widerspr&#252;chliche Quellen:</b> Liefern mehrere Plate-Solve-Quellen Skalen, die um mehr als 2 % voneinander abweichen, erscheint ein Hinweis; verwendet wird die erste (in der oben genannten Reihenfolge).</li>
+      <li><b>Option &#8222;Plate-Solve-Skala f&#252;r die Messung verwenden&#8220;:</b> Sie ist an, sobald eine verwendbare L&#246;sung vorhanden ist. Wer sie abschaltet, rechnet bewusst mit Brennweite und Pixelgr&#246;&#223;e.</li>
+      <li><b>Binning:</b> FITS-Header (<code>XPIXSZ</code>) nennen die Pixelgr&#246;&#223;e nach g&#228;ngiger Konvention schon inklusive Binning (z. B. N.I.N.A.), XISF-Eigenschaften die physische Pixelgr&#246;&#223;e. Mit Plate-Solve entscheidet das Script anhand der gel&#246;sten Skala, welche Variante stimmt. Ohne L&#246;sung erscheint bei Binning ein Hinweis, den Wert zu pr&#252;fen.</li>
+      <li><b>Brennweite:</b> Die XISF-Eigenschaft <code>Instrument:Telescope:FocalLength</code> ist in Metern angegeben und wird automatisch in Millimeter umgerechnet. Ein 14-mm-Weitwinkelobjektiv bleibt dabei 14 mm.</li>
+      <li><b>Fehlende Header-Werte:</b> Fehlen Brennweite oder Pixelgr&#246;&#223;e im Header (und gibt es keine L&#246;sung), werden die Werte der letzten Sitzung vorbelegt und ausdr&#252;cklich als ungepr&#252;ft gekennzeichnet.</li>
+      <li><b>Konsolenbericht:</b> Alle FITS-Keywords und XISF-Eigenschaften (Matrizen und Vektoren mit Zahlenwerten), die Bildgr&#246;&#223;e laut Header, alle gefundenen Plate-Solve-Quellen (verwendet bzw. veraltet) und die berechnete Skala stehen zur Kontrolle in der Konsole.</li>
+    </ul>
+    <p><b>Tipp:</b> Wenn Sie sich bei Optik, Binning oder Bearbeitung nicht sicher sind, l&#246;sen Sie das Bild <b>nach dem letzten gr&#246;&#223;en&#228;ndernden Schritt</b> mit dem ImageSolver. Dann ist der Ma&#223;stab in jedem Fall korrekt.</p>
+  </div>
+
+  <h2>4. Online-Objektsuche (SIMBAD TAP &amp; NED)</h2>
+  <div class="card">
+    <p>Deepsky-Entfernungen lassen sich direkt &#252;ber das Netzwerk abfragen (PJSR-Download-Engine, <code>FileDownload</code> mit <code>NetworkTransfer</code>-Fallback). Die Entfernung bleibt immer ein <b>Richtwert mit Unsicherheit</b>. Das Script zeigt Methode, Quelle, Streuung und gegebenenfalls eine Warnung an.</p>
+    <ul>
+      <li><b>SIMBAD TAP (CDS Stra&#223;burg, Harvard CFA):</b> Synchrone ADQL-Abfragen auf <code>basic</code>, <code>ident</code> und <code>mesDistance</code>. Probiert werden mehrere Namensvarianten, z. B. &#8222;NGC 7000&#8220;, &#8222;NGC7000&#8220;, &#8222;Sh 2-132&#8220; oder &#8222;NAME Orion Nebula&#8220;.</li>
+      <li><b>NED (NASA/IPAC):</b> Fallback f&#252;r extragalaktische Objekte. Es werden nur eindeutig erkennbare Felder verwendet (explizite Distanz in Mpc oder die Rotverschiebung), nichts wird erraten.</li>
+      <li><b>Zeit- und Fehlerbudget:</b> Die gesamte Suche dauert h&#246;chstens ca. 75 Sekunden. Nach drei Verbindungsfehlern in Folge gilt das Netz als nicht erreichbar, und das Script f&#228;llt auf den lokalen Katalog zur&#252;ck. W&#228;hrend einer Anfrage reagiert PixInsight nicht, ein Abbrechen ist technisch nicht m&#246;glich.</li>
+      <li><b>Plausibilit&#228;tspr&#252;fung:</b> Werte au&#223;erhalb von 1 Lichtjahr bis 20 Milliarden Lichtjahren werden verworfen. Bei Objekten aus dem lokalen Katalog wird der Online-Wert zus&#228;tzlich mit dem Katalogwert verglichen; weicht er um mehr als den Faktor 1,5 ab, erscheint eine deutliche Warnung.</li>
+      <li><b>Rohdaten-Protokollierung:</b> Anfragen und (gek&#252;rzte) Rohantworten stehen in der PixInsight-Konsole.</li>
+      <li><b>Offline-Fallback:</b> Ohne Verbindung oder ohne Treffer greift der lokale Katalog (inkl. NGC 6820, NGC 2359, Sh2-132 u. a.).</li>
+      <li><b>Objektname aus dem Header:</b> Kennungen wie M42 oder NGC 7000 werden auch innerhalb l&#228;ngerer Namen erkannt (&#8222;NGC 7000 / IC 5070&#8220;). Reine Namen wie &#8222;Orion&#8220; oder &#8222;Ring&#8220; z&#228;hlen nur bei exakter &#220;bereinstimmung. Ist das Objekt nicht im Katalog, warnt der Dialog, dass die vorbelegte Entfernung nicht gepr&#252;ft ist.</li>
+    </ul>
+
+    <h3>Methoden-Kaskade</h3>
+    <ul>
+      <li><b>1. Gaia-Parallaxe (<i>&#960;</i> in mas):</b> Wird nur bei Signal-zu-Rausch &#8805; 5 als belastbar akzeptiert. Bei 3 bis 5 ist die Entfernung ausdr&#252;cklich als unsicher markiert.
+        <div style="background: var(--code-bg); padding: 6px 12px; border-radius: 4px; margin: 6px 0; font-family: Consolas, monospace;">
+          Distanz [pc] = 1000 / &#960; [mas] &nbsp;&rArr;&nbsp; Distanz [lj] = Distanz [pc] &#215; 3,26156
+        </div>
+        Eine Nullpunktkorrektur der Parallaxe wird nicht angewendet.
+      </li>
+      <li><b>2. Fachliteratur (SIMBAD <code>mesDistance</code>):</b> Es werden nur die Einheiten pc, kpc, Mpc, Gpc und Lichtjahre akzeptiert; andere Einheiten (z. B. Distanzmodul in mag) werden &#252;bersprungen. Aus mehreren Ver&#246;ffentlichungen wird der <b>Median</b> gebildet und die Streuung angezeigt. Streuen die Werte um mehr als den Faktor 1,5, gibt es eine Warnung.</li>
+      <li><b>3. NED:</b> Eine explizit angegebene Distanz (Mpc) wird &#252;bernommen. Sonst gilt der Hubble-Fluss (<i>D</i> = <i>v</i> / <i>H</i><sub>0</sub>, <i>H</i><sub>0</sub> = 70 km/s/Mpc) nur f&#252;r 0,003 &#8804; <i>z</i> &#8804; 0,1, mit einer Unsicherheit von ca. &#177; 4,3 Mpc durch Eigenbewegungen. Au&#223;erhalb dieses Bereichs wird bewusst nichts berechnet.</li>
+      <li><b>4. Sterne im Umkreis (nur Nebel und Haufen):</b> Nur wenn SIMBAD das Objekt als Nebel oder Haufen f&#252;hrt und keine Distanz kennt, wird der Median der Parallaxen gut vermessener Sterne (S/N &gt; 5) im Umkreis von 2,4&#8242; gebildet. Die Zugeh&#246;rigkeit zum Objekt ist ungepr&#252;ft, das Ergebnis wird als unsicher markiert. Bei Galaxien wird diese Methode nie benutzt.</li>
+      <li><b>5. Lokaler Katalog:</b> Kuratierte Richtwerte mit Quellenangabe.</li>
+    </ul>
+
+    <h3>Eingabe von Zahlen</h3>
+    <ul>
+      <li>Dezimaltrenner ist Komma oder Punkt. Bei Entfernungen und Brennweite gelten Punkte vor genau drei Ziffern als Tausendertrenner: &#8222;2.537.000&#8220; und &#8222;3.000&#8220; (= 3000) werden so gelesen.</li>
+      <li>Bei der <b>Pixelgr&#246;&#223;e</b> ist der Punkt immer ein Dezimaltrenner (&#8222;3.75&#8220; = 3,75 &#181;m).</li>
+      <li>Ungew&#246;hnliche Werte (z. B. Entfernung unter 1 lj, Brennweite unter 5 mm, Pixelgr&#246;&#223;e &#252;ber 50 &#181;m) l&#246;sen eine R&#252;ckfrage aus.</li>
+      <li>Wird die Entfernung von Hand ge&#228;ndert, wechselt die Auswahl automatisch auf &#8222;Freie Eingabe&#8220;. Der Wert bleibt dadurch beim n&#228;chsten Start erhalten.</li>
+    </ul>
+
+    <h3>Grenzen und Genauigkeit der Kalkulation (Was man beachten sollte)</h3>
+    <div class="highlight-card" style="margin-top: 10px;">
+      <ul>
+        <li><b>2D-Projektion vs. 3D-Realit&auml;t:</b> Ein Astrofotobild zeigt stets die 2-dimensionale Projektion an der Himmelssph&auml;re. Eine gezogene Linie misst die Ausdehnung <i>senkrecht zur Sichtlinie</i>. Ist eine Struktur oder Galaxie gegen die Bildebene geneigt (z.&thinsp;B. Spiralgalaxien in Schr&auml;gansicht oder langgestreckte Nebelr&uuml;ssel), stellt das Messergebnis die Mindestgr&ouml;&szlig;e dar; die tats&auml;chliche 3D-L&auml;nge ist um den Neigungswinkel (cos &#952;) gr&ouml;&szlig;er.</li>
+        <li><b>R&auml;umliche Tiefenausdehnung bei Nebeln:</b> Gasnebel (wie der Nordamerika- oder Rosettennebel) sind riesige 3D-Gaswolken, die sich oft &uuml;ber dutzende bis hunderte Lichtjahre Tiefe erstrecken. Die angenommene Distanz bezieht sich meist auf den ionisierenden Sternhaufen im Kern.</li>
+        <li><b>Reichweite der Parallaxenmessung:</b> Bis etwa 10.000 bis 15.000 Lichtjahre liefert Gaia herausragend pr&auml;zise geometrische Distanzen. Bei noch gr&ouml;&szlig;eren Distanzen wird der Parallaxenwinkel extrem klein (&#960; &lt; 0,05 mas), wodurch die relative Unsicherheit naturgem&auml;&szlig; ansteigt.</li>
+        <li><b>Eigenbewegungen naher Galaxien (Peculiar Velocity):</b> Bei nahen Galaxien der Lokalen Gruppe (wie M31 Andromeda oder M33) &uuml;berlagern gravitative Eigenbewegungen die kosmologische Expansion. Hier sind klassische Standardkerzen (Cepheiden/TRGB) der reinen Rotverschiebung &uuml;berlegen.</li>
+        <li><b>Distanzen sind Richtwerte:</b> Je nach Methode und Ver&#246;ffentlichung k&#246;nnen Entfernungen um 5 bis 30 % schwanken. Die angezeigte Streuung ist ein Anhaltspunkt, keine Fehlergrenze im statistischen Sinn.</li>
+        <li><b>Hubble-Fluss und Sternsuche:</b> Beide Methoden sind N&#228;herungen und als solche gekennzeichnet. F&#252;r wichtige Aussagen sollte die Entfernung aus der Originalliteratur gepr&#252;ft und von Hand eingetragen werden.</li>
+        <li><b>Bildverzerrung:</b> Der Ma&#223;stab wird als &#252;ber das Bild konstant angenommen. Bei sehr gro&#223;en Feldern oder starker Verzeichnung ergeben sich am Bildrand kleine Abweichungen.</li>
+        <li><b>Tangens statt N&#228;herung:</b> Die projizierte L&#228;nge wird mit <i>L</i> = 2 &#183; <i>d</i> &#183; tan(&#952;/2) berechnet und nicht mit der Kleinwinkeln&#228;herung.</li>
+
+      </ul>
+    </div>
+  </div>
+
+  <h2>5. Tastaturk&uuml;rzel &amp; Steuerung (Cheat Sheet)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 180px;">Taste / Aktion</th>
+        <th>Funktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><kbd>L</kbd></td>
+        <td>Werkzeug <b>Linie</b> aktivieren (f&uuml;r Distanzen, Durchmesser, Filamentl&auml;ngen).</td>
+      </tr>
+      <tr>
+        <td><kbd>K</kbd></td>
+        <td>Werkzeug <b>Kreisfl&auml;che</b> aktivieren (f&uuml;r Radien, scheinbare Durchmesser und Fl&auml;chen A = &#960; &#183; r&#178;).</td>
+      </tr>
+      <tr>
+        <td><kbd>Backspace</kbd> / <kbd>Entf</kbd></td>
+        <td><b>R&uuml;ckg&auml;ngig:</b> Letzte Messung aus der Historie entfernen.</td>
+      </tr>
+      <tr>
+        <td><kbd>+</kbd> / <kbd>-</kbd></td>
+        <td>Hinein- / Herauszoomen (Faktor 1,25&times; bzw. 0,8&times;).</td>
+      </tr>
+      <tr>
+        <td><kbd>1</kbd></td>
+        <td>Zoom <b>1:1</b> (100 % Pixel-Originalgr&ouml;&szlig;e).</td>
+      </tr>
+      <tr>
+        <td><kbd>F</kbd></td>
+        <td><b>Fit:</b> Bild optimal an die aktuelle Fenstergr&ouml;&szlig;e anpassen.</td>
+      </tr>
+      <tr>
+        <td><kbd>Mausrad</kbd></td>
+        <td>Stufenloser Zoom zentriert auf den Mauszeiger.</td>
+      </tr>
+      <tr>
+        <td><kbd>Mittlere Maustaste</kbd> + Drag</td>
+        <td><b>Verschieben (Panning)</b> der Bildansicht. Alternativ: Scrollbalken oder Pfeiltasten.</td>
+      </tr>
+      <tr>
+        <td><kbd>Rechte Maustaste</kbd></td>
+        <td>Bricht die <b>laufende Messung</b> ab. Der Messmodus bleibt ge&#246;ffnet, es gehen keine Messungen verloren.</td>
+      </tr>
+      
+      <tr>
+        <td><kbd>Pfeiltasten</kbd></td>
+        <td>Bild scrollen / Bildausschnitt feinjustieren.</td>
+      </tr>
+      <tr>
+        <td><kbd>Esc</kbd></td>
+        <td>Bricht eine laufende Messung ab, sonst wird der Messmodus beendet. Gibt es noch nicht gespeicherte Messungen, fragt das Script vorher nach.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Export &amp; Datenspeicherung</h2>
+  <div class="card">
+    <p>Mit dem Button <b>&bdquo;Bild speichern &hellip;&ldquo;</b> erzeugt <code>LocalSizeMeasurer</code> eine reproduzierbare Bilddatei:</p>
+    <ul>
+      <li><b>Formate:</b> PNG (verlustfrei) oder JPEG (Qualit&auml;t 95 %).</li>
+      <li><b>Inhalte:</b> Linien und Kreise in kontrastreichen Farben, dynamisch skalierte Messwert-Tags (#1, #2 &#8230;), eine &#252;bersichtliche Legenden-Tabelle in der Bildecke, eine <b>Ma&#223;stabsleiste</b> unten rechts (in lj bzw. km, gerundet auf 1-2-5-Schritte) sowie ein Metadaten-Banner mit Objekt, Entfernung, Ma&#223;stab und Ma&#223;stabsquelle.</li>
+      <li><b>Vor dem Beenden:</b> Beenden Sie den Messmodus mit nicht gespeicherten Messungen, fragt das Script nach. Auch &#8222;Alle l&#246;schen&#8220; fragt bei mehr als einer Messung nach. Der Konsolenbericht bleibt in jedem Fall erhalten.</li>
+      <li><b>Nicht-destruktiv:</b> Das Originalbild in PixInsight bleibt vollst&auml;ndig unver&auml;ndert.</li>
+    </ul>
+  </div>
+
+  <h2>7. Mathematische &amp; Physikalische Formeln</h2>
+  <div class="card">
+    <h3>Pixelma&szlig;stab (Scale)</h3>
+    <div class="formula-box">
+      s = <i>p</i> &#215; 206,265 / <i>F</i> &nbsp; [Bogensekunden pro Pixel, &#8243;/px]
+    </div>
+    <p>Hierbei ist <i>p</i> die effektive Pixelgr&ouml;&szlig;e in Mikrometern (&#181;m) unter Ber&uuml;cksichtigung des Binnings und <i>F</i> die Brennweite in Millimetern (mm). Ohne Plate-Solve wird <i>p</i> mit dem Faktor <i>k</i> aus der R&#252;ckfrage multipliziert (<i>s</i> = <i>p</i> &#183; <i>k</i> &#215; 206,265 / <i>F</i>). Liegt eine verwendbare L&#246;sung vor und ist die Option aktiv, wird stattdessen der gel&#246;ste Ma&#223;stab <i>s</i> = &#8730;|det CD| &#183; 3600 verwendet (CD-Matrix in Grad pro Pixel).</p>
+
+    <h3>Projizierte physikalische Raumausdehnung</h3>
+    <div class="formula-box">
+      L = 2 &#183; <i>d</i> &#183; tan(&#952; / 2) &#8776; <i>d</i> &#183; &#952;<sub>rad</sub>
+    </div>
+    <p>Hierbei ist <i>d</i> die angenommene Distanz zum Objekt und &#952; die Winkelausdehnung der gezogenen Messstrecke.</p>
+
+    <h3>Fl&auml;chenberechnung</h3>
+    <div class="formula-box">
+      A = &#960; &#183; <i>r</i>&#178; = (&#960; / 4) &#183; <i>D</i>&#178;
+    </div>
+    <p>Die Kreisfl&auml;che wird aus dem Radius <i>r</i> der gezogenen Strecke berechnet und mit Referenzfl&auml;chen (Erdscheibe bzw. Sonnensystem) verglichen.</p>
+  </div>
+
+  <h2>8. Entstehungsgeschichte &amp; Danksagung (Credits)</h2>
+  <div class="card" style="border-left: 4px solid var(--accent-gold);">
+    <p>
+      Die urspr&uuml;ngliche Idee zu diesem Rechner stammt von <b>Rainer und Daniel</b>, mit deren Excel-Tabelle ich bereits seit 2021 gerechnet habe. Nun habe ich dank <i>Vibe Coding</i> das Ganze in ein vollwertiges, interaktives Skript direkt f&uuml;r PixInsight umgesetzt und um Funktionen wie interaktive Vektormessungen (Linie und Kreisfl&auml;che), Bild-Export mit Annotationen, automatische Header-Inspektion sowie Online-Katalogabfragen (SIMBAD TAP &amp; NED) erweitert.
+    </p>
+    <p>
+      Ein ganz herzlicher Dank und Gru&szlig; geht raus an die beiden f&uuml;r die tolle Vorarbeit und Inspiration! :-)
+    </p>
+    <p>
+      <b>Quelle &amp; Video zur urspr&uuml;nglichen Excel-Tabelle:</b><br>
+      &#x25B6; <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank">Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen (YouTube)</a>
+    </p>
+  </div>
+
+  <h2>9. Versionshistorie</h2>
+  <ul>
+    <li><b>v2.3 (2.3.6):</b> Sonnensystem-Modus: Messwerte nur noch in km, AE nur f&#252;r die Objektentfernung; Faktor-Erkennung bei Skalenabweichung (2, 3, 4, 0,5) mit Ursache und Abhilfe; Plate-Solve-Skala aus Fenster-L&#246;sung, PCL-Matrix, Astrometry:Resolution und FITS-WCS mit Gegenpr&#252;fung; veraltete Header-L&#246;sungen werden &#252;ber die Bildgr&#246;&#223;e (NAXIS1/NAXIS2) erkannt und verworfen (behebt einen Ma&#223;stabsfehler um Faktor 2 nach Super-Pixel-Debayer); R&#252;ckfrage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; mit Faktor-Eingabe, wenn kein Plate-Solve vorliegt; Warnung vor doppelter Korrektur; Debayer- und Drizzle-Erkennung; Hinweis bei exakter &#220;bereinstimmung von Optik und Plate-Solve (ASIAIR); Konsolenbericht zeigt Matrix- und Vektor-Werte.</li>
+    <li><b>v2.2:</b> Plate-Solve-Skala wird jetzt tats&#228;chlich f&#252;r die Messung verwendet (inkl. Abweichungswarnung, Quellenanzeige und Binning-Abgleich); WCS-Skala aus CD-Matrix bzw. CDELT&#215;PC; XISF-Brennweite korrekt in Metern; robustere Online-Suche (Einheiten-Whitelist, Median aus mehreren Literaturwerten, Parallaxe nur bei S/N &#8805; 5, Zentralstern-Fallback nur noch f&#252;r Nebel/Haufen, strenger NED-Parser, Hubble-Fluss nur f&#252;r 0,003 &#8804; z &#8804; 0,1, Zeitbudget und Offline-Erkennung, Abgleich mit dem Katalog, Sesame entfernt); Namensvarianten f&#252;r Sh2-132 u. &#228;. repariert; Zahleneingabe mit deutschen Tausenderpunkten und Plausibilit&#228;tsr&#252;ckfragen; handge&#228;nderte Entfernungen bleiben erhalten; Header-Objektnamen werden nur noch sicher zugeordnet; R&#252;ckfrage vor dem Beenden mit ungespeicherten Messungen; Rechtsklick bricht nur die laufende Messung ab; Scrollbalken, <kbd>1</kbd> und <kbd>F</kbd> funktionieren; AutoSTF-Umschalten mit Zwischenspeicher; Ma&#223;stabsleiste im Export; Dokumentation an den Code angeglichen (Formeln als HTML).</li>
+    <li><b>v2.1 (Finale Version):</b> Umfassende Qualit&auml;tskontrolle und Code-H&auml;rtung; numerischer NaN/Inf-Schutz bei Bild-Sampling und Skalenberechnungen; erweiterte SIMBAD TAP Identifier-Aufl&ouml;sung mit Leerzeichen- und Case-Toleranz; intelligenter Zielordner-Vorschlag beim Export annotierter Bilder; Tastaturk&uuml;rzel f&uuml;r Bildzoom (<kbd>+</kbd> und <kbd>&minus;</kbd>); robustes Ressourcen- und Graphics-Lifecycle-Management.</li>
+    <li><b>v1.40:</b> Online-Objektsuche via SIMBAD TAP (Harvard CFA &amp; CDS) und NED mit Rohdaten-Protokollierung; Erstellung der vollst&auml;ndigen HTML-Dokumentation f&uuml;r den PixInsight-Browser; Harmonisierung der Erddurchmesser-Angaben in Legende und Export.</li>
+    <li><b>v1.30:</b> Export-Funktion f&uuml;r annotierte Bilder (PNG/JPG); Anbindung des Doku-Browsers; optimierte Zahlenformatierung (Tsd., Mio., Mrd.).</li>
+    <li><b>v1.20:</b> Kreis-Fl&auml;chenwerkzeug (A = &#960; &#183; r&#178;); Tastaturk&uuml;rzel <kbd>L</kbd> und <kbd>K</kbd>; Erdscheiben- und Sonnensystem-Fl&auml;chenvergleich.</li>
+    <li><b>v1.10:</b> Sonnensystem-Modus mit dynamischen Planeten-Abst&auml;nden; Mehrfachmessungs-Historie; Undo-Funktion; Farblegende.</li>
+    <li><b>v1.00:</b> Initiales Release; FITS- &amp; XISF-Headerinspektion; Astrometrie-Erkennung; Streckenmessung f&uuml;r Deepsky-Objekte.</li>
+  </ul>
+
+</main>
+
+<footer>
+  LocalSizeMeasurer &bull; Entwickelt f&uuml;r PixInsight (PJSR Version 2.0) &bull; Freie Software f&uuml;r die Astrofotografie
+</footer>
+
+</body>
+</html>
