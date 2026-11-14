@@ -79,4 +79,4 @@ Das Script ist mit Unterstützung von KI („Vibe Coding“) entstanden.
 
 ## Lizenz
 
-*Noch festzulegen.*
+MIT-Lizenz – siehe [LICENSE](LICENSE). Du darfst das Script frei nutzen, verändern und weitergeben, solange der Urheberhinweis erhalten bleibt. Es gibt keine Gewähr für die Richtigkeit der Ergebnisse.
