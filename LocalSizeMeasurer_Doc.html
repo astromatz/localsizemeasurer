@@ -203,14 +203,18 @@
   </div>
 
   <h2>1. Schnellanleitung (Workflow)</h2>
-  <p><b>Installation:</b> Die Script-Datei (<code>.js</code>) und <code>LocalSizeMeasurer_Doc.html</code> m&#252;ssen im <b>selben Ordner</b> liegen, sonst findet der Button &#8222;Dokumentation&#8220; die Hilfe nicht.</p>
+  <p><b>Installation:</b> Die Script-Datei (<code>.js</code>) und <code>LocalSizeMeasurer_Doc.html</code> m&#252;ssen im <b>selben Ordner</b> liegen, sonst findet der Button &#8222;Dokumentation&#8220; die Hilfe nicht. Es gibt zwei Wege, das Script zu starten:</p>
+  <ul>
+    <li><b>Einmalig ausprobieren:</b> <code>Script &gt; Execute Script File &hellip;</code> und die <code>.js</code>-Datei w&#228;hlen. Dabei wird nichts installiert, das Script erscheint auch nicht im Men&#252;.</li>
+    <li><b>Dauerhaft ins Men&#252;:</b> <code>Script &gt; Feature Scripts &hellip;</code>, mit <b>Add</b> den Ordner mit der <code>.js</code>-Datei hinzuf&#252;gen und mit <b>Done</b> best&#228;tigen. Danach steht das Script unter <code>Script &gt; Utilities &gt; LocalSizeMeasurer</code>.</li>
+  </ul>
   <ol>
     <li><b>Bild &ouml;ffnen:</b> &Ouml;ffnen Sie ein beliebiges astronomisches Bild (FITS oder XISF) in PixInsight und aktivieren Sie die Zielansicht.</li>
-    <li><b>Skript starten:</b> Starten Sie <code>Utilities &gt; LocalSizeMeasurer</code>. Das Skript liest automatisch Header-Metadaten (Brennweite, Pixelgr&ouml;&szlig;e, Objektname, Astrometrie) aus.</li>
+    <li><b>Skript starten:</b> Starten Sie <code>Script &gt; Utilities &gt; LocalSizeMeasurer</code> (oder &#252;ber <code>Execute Script File</code>, siehe oben). Das Skript liest automatisch Header-Metadaten (Brennweite, Pixelgr&ouml;&szlig;e, Objektname, Astrometrie) aus.</li>
     <li><b>Modus &amp; Entfernung w&auml;hlen:</b> Best&auml;tigen oder w&auml;hlen Sie im Parameter-Dialog den passenden Modus (<i>Deepsky</i> oder <i>Sonnensystem</i>). Nutzen Sie die <b>Online-Suche (SIMBAD/NED)</b> oder den integrierten Referenzkatalog.</li>
     <li><b>Ma&#223;stab pr&#252;fen:</b> Der Parameter-Dialog zeigt die Skala aus Plate-Solve und aus Brennweite/Pixelgr&#246;&#223;e. Bei Abweichungen &#252;ber 2 % erscheint eine orangefarbene Warnung, wenn m&#246;glich mit der wahrscheinlichen Ursache (siehe Abschnitt 3). Ohne Plate-Solve muss die Frage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; beantwortet werden.</li>
     <li><b>Interaktiv Messen:</b> Im Viewer-Fenster k&ouml;nnen Sie mit der Maus Strecken (Taste <kbd>L</kbd>) oder Kreisfl&auml;chen (Taste <kbd>K</kbd>) ziehen.</li>
-    <li><b>Exportieren:</b> Mit <b>&bdquo;Bild speichern &hellip;&ldquo;</b> exportieren Sie die Ansicht mit allen sichtbaren Annotationen, Skalen, Legende und Metadaten-Banner als PNG oder JPEG.</li>
+    <li><b>Exportieren:</b> Mit <b>&bdquo;Bild speichern &hellip;&ldquo;</b> exportieren Sie das Bild mit allen Messungen, Beschriftungen, Legende, Ma&#223;stabsleiste und Metadaten-Banner als PNG oder JPEG. Beschriftungen und Legende werden dabei <b>immer</b> eingezeichnet, auch wenn sie im Messfenster ausgeblendet sind (siehe Abschnitt 6).</li>
   </ol>
 
   <h2>2. Die beiden Betriebsmodi</h2>
@@ -348,7 +352,7 @@
         <td>Werkzeug <b>Linie</b> aktivieren (f&uuml;r Distanzen, Durchmesser, Filamentl&auml;ngen).</td>
       </tr>
       <tr>
-        <td><kbd>K</kbd></td>
+        <td><kbd>K</kbd> / <kbd>C</kbd></td>
         <td>Werkzeug <b>Kreisfl&auml;che</b> aktivieren (f&uuml;r Radien, scheinbare Durchmesser und Fl&auml;chen A = &#960; &#183; r&#178;).</td>
       </tr>
       <tr>
@@ -385,9 +389,38 @@
         <td>Bild scrollen / Bildausschnitt feinjustieren.</td>
       </tr>
       <tr>
+        <td><kbd>Bild&#8593;</kbd> / <kbd>Bild&#8595;</kbd></td>
+        <td>Seitenweise nach oben / unten scrollen.</td>
+      </tr>
+      <tr>
+        <td><kbd>Pos1</kbd> / <kbd>Ende</kbd></td>
+        <td>Zur linken oberen bzw. rechten unteren Bildecke springen.</td>
+      </tr>
+      <tr>
         <td><kbd>Esc</kbd></td>
         <td>Bricht eine laufende Messung ab, sonst wird der Messmodus beendet. Gibt es noch nicht gespeicherte Messungen, fragt das Script vorher nach.</td>
       </tr>
+    </tbody>
+  </table>
+
+  <h3>Bedienelemente im Messfenster</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 180px;">Element</th>
+        <th>Funktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Werkzeug</b></td><td>Auswahl zwischen <i>Linie (Strecke)</i> und <i>Kreis (Fl&#228;che)</i>, gleichwertig zu den Tasten <kbd>L</kbd> und <kbd>K</kbd>.</td></tr>
+      <tr><td><b>Beschriftung</b></td><td>Blendet das Kurzergebnis direkt an jeder Linie bzw. jedem Kreis ein oder aus.</td></tr>
+      <tr><td><b>Legende</b></td><td>Blendet die Tafel mit allen Messungen links unten ein oder aus. Sie zeigt die letzten 12 Messungen, &#228;ltere werden mit &#8222;&hellip; &#228;ltere nicht angezeigt&#8220; zusammengefasst.</td></tr>
+      <tr><td><b>Letzte l&#246;schen</b></td><td>Entfernt die letzte Messung (wie <kbd>Backspace</kbd> / <kbd>Entf</kbd>).</td></tr>
+      <tr><td><b>Alle l&#246;schen</b></td><td>Entfernt alle Messungen aus der Anzeige, bei mehr als einer Messung mit R&#252;ckfrage. Der Konsolenbericht bleibt erhalten.</td></tr>
+      <tr><td><b>AutoSTF</b></td><td>Schaltet die automatische Bildschirmstreckung ein oder aus. Zoom und Messungen bleiben erhalten; die Messwerte &#228;ndern sich dadurch nicht.</td></tr>
+      <tr><td><b>+ / &minus; / 1:1 / Fit</b></td><td>Zoom-Buttons, entsprechen Mausrad, <kbd>1</kbd> und <kbd>F</kbd>.</td></tr>
+      <tr><td><b>Bild speichern &hellip;</b></td><td>Export des annotierten Bildes (siehe Abschnitt 6).</td></tr>
+      <tr><td><b>Messmodus beenden</b></td><td>Schlie&#223;t das Messfenster, bei nicht gespeicherten Messungen mit R&#252;ckfrage (wie <kbd>Esc</kbd>).</td></tr>
     </tbody>
   </table>
 
@@ -397,6 +430,8 @@
     <ul>
       <li><b>Formate:</b> PNG (verlustfrei) oder JPEG (Qualit&auml;t 95 %).</li>
       <li><b>Inhalte:</b> Linien und Kreise in kontrastreichen Farben, dynamisch skalierte Messwert-Tags (#1, #2 &#8230;), eine &#252;bersichtliche Legenden-Tabelle in der Bildecke, eine <b>Ma&#223;stabsleiste</b> unten rechts (in lj bzw. km, gerundet auf 1-2-5-Schritte) sowie ein Metadaten-Banner mit Objekt, Entfernung, Ma&#223;stab und Ma&#223;stabsquelle.</li>
+      <li><b>Unabh&#228;ngig von der Anzeige:</b> Der Export zeichnet immer alle Messungen mit Beschriftung und die Legende ein, auch wenn &#8222;Beschriftung&#8220; oder &#8222;Legende&#8220; im Messfenster abgeschaltet sind. Wer ein Bild ohne bestimmte Messungen m&#246;chte, l&#246;scht diese vorher.</li>
+      <li><b>Legende im Export:</b> Sie enth&#228;lt die <b>letzten 14 Messungen</b>. Bei mehr Messungen fehlen die &#228;lteren in der Legende ohne gesonderten Hinweis; ihre Linien, Kreise und Beschriftungen sind aber im Bild eingezeichnet.</li>
       <li><b>Vor dem Beenden:</b> Beenden Sie den Messmodus mit nicht gespeicherten Messungen, fragt das Script nach. Auch &#8222;Alle l&#246;schen&#8220; fragt bei mehr als einer Messung nach. Der Konsolenbericht bleibt in jedem Fall erhalten.</li>
       <li><b>Nicht-destruktiv:</b> Das Originalbild in PixInsight bleibt vollst&auml;ndig unver&auml;ndert.</li>
     </ul>
@@ -452,7 +487,7 @@
 </main>
 
 <footer>
-  LocalSizeMeasurer &bull; Entwickelt f&uuml;r PixInsight (PJSR Version 2.0) &bull; Freie Software f&uuml;r die Astrofotografie
+  LocalSizeMeasurer v2.3.6 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
 </footer>
 
 </body>
