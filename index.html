@@ -109,7 +109,7 @@ kbd{background:var(--p2);border:1px solid var(--b);border-bottom-width:2px;borde
 <div><label>Sensor-Pixelbreite<span id="spOpt" class="opt"> (optional)</span></label><div class="u"><input id="sp" class="in" inputmode="decimal"><span>px</span></div><p class="why">Damit prüft die App, ob das Bild gebinnt, skaliert oder zugeschnitten wurde.</p></div></div>
 <div class="row"><div><label>Sensortyp</label><select id="col" class="in"><option value="c">Farbe (Bayer)</option><option value="m">Mono</option></select></div>
 <div id="dbw"><label>Debayer-Verfahren</label><select id="deb" class="in"><option value="">– bitte wählen –</option><option value="n">Normal (Bildbreite bleibt)</option><option value="s">Super-Pixel (halbe Breite)</option><option value="d">Drizzle</option></select><p class="why">Super-Pixel halbiert die Auflösung und verdoppelt die Pixelgröße.</p></div></div>
-<div class="row"><div><label>Bildskala aus deinem Plate-Solve (abtippen) <span class="opt">(optional)</span></label><div class="u"><input id="ps" class="in" inputmode="decimal" placeholder="z. B. 1,24"><span>″/px</span></div><p class="why">Die Bilddatei enthält diese Angabe nicht – bitte aus dem Ergebnis von ImageSolver, ASTAP oder astrometry.net übernehmen. Gilt nur, wenn das hochgeladene JPG/PNG in derselben Auflösung wie beim Lösen vorliegt (kein nachträgliches Verkleinern beim Export).</p><p class="hint">Noch nicht gelöst? <a href="https://nova.astrometry.net/upload" target="_blank" rel="noopener">Bei nova.astrometry.net</a> lässt sich ein Bild kostenlos astrometrisch lösen (außerhalb dieser App) – die dort angezeigte Bildskala kannst du anschließend hier eintragen.</p></div>
+<div class="row"><div><label>Bildskala aus deinem Plate-Solve (abtippen) <span class="opt">(optional)</span></label><div class="u"><input id="ps" class="in" inputmode="decimal" placeholder="z. B. 1,24"><span>″/px</span></div><p class="why">Deine Bilddatei trägt diese Angabe nicht – bitte aus ImageSolver, ASTAP oder astrometry.net übernehmen. Gilt nur, wenn das Bild seit dem Lösen nicht verkleinert wurde.</p><p class="hint">Noch nicht gelöst? <a href="https://nova.astrometry.net/upload" target="_blank" rel="noopener">Kostenlos bei nova.astrometry.net</a> (außerhalb dieser App).</p></div>
 <div><label class="chk" style="margin-top:34px"><input type="checkbox" id="psUse" class="in" disabled> Plate-Solve-Skala für die Messung verwenden</label><p class="hint">Nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde und sich auf exakt dieses Bild bezieht.</p></div></div>
 <p class="hint">Alle Werte kannst du überschreiben.</p>
 <div class="tb" style="margin-top:10px"><button id="svP">Profil speichern</button><select id="ldP" style="width:auto"><option value="">Profil laden …</option></select></div>
@@ -151,9 +151,11 @@ kbd{background:var(--p2);border:1px solid var(--b);border-bottom-width:2px;borde
 
 <div class="nav"><button id="bk">← Zurück</button><button id="nx" class="pr">Weiter →</button></div>
 
-<div class="card ft" style="margin-top:16px"><b>LocalSizeMeasurer Web v1.0</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
+<div class="card hide" id="s5"><h2>5 · Hinweise</h2>
+<div class="ft"><b>LocalSizeMeasurer Web v1.0</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
 <b>Credits:</b> Idee und ursprünglicher Excel-Rechner von Rainer und Daniel – <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank" rel="noopener">„Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen“</a> (YouTube). Danke und Gruß an die beiden!<br><br>
 <b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
+</div>
 </div>
 <script>
 // ===== Daten =====
@@ -338,8 +340,8 @@ function show(id,a,st){var h="",m={},any=0;
  $(id).innerHTML=h}
 function len(s){var d=Math.hypot(s.b.x-s.a.x,s.b.y-s.a.y);return s.t==="c"?2*d:d}
 // ===== UI =====
-function stBar(){var o=calc(),dn=[!!S.img&&S.orig!==null&&!(S.orig==="no"&&!$("chgT").value),o.sc>0,o.dkm>0,false];
-$("st").innerHTML=["Bild prüfen","Optik","Entfernung","Messen"].map(function(t,i){var a=i===S.step,d=dn[i]&&!a;
+function stBar(){var o=calc(),dn=[!!S.img&&S.orig!==null&&!(S.orig==="no"&&!$("chgT").value),o.sc>0,o.dkm>0,false,false];
+$("st").innerHTML=["Bild prüfen","Optik","Entfernung","Messen","Hinweise"].map(function(t,i){var a=i===S.step,d=dn[i]&&!a;
  return '<button type="button" class="'+(a?"on":d?"done":"")+'" data-g="'+i+'"'+(a?' aria-current="step"':'')+'><span class="n">'+(d?CHK:(i+1))+'</span><span>'+t+'</span></button>'}).join("")}
 function upd(){var o=calc(),tiles=[["Effektive Brennweite",fmt(o.efl)+" mm"],["Pixelgröße (Sensor)",fmt(o.px)+" µm"],["Effektive Pixelgröße",fmt(o.epx)+" µm"],["Maßstab aus Optik",fx(o.scOpt,4)+" ″/px"]];
 if(o.psOk)tiles.push(["Maßstab aus Plate-Solve",fx(o.ps,4)+" ″/px"]);
@@ -367,9 +369,9 @@ var c=checks();show("c1",c,1);show("c2",c,2);show("c3",c,3);$("chg").classList.t
 document.querySelectorAll("[data-o]").forEach(function(b){b.classList.toggle("sel",b.dataset.o===S.orig)});
 stBar();
 if(S.step===3){drawAll();results(c)}}
-function go(n){n=Math.max(0,Math.min(3,n));if(n>0&&!S.img){msg("Bitte zuerst ein Bild laden oder das Beispielbild verwenden.");n=0}
-S.step=n;for(var i=0;i<4;i++){$("s"+(i+1)).classList.toggle("hide",i!==S.step)}
-$("bk").style.visibility=S.step?"visible":"hidden";$("nx").style.visibility=S.step<3?"visible":"hidden";if(S.step===3)setTimeout(function(){fit();upd()},0);else upd()}
+function go(n){n=Math.max(0,Math.min(4,n));if(n>0&&!S.img){msg("Bitte zuerst ein Bild laden oder das Beispielbild verwenden.");n=0}
+S.step=n;for(var i=0;i<5;i++){$("s"+(i+1)).classList.toggle("hide",i!==S.step)}
+$("bk").style.visibility=S.step?"visible":"hidden";$("nx").style.visibility=S.step<4?"visible":"hidden";if(S.step===3)setTimeout(function(){fit();upd()},0);else upd()}
 // ===== Canvas =====
 var cv=$("cv"),g=cv.getContext("2d");
 function fit(){if(!S.img)return;var w=cv.clientWidth||900,hh=Math.max(420,Math.min(760,window.innerHeight-300));cv.width=w;cv.height=hh;S.v.s=Math.min(w/S.img.w,hh/S.img.h);S.v.x=(w-S.img.w*S.v.s)/2;S.v.y=(hh-S.img.h*S.v.s)/2;drawAll()}
