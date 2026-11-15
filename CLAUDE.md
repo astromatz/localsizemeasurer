@@ -20,7 +20,7 @@ Stand: 15.11.2026 (Script v2.4.0, Web v1.4)
 - Referenz-Setup zum Testen: Brennweite 480 mm (Apo), Pixel 3,76 µm (ASI2600MC Pro), Entfernung 3000 Lichtjahre.
 - Wichtig: Maus-Events am ImageWindow funktionieren nicht. Interaktion läuft ausschließlich **dialog-intern** (Bitmap in ScrollBox mit eigenen Maus-Handlern).
 - Skalenberechnung in `getPixelscale()` gekapselt; Maßstab kann aus Plate-Solve kommen.
-- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten; noch nicht in PixInsight getestet).
+- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten; von Mathias in PixInsight erfolgreich getestet).
 - 10–100 Lj mit einer Nachkommastelle: im Script schon seit v2.3, in der Web-App seit v1.4.
 - Später geplant: Bild mit Maßstab speichern/exportieren.
 
@@ -58,7 +58,6 @@ AutoSTF bzw. eigene Streckung, FITS-Header (Brennweite/Pixelgröße werden nicht
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- PixInsight-Test von Script v2.4 durch Mathias (Testschritte im Chat der Sitzung 15.11.2026).
 - Browser-Test von v1.3/v1.4 durch Mathias mit echten Exporten aus PixInsight (TIFF 16/32 Bit, FITS) – vor allem: Ist ein FITS aus PixInsight richtig herum oder gespiegelt? (Messung ist davon unabhängig.)
 - Export in Firefox/Safari prüfen (dort Download statt Speichern-Dialog).
 
@@ -66,19 +65,18 @@ Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub
 Grundlage: HANDOVER.md aus dem Code-Review (ist hier eingearbeitet, Datei wird nicht mehr gebraucht).
 Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj** · Begriff **Einpassen** · Script-Ergebnisliste **rechts vom Bild** · Versionen v1.4 / v2.4.
 
-**Web v1.4 (umgesetzt, automatisch getestet: Messwerte unverändert, hell/dunkel, keine Konsolenfehler)**
+**Web v1.4 (umgesetzt, automatisch getestet und von Mathias im Browser erfolgreich getestet)**
 - W1: Linie ist Standardwerkzeug; Verschieben mit mittlerer Maustaste oder Leertaste + Ziehen; Knopf „Verschieben“ und Taste V bleiben.
 - W2: Schritt 4 mit Seitenleiste (ab 1280 px): Live-Werte, Messliste (einzeln löschbar), Messgrundlage. Grundlagen-Zeile über dem Bild (″/px, Lj/px bzw. km/px, Entfernung, Quelle, Links zu Schritt 2/3). Details in der Ergebnistabelle aufklappbar.
 - W4: „Weiter“ aus Schritt 1 und Sprung über die Schrittleiste gesperrt, bis die Bildfrage beantwortet ist (bei „Nein“ auch die Art). Neue Antwort „Weiß ich nicht“: Pixelgröße 1:1, ohne verwendeten Plate-Solve „Maßstab ungeprüft“ in Prüfungen, Messgrundlage, Grundlagen-Zeile und Export-Info-Leiste.
 - `fLy`: 10–100 Lj mit einer Nachkommastelle.
 
-**Script v2.4.0 (umgesetzt, nur Syntaxprüfung – Test in PixInsight durch Mathias offen)**
+**Script v2.4.0 (umgesetzt, von Mathias in PixInsight erfolgreich getestet)**
 - Datei umbenannt: `LSM_2_3.js` → `LSM_2_4.js`.
 - S1: Ergebnisliste (TreeBox) rechts vom Bild: Nr., Art, Winkel, Größe, Spanne (Spanne nur Sonnensystem mit Katalog-Körper, sonst „–“; Deepsky hat im Script keine numerische Entfernungsunsicherheit). „Markierte löschen“.
 - S2: „Eingaben ändern …“ öffnet den ParameterDialog mit einer Kopie der aktuellen Werte (inkl. Antwort zur Originalauflösung über `params.origAnswer`). Nach OK: Messungen aus `x0,y0,x1,y1` neu berechnet, Titel/Kopfzeile/Legende/Liste aktualisiert, `saveParams`, `dirty = true`, Konsolenbericht (neue Funktion `printParamSummary`) und alle Messungen erneut ausgegeben. Moduswechsel möglich.
 - Esc bricht nur die laufende Messung ab; Beenden nur über „Messmodus beenden“. Werkzeug als zwei ToolButtons (Text, umschaltbar) statt Auswahlliste. „Fit“ → „Einpassen“. „lj“ → „Lj“ überall.
 - Doku (`LocalSizeMeasurer_Doc.html`) und README nachgezogen.
-- Risiko [Vermutung]: Ob Qt/PixInsight bei Esc das Dialogfenster trotzdem schließt, ist ungeprüft (vorher fing `requestEnd()` das ab). Testpunkt.
 
 **Bedienunterschiede, die bleiben:** Taste V/Verschieben-Werkzeug nur Web. Script nummeriert Messungen nach dem Löschen nicht um (passt zum Konsolenbericht), Web schon.
 
