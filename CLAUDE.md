@@ -1,7 +1,7 @@
 # CLAUDE.md – LocalSizeMeasurer (LSM)
 
 Diese Datei übergibt den Projektstand aus dem claude.ai-Projekt „LSM“ an Claude Code.
-Stand: 15.11.2026 (Script v2.4.0, Web v1.4)
+Stand: 15.11.2026 (Script v2.4.1, Web v1.4)
 
 ## Über den Nutzer (Mathias)
 - Kann nicht programmieren. Bei Code-Änderungen immer **komplette, fertige Dateien** liefern, keine Schnipsel zum Einfügen.
@@ -11,7 +11,7 @@ Stand: 15.11.2026 (Script v2.4.0, Web v1.4)
 
 ## Repo-Inhalt (astromatz/localsizemeasurer, Branch main)
 - `index.html` – **LocalSizeMeasurer Web**, Standalone-Web-App (eine HTML-Datei, läuft lokal per Doppelklick und auf GitHub Pages)
-- `LSM_2_4.js` – aktuelles PixInsight-Script (PJSR), v2.4.0
+- `LSM_2_4.js` – aktuelles PixInsight-Script (PJSR), v2.4.1
 - Dokumentation (`LocalSizeMeasurer_Doc.html`), `README`, MIT-Lizenz
 
 ## Teil 1: PixInsight-Script (LSM_2_4.js)
@@ -71,12 +71,14 @@ Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj*
 - W4: „Weiter“ aus Schritt 1 und Sprung über die Schrittleiste gesperrt, bis die Bildfrage beantwortet ist (bei „Nein“ auch die Art). Neue Antwort „Weiß ich nicht“: Pixelgröße 1:1, ohne verwendeten Plate-Solve „Maßstab ungeprüft“ in Prüfungen, Messgrundlage, Grundlagen-Zeile und Export-Info-Leiste.
 - `fLy`: 10–100 Lj mit einer Nachkommastelle.
 
-**Script v2.4.0 (umgesetzt, von Mathias in PixInsight erfolgreich getestet)**
+**Script v2.4.0 (umgesetzt, von Mathias in PixInsight erfolgreich getestet; Esc siehe 2.4.1)**
 - Datei umbenannt: `LSM_2_3.js` → `LSM_2_4.js`.
 - S1: Ergebnisliste (TreeBox) rechts vom Bild: Nr., Art, Winkel, Größe, Spanne (Spanne nur Sonnensystem mit Katalog-Körper, sonst „–“; Deepsky hat im Script keine numerische Entfernungsunsicherheit). „Markierte löschen“.
 - S2: „Eingaben ändern …“ öffnet den ParameterDialog mit einer Kopie der aktuellen Werte (inkl. Antwort zur Originalauflösung über `params.origAnswer`). Nach OK: Messungen aus `x0,y0,x1,y1` neu berechnet, Titel/Kopfzeile/Legende/Liste aktualisiert, `saveParams`, `dirty = true`, Konsolenbericht (neue Funktion `printParamSummary`) und alle Messungen erneut ausgegeben. Moduswechsel möglich.
 - Esc bricht nur die laufende Messung ab; Beenden nur über „Messmodus beenden“. Werkzeug als zwei ToolButtons (Text, umschaltbar) statt Auswahlliste. „Fit“ → „Einpassen“. „lj“ → „Lj“ überall.
 - Doku (`LocalSizeMeasurer_Doc.html`) und README nachgezogen.
+- Test Mathias: Esc ohne laufende Messung schließt das Messfenster sofort (PixInsight/Qt, vom Script nicht abfangbar; war vermutlich schon in v2.3 so, die Rückfrage griff nur beim Knopf).
+- **v2.4.1:** `main()` führt den Messdialog in einer Schleife aus. Endete er nicht über „Messmodus beenden“ (`md.endedByButton`) und gibt es ungespeicherte Messungen (`md.unsavedCount()`), Rückfrage und erneutes `md.execute()` mit allen Messungen. **Ungetestet:** ob PixInsight einen geschlossenen Dialog erneut öffnet.
 
 **Bedienunterschiede, die bleiben:** Taste V/Verschieben-Werkzeug nur Web. Script nummeriert Messungen nach dem Löschen nicht um (passt zum Konsolenbericht), Web schon.
 

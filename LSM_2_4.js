@@ -13,7 +13,7 @@
 #include <pjsr/StdCursor.jsh>
 
 /*
- * LocalSizeMeasurer v2.4.0
+ * LocalSizeMeasurer v2.4.1
  *
  * Interaktives Mess-Lineal fuer PixInsight (PJSR):
  *  - Echte physikalische Raumdimensionen (Lichtjahre, Lichttage, km, AE)
@@ -46,6 +46,8 @@
  *  - Ergebnisliste im Messfenster (rechts vom Bild), einzelne Messungen loeschbar
  *  - "Eingaben aendern ...": Parameter-Dialog erneut oeffnen, Messungen bleiben erhalten und werden neu berechnet
  *  - Esc bricht nur noch die laufende Messung ab; Beenden ueber "Messmodus beenden"
+ *  - Schliesst PixInsight das Fenster trotzdem (Esc, Fenster-X) und gibt es ungespeicherte Messungen:
+ *    Rueckfrage und Wiederoeffnen mit allen Messungen
  *  - Werkzeug Linie/Kreis als Umschaltknoepfe; "Einpassen" statt "Fit"; Einheit "Lj" statt "Lj"
  *
  * Credits & Inspiration:
@@ -58,7 +60,7 @@
 // ============================================================================
 // Konstanten & Physikalische Referenzen
 // ============================================================================
-#define VERSION            "2.4.0"
+#define VERSION            "2.4.1"
 #define TITLE              "LocalSizeMeasurer"
 
 var ARCSEC_PER_RAD     = 648000 / Math.PI;          // 206264,806247...
@@ -3446,6 +3448,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    var history = [];
    var p0 = { x: 0, y: 0 }, p1 = { x: 0, y: 0 };
    this.measureCount = 0;
+   this.endedByButton = false;      // true nur bei "Messmodus beenden"; Esc/Fenster-X schliessen ohne Rueckfrage (PixInsight/Qt)
 
    var isSolar = ( params.mode === "solarsys" );
    var objSuffix = ( meta && meta.objectName ) ? " – " + meta.objectName : "";
@@ -3641,6 +3644,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
                                   TITLE, StdIcon_Question, StdButton_Yes, StdButton_No );
          if ( mb.execute() !== StdButton_Yes ) return;
       }
+      self.endedByButton = true;
       self.ok();
    }
 
@@ -4202,6 +4206,9 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    this.sizer.add( viewRow );
 
    this.onShow = function() { fitZoom(); };
+
+   // Fuer main(): Gibt es Messungen, die noch nicht als Bild gespeichert wurden?
+   this.unsavedCount = function() { return ( dirty && history.length > 0 ) ? history.length : 0; };
    this.onResize = function() { if ( fitMode ) fitZoom(); else { layout(); vp.update(); } };
 
    this.detachHandlers = function()
@@ -4347,7 +4354,23 @@ function main()
                               meta );
       preview = null;
       console.writeln( "Messmodus aktiv (Werkzeuge: Taste L = Linie, Taste K = Kreisfläche; Esc bricht die laufende Messung ab)." );
-      md.execute();
+      // Esc oder Fenster-X schliessen den Dialog sofort (PixInsight/Qt), ohne dass das Script es verhindern kann.
+      // Deshalb danach nachfragen und dasselbe Fenster mit allen Messungen wieder oeffnen.
+      for ( ;; )
+      {
+         md.endedByButton = false;
+         md.execute();
+         var nUnsaved = md.unsavedCount();
+         if ( md.endedByButton || nUnsaved === 0 )
+            break;
+         var mbr = new MessageBox( "Das Messfenster wurde geschlossen (Esc oder Fenster-X).\n\n" +
+                                   "Es gibt " + nUnsaved + " Messung(en), die noch nicht als Bild gespeichert wurden.\n\n" +
+                                   "Messfenster mit allen Messungen wieder öffnen?",
+                                   TITLE, StdIcon_Question, StdButton_Yes, StdButton_No );
+         if ( mbr.execute() !== StdButton_Yes )
+            break;
+         console.writeln( "Messfenster wieder geöffnet." );
+      }
    }
    catch ( e )
    {

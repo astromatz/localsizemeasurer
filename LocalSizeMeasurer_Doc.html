@@ -398,7 +398,7 @@
       </tr>
       <tr>
         <td><kbd>Esc</kbd></td>
-        <td>Bricht die <b>laufende Messung</b> ab (wie die rechte Maustaste). Der Messmodus bleibt ge&#246;ffnet; beendet wird er nur &#252;ber den Knopf <b>Messmodus beenden</b>.</td>
+        <td>Bricht die <b>laufende Messung</b> ab (wie die rechte Maustaste). Ohne laufende Messung schlie&#223;t PixInsight das Fenster selbst. Gibt es dann nicht gespeicherte Messungen, fragt das Script nach und &#246;ffnet das Messfenster auf Wunsch mit allen Messungen wieder. Regul&#228;r beendet wird &#252;ber <b>Messmodus beenden</b>.</td>
       </tr>
     </tbody>
   </table>
@@ -422,7 +422,7 @@
       <tr><td><b>+ / &minus; / 1:1 / Einpassen</b></td><td>Zoom-Buttons, entsprechen Mausrad, <kbd>1</kbd> und <kbd>F</kbd>.</td></tr>
       <tr><td><b>Eingaben &#228;ndern &hellip;</b></td><td>&#214;ffnet den Parameter-Dialog erneut, vorbelegt mit den aktuellen Werten. Optik, Entfernung, Faktor und auch der Modus (Deepsky/Sonnensystem) lassen sich &#228;ndern. Die vorhandenen Messungen bleiben erhalten und werden neu berechnet; die Konsole gibt die neuen Werte und alle Messungen erneut aus.</td></tr>
       <tr><td><b>Bild speichern &hellip;</b></td><td>Export des annotierten Bildes (siehe Abschnitt 6).</td></tr>
-      <tr><td><b>Messmodus beenden</b></td><td>Schlie&#223;t das Messfenster, bei nicht gespeicherten Messungen mit R&#252;ckfrage. Das ist der einzige Weg zum Beenden; <kbd>Esc</kbd> bricht nur die laufende Messung ab.</td></tr>
+      <tr><td><b>Messmodus beenden</b></td><td>Schlie&#223;t das Messfenster, bei nicht gespeicherten Messungen mit R&#252;ckfrage. Schlie&#223;t PixInsight das Fenster anders (<kbd>Esc</kbd>, Fenster-X), bietet das Script an, es mit allen Messungen wieder zu &#246;ffnen.</td></tr>
     </tbody>
   </table>
 
@@ -476,7 +476,7 @@
 
   <h2>9. Versionshistorie</h2>
   <ul>
-    <li><b>v2.4 (2.4.0):</b> Angleichung an LocalSizeMeasurer Web: Ergebnisliste im Messfenster mit L&#246;schen einzelner Messungen; <b>Eingaben &#228;ndern &hellip;</b> ohne Neustart (Messungen bleiben erhalten); <kbd>Esc</kbd> bricht nur die laufende Messung ab; Werkzeug als Umschaltkn&#246;pfe; &#8222;Einpassen&#8220; statt &#8222;Fit&#8220;; Einheit &#8222;Lj&#8220; statt &#8222;lj&#8220;.</li>
+    <li><b>v2.4 (2.4.1):</b> Schlie&#223;en per <kbd>Esc</kbd> oder Fenster-X verliert keine Messungen mehr (R&#252;ckfrage und Wieder&#246;ffnen). <b>2.4.0:</b> Angleichung an LocalSizeMeasurer Web: Ergebnisliste im Messfenster mit L&#246;schen einzelner Messungen; <b>Eingaben &#228;ndern &hellip;</b> ohne Neustart (Messungen bleiben erhalten); <kbd>Esc</kbd> bricht nur die laufende Messung ab; Werkzeug als Umschaltkn&#246;pfe; &#8222;Einpassen&#8220; statt &#8222;Fit&#8220;; Einheit &#8222;Lj&#8220; statt &#8222;lj&#8220;.</li>
     <li><b>v2.3 (2.3.6):</b> Sonnensystem-Modus: Messwerte nur noch in km, AE nur f&#252;r die Objektentfernung; Faktor-Erkennung bei Skalenabweichung (2, 3, 4, 0,5) mit Ursache und Abhilfe; Plate-Solve-Skala aus Fenster-L&#246;sung, PCL-Matrix, Astrometry:Resolution und FITS-WCS mit Gegenpr&#252;fung; veraltete Header-L&#246;sungen werden &#252;ber die Bildgr&#246;&#223;e (NAXIS1/NAXIS2) erkannt und verworfen (behebt einen Ma&#223;stabsfehler um Faktor 2 nach Super-Pixel-Debayer); R&#252;ckfrage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; mit Faktor-Eingabe, wenn kein Plate-Solve vorliegt; Warnung vor doppelter Korrektur; Debayer- und Drizzle-Erkennung; Hinweis bei exakter &#220;bereinstimmung von Optik und Plate-Solve (ASIAIR); Konsolenbericht zeigt Matrix- und Vektor-Werte.</li>
     <li><b>v2.2:</b> Plate-Solve-Skala wird jetzt tats&#228;chlich f&#252;r die Messung verwendet (inkl. Abweichungswarnung, Quellenanzeige und Binning-Abgleich); WCS-Skala aus CD-Matrix bzw. CDELT&#215;PC; XISF-Brennweite korrekt in Metern; robustere Online-Suche (Einheiten-Whitelist, Median aus mehreren Literaturwerten, Parallaxe nur bei S/N &#8805; 5, Zentralstern-Fallback nur noch f&#252;r Nebel/Haufen, strenger NED-Parser, Hubble-Fluss nur f&#252;r 0,003 &#8804; z &#8804; 0,1, Zeitbudget und Offline-Erkennung, Abgleich mit dem Katalog, Sesame entfernt); Namensvarianten f&#252;r Sh2-132 u. &#228;. repariert; Zahleneingabe mit deutschen Tausenderpunkten und Plausibilit&#228;tsr&#252;ckfragen; handge&#228;nderte Entfernungen bleiben erhalten; Header-Objektnamen werden nur noch sicher zugeordnet; R&#252;ckfrage vor dem Beenden mit ungespeicherten Messungen; Rechtsklick bricht nur die laufende Messung ab; Scrollbalken, <kbd>1</kbd> und <kbd>F</kbd> funktionieren; AutoSTF-Umschalten mit Zwischenspeicher; Ma&#223;stabsleiste im Export; Dokumentation an den Code angeglichen (Formeln als HTML).</li>
     <li><b>v2.1 (Finale Version):</b> Umfassende Qualit&auml;tskontrolle und Code-H&auml;rtung; numerischer NaN/Inf-Schutz bei Bild-Sampling und Skalenberechnungen; erweiterte SIMBAD TAP Identifier-Aufl&ouml;sung mit Leerzeichen- und Case-Toleranz; intelligenter Zielordner-Vorschlag beim Export annotierter Bilder; Tastaturk&uuml;rzel f&uuml;r Bildzoom (<kbd>+</kbd> und <kbd>&minus;</kbd>); robustes Ressourcen- und Graphics-Lifecycle-Management.</li>
@@ -490,7 +490,7 @@
 </main>
 
 <footer>
-  LocalSizeMeasurer v2.4.0 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
+  LocalSizeMeasurer v2.4.1 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
 </footer>
 
 </body>
