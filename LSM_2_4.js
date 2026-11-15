@@ -13,7 +13,7 @@
 #include <pjsr/StdCursor.jsh>
 
 /*
- * LocalSizeMeasurer v2.3.6
+ * LocalSizeMeasurer v2.4.0
  *
  * Interaktives Mess-Lineal fuer PixInsight (PJSR):
  *  - Echte physikalische Raumdimensionen (Lichtjahre, Lichttage, km, AE)
@@ -42,6 +42,12 @@
  *  - Konsolenbericht zeigt Matrix- und Vektor-Properties mit Werten
  *  - Begriffe: "debayert" statt "entbayert"; Modus-Auswahl Sonnensystem ohne "AE"
  *
+ * Neu in v2.4 (Angleichung an LocalSizeMeasurer Web):
+ *  - Ergebnisliste im Messfenster (rechts vom Bild), einzelne Messungen loeschbar
+ *  - "Eingaben aendern ...": Parameter-Dialog erneut oeffnen, Messungen bleiben erhalten und werden neu berechnet
+ *  - Esc bricht nur noch die laufende Messung ab; Beenden ueber "Messmodus beenden"
+ *  - Werkzeug Linie/Kreis als Umschaltknoepfe; "Einpassen" statt "Fit"; Einheit "Lj" statt "Lj"
+ *
  * Credits & Inspiration:
  *  - Urspruengliche Idee & Excel-Rechner (seit 2021 genutzt): Rainer und Daniel
  *    Quelle: "Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen"
@@ -52,7 +58,7 @@
 // ============================================================================
 // Konstanten & Physikalische Referenzen
 // ============================================================================
-#define VERSION            "2.3.6"
+#define VERSION            "2.4.0"
 #define TITLE              "LocalSizeMeasurer"
 
 var ARCSEC_PER_RAD     = 648000 / Math.PI;          // 206264,806247...
@@ -161,31 +167,31 @@ function openDocumentation()
 // Kataloge (Deepsky & Sonnensystem)
 // ============================================================================
 var DEEPSKY_CATALOG = [
-   { name: "IC 1805 – Herznebel (Heart Nebula)", ly: 7500, unc: "± 300 lj", src: "Gaia EDR3", keys: [ "IC1805", "HEARTOHEART", "HEART", "SH2-190", "HERZNEBEL", "HEARTNEBULA" ] },
-   { name: "IC 1848 – Seelennebel (Soul Nebula)", ly: 6500, unc: "± 300 lj", src: "Gaia EDR3", keys: [ "IC1848", "SOUL", "SH2-199", "SEELENNEBEL", "SOULNEBULA" ] },
-   { name: "M31 – Andromeda-Galaxie", ly: 2537000, unc: "± 50.000 lj", src: "Cepheiden (HST)", keys: [ "M31", "ANDROMEDA", "NGC224", "ANDROMEDAGALAXIE", "ANDROMEDAGALAXY" ] },
-   { name: "M33 – Dreiecksnebel (Triangulum)", ly: 2730000, unc: "± 100.000 lj", src: "Cepheiden", keys: [ "M33", "TRIANGULUM", "NGC598" ] },
-   { name: "M42 – Großer Orionnebel", ly: 1344, unc: "± 20 lj", src: "Gaia DR2", keys: [ "M42", "ORION", "NGC1976", "ORIONNEBEL", "ORIONNEBULA", "GROSSERORIONNEBEL" ] },
-   { name: "M45 – Plejaden (Siebengestirn)", ly: 444, unc: "± 6 lj", src: "Gaia EDR3", keys: [ "M45", "PLEIADES", "PLEJADEN", "SIEBENGESTIRN" ] },
-   { name: "M51 – Whirlpool-Galaxie", ly: 23500000, unc: "± 2.000.000 lj", src: "Tully-Fisher / SN", keys: [ "M51", "WHIRLPOOL", "NGC5194", "WHIRLPOOLGALAXIE", "WHIRLPOOLGALAXY" ] },
-   { name: "M81 – Bodes Galaxie", ly: 11740000, unc: "± 400.000 lj", src: "HST Cepheiden", keys: [ "M81", "BODE", "NGC3031" ] },
-   { name: "M82 – Zigarren-Galaxie", ly: 11500000, unc: "± 500.000 lj", src: "TRGB", keys: [ "M82", "CIGAR", "NGC3034" ] },
-   { name: "NGC 7000 – Nordamerika-Nebel", ly: 2590, unc: "± 70 lj", src: "Gaia DR2", keys: [ "NGC7000", "NORTH AMERICA", "NORDAMERIKA" ] },
-   { name: "NGC 2359 – Thors Helm (Thor's Helmet)", ly: 15000, unc: "± 1.500 lj", src: "Gaia EDR3 (WR 7)", keys: [ "NGC2359", "THOR", "THORSHELM", "SH2-298" ] },
-   { name: "NGC 6888 – Sichelnebel (Crescent Nebula)", ly: 5000, unc: "± 400 lj", src: "Gaia EDR3 (WR 136)", keys: [ "NGC6888", "CRESCENT", "SH2-105" ] },
-   { name: "NGC 7635 – Blasennebel (Bubble Nebula)", ly: 9100, unc: "± 800 lj", src: "Gaia EDR3 (BD+60 2522)", keys: [ "NGC7635", "BUBBLE", "SH2-162" ] },
-   { name: "IC 1396 – Elefantenrüssel-Nebel", ly: 2400, unc: "± 100 lj", src: "Gaia EDR3", keys: [ "IC1396", "ELEPHANT", "ELEFANT" ] },
-   { name: "M16 – Adlernebel (Säulen der Schöpfung)", ly: 7000, unc: "± 300 lj", src: "Gaia EDR3", keys: [ "M16", "EAGLE", "NGC6611" ] },
-   { name: "M101 – Feuerrad-Galaxie (Pinwheel)", ly: 20900000, unc: "± 600.000 lj", src: "HST Cepheiden", keys: [ "M101", "PINWHEEL", "NGC5457" ] },
-   { name: "NGC 3521 – Bubble-Galaxie (Löwe)", ly: 37300000, unc: "± 2.000.000 lj", src: "HST Cepheiden / NED", keys: [ "NGC3521" ] },
-   { name: "NGC 2237 – Rosettennebel", ly: 5200, unc: "± 200 lj", src: "Gaia EDR3", keys: [ "NGC2237", "ROSETTE", "NGC2244", "NGC2238", "NGC2239", "NGC2246", "ROSETTENNEBEL", "CALDWELL49", "C49" ] },
-   { name: "NGC 6960 – Cirrusnebel (Sturmvogel)", ly: 2400, unc: "± 100 lj", src: "Gaia EDR3", keys: [ "NGC6960", "VEIL", "CIRRUS" ] },
-   { name: "M13 – Großer Herkuleshaufen", ly: 22200, unc: "± 500 lj", src: "Gaia EDR3", keys: [ "M13", "HERCULES", "NGC6205" ] },
-   { name: "M57 – Ringnebel in der Leier", ly: 2570, unc: "± 150 lj", src: "Gaia EDR3", keys: [ "M57", "RING", "NGC6720" ] },
-   { name: "M27 – Hantelnebel (Dumbbell)", ly: 1360, unc: "± 50 lj", src: "Gaia EDR3", keys: [ "M27", "DUMBBELL", "HANTEL", "NGC6853" ] },
-   { name: "NGC 891 – Silver Sliver Galaxie", ly: 31600000, unc: "± 2.000.000 lj", src: "Tully-Fisher", keys: [ "NGC891" ] },
-   { name: "NGC 6820 – Emissionsnebel in der Füchsin (Sh2-86)", ly: 6000, unc: "± 300 lj", src: "Gaia EDR3 (NGC 6823)", keys: [ "NGC6820", "SH2-86", "NGC6823" ] },
-   { name: "Sh2-132 – Löwennebel (Lion Nebula)", ly: 10400, unc: "± 600 lj", src: "Gaia EDR3", keys: [ "SH2-132", "SH2132", "LION", "LBN473" ] }
+   { name: "IC 1805 – Herznebel (Heart Nebula)", ly: 7500, unc: "± 300 Lj", src: "Gaia EDR3", keys: [ "IC1805", "HEARTOHEART", "HEART", "SH2-190", "HERZNEBEL", "HEARTNEBULA" ] },
+   { name: "IC 1848 – Seelennebel (Soul Nebula)", ly: 6500, unc: "± 300 Lj", src: "Gaia EDR3", keys: [ "IC1848", "SOUL", "SH2-199", "SEELENNEBEL", "SOULNEBULA" ] },
+   { name: "M31 – Andromeda-Galaxie", ly: 2537000, unc: "± 50.000 Lj", src: "Cepheiden (HST)", keys: [ "M31", "ANDROMEDA", "NGC224", "ANDROMEDAGALAXIE", "ANDROMEDAGALAXY" ] },
+   { name: "M33 – Dreiecksnebel (Triangulum)", ly: 2730000, unc: "± 100.000 Lj", src: "Cepheiden", keys: [ "M33", "TRIANGULUM", "NGC598" ] },
+   { name: "M42 – Großer Orionnebel", ly: 1344, unc: "± 20 Lj", src: "Gaia DR2", keys: [ "M42", "ORION", "NGC1976", "ORIONNEBEL", "ORIONNEBULA", "GROSSERORIONNEBEL" ] },
+   { name: "M45 – Plejaden (Siebengestirn)", ly: 444, unc: "± 6 Lj", src: "Gaia EDR3", keys: [ "M45", "PLEIADES", "PLEJADEN", "SIEBENGESTIRN" ] },
+   { name: "M51 – Whirlpool-Galaxie", ly: 23500000, unc: "± 2.000.000 Lj", src: "Tully-Fisher / SN", keys: [ "M51", "WHIRLPOOL", "NGC5194", "WHIRLPOOLGALAXIE", "WHIRLPOOLGALAXY" ] },
+   { name: "M81 – Bodes Galaxie", ly: 11740000, unc: "± 400.000 Lj", src: "HST Cepheiden", keys: [ "M81", "BODE", "NGC3031" ] },
+   { name: "M82 – Zigarren-Galaxie", ly: 11500000, unc: "± 500.000 Lj", src: "TRGB", keys: [ "M82", "CIGAR", "NGC3034" ] },
+   { name: "NGC 7000 – Nordamerika-Nebel", ly: 2590, unc: "± 70 Lj", src: "Gaia DR2", keys: [ "NGC7000", "NORTH AMERICA", "NORDAMERIKA" ] },
+   { name: "NGC 2359 – Thors Helm (Thor's Helmet)", ly: 15000, unc: "± 1.500 Lj", src: "Gaia EDR3 (WR 7)", keys: [ "NGC2359", "THOR", "THORSHELM", "SH2-298" ] },
+   { name: "NGC 6888 – Sichelnebel (Crescent Nebula)", ly: 5000, unc: "± 400 Lj", src: "Gaia EDR3 (WR 136)", keys: [ "NGC6888", "CRESCENT", "SH2-105" ] },
+   { name: "NGC 7635 – Blasennebel (Bubble Nebula)", ly: 9100, unc: "± 800 Lj", src: "Gaia EDR3 (BD+60 2522)", keys: [ "NGC7635", "BUBBLE", "SH2-162" ] },
+   { name: "IC 1396 – Elefantenrüssel-Nebel", ly: 2400, unc: "± 100 Lj", src: "Gaia EDR3", keys: [ "IC1396", "ELEPHANT", "ELEFANT" ] },
+   { name: "M16 – Adlernebel (Säulen der Schöpfung)", ly: 7000, unc: "± 300 Lj", src: "Gaia EDR3", keys: [ "M16", "EAGLE", "NGC6611" ] },
+   { name: "M101 – Feuerrad-Galaxie (Pinwheel)", ly: 20900000, unc: "± 600.000 Lj", src: "HST Cepheiden", keys: [ "M101", "PINWHEEL", "NGC5457" ] },
+   { name: "NGC 3521 – Bubble-Galaxie (Löwe)", ly: 37300000, unc: "± 2.000.000 Lj", src: "HST Cepheiden / NED", keys: [ "NGC3521" ] },
+   { name: "NGC 2237 – Rosettennebel", ly: 5200, unc: "± 200 Lj", src: "Gaia EDR3", keys: [ "NGC2237", "ROSETTE", "NGC2244", "NGC2238", "NGC2239", "NGC2246", "ROSETTENNEBEL", "CALDWELL49", "C49" ] },
+   { name: "NGC 6960 – Cirrusnebel (Sturmvogel)", ly: 2400, unc: "± 100 Lj", src: "Gaia EDR3", keys: [ "NGC6960", "VEIL", "CIRRUS" ] },
+   { name: "M13 – Großer Herkuleshaufen", ly: 22200, unc: "± 500 Lj", src: "Gaia EDR3", keys: [ "M13", "HERCULES", "NGC6205" ] },
+   { name: "M57 – Ringnebel in der Leier", ly: 2570, unc: "± 150 Lj", src: "Gaia EDR3", keys: [ "M57", "RING", "NGC6720" ] },
+   { name: "M27 – Hantelnebel (Dumbbell)", ly: 1360, unc: "± 50 Lj", src: "Gaia EDR3", keys: [ "M27", "DUMBBELL", "HANTEL", "NGC6853" ] },
+   { name: "NGC 891 – Silver Sliver Galaxie", ly: 31600000, unc: "± 2.000.000 Lj", src: "Tully-Fisher", keys: [ "NGC891" ] },
+   { name: "NGC 6820 – Emissionsnebel in der Füchsin (Sh2-86)", ly: 6000, unc: "± 300 Lj", src: "Gaia EDR3 (NGC 6823)", keys: [ "NGC6820", "SH2-86", "NGC6823" ] },
+   { name: "Sh2-132 – Löwennebel (Lion Nebula)", ly: 10400, unc: "± 600 Lj", src: "Gaia EDR3", keys: [ "SH2-132", "SH2132", "LION", "LBN473" ] }
 ];
 
 function makePlanet( name, minKm, maxKm, keys, minLabel, maxLabel )
@@ -269,34 +275,34 @@ function formatAngle( arcsec )
 function formatLy( ly )
 {
    if ( ly >= 1e9 )
-      return fmt( ly / 1e9, 2 ) + " Mrd. lj";
+      return fmt( ly / 1e9, 2 ) + " Mrd. Lj";
    if ( ly >= 1e6 )
-      return fmt( ly / 1e6, 2 ) + " Mio. lj";
+      return fmt( ly / 1e6, 2 ) + " Mio. Lj";
    if ( ly >= 10000 )
-      return fmt( ly / 1e3, 1 ) + " Tsd. lj";
+      return fmt( ly / 1e3, 1 ) + " Tsd. Lj";
    if ( ly >= 100 )
-      return fmt( ly, 0 ) + " lj";
+      return fmt( ly, 0 ) + " Lj";
    if ( ly >= 10 )
-      return fmt( ly, 1 ) + " lj";
+      return fmt( ly, 1 ) + " Lj";
    if ( ly >= 0.01 )
-      return fmt( ly, 2 ) + " lj";
+      return fmt( ly, 2 ) + " Lj";
    if ( ly >= 0.0001 )
-      return fmt( ly, 4 ) + " lj";
+      return fmt( ly, 4 ) + " Lj";
    return fmt( ly * AU_PER_LY, 0 ) + " AE";
 }
 
 function formatAreaLy( ly2 )
 {
    if ( ly2 >= 1e9 )
-      return fmt( ly2 / 1e9, 2 ) + " Mrd. lj²";
+      return fmt( ly2 / 1e9, 2 ) + " Mrd. Lj²";
    if ( ly2 >= 1e6 )
-      return fmt( ly2 / 1e6, 2 ) + " Mio. lj²";
+      return fmt( ly2 / 1e6, 2 ) + " Mio. Lj²";
    if ( ly2 >= 10000 )
-      return fmt( ly2 / 1e3, 1 ) + " Tsd. lj²";
+      return fmt( ly2 / 1e3, 1 ) + " Tsd. Lj²";
    if ( ly2 >= 1.0 )
-      return fmt( ly2, 2 ) + " lj²";
+      return fmt( ly2, 2 ) + " Lj²";
    if ( ly2 >= 0.01 )
-      return fmt( ly2, 4 ) + " lj²";
+      return fmt( ly2, 4 ) + " Lj²";
    return fmt( ly2 * AU_PER_LY * AU_PER_LY, 0 ) + " AE²";
 }
 
@@ -807,7 +813,7 @@ function querySimbadTap( objectName )
             var uncP = "";
             if ( plxErr < plx )
                uncP = "(+" + fmt( 1000 / ( plx - plxErr ) * LY_PER_PC - lyP, 0 ) + " / −" +
-                      fmt( lyP - 1000 / ( plx + plxErr ) * LY_PER_PC, 0 ) + " lj)";
+                      fmt( lyP - 1000 / ( plx + plxErr ) * LY_PER_PC, 0 ) + " Lj)";
             return { success: true, source: srcName, mainId: mainId, otype: otype || "Objekt",
                      ly: lyP, method: "Parallaxe " + fmt( plx, 3 ) + " ± " + fmt( plxErr, 3 ) + " mas (S/N " + fmt( snr, 1 ) + ")",
                      unc: uncP, warn: "" };
@@ -1068,7 +1074,7 @@ function resolveDeepskyDistance( objectName )
 
    if ( result !== null && !plausibleLy( result.ly ) )
    {
-      notes.push( "Unplausibler Online-Wert verworfen (" + result.ly + " lj)." );
+      notes.push( "Unplausibler Online-Wert verworfen (" + result.ly + " Lj)." );
       result = null;
    }
 
@@ -2130,7 +2136,7 @@ function report( it, p )
          console.writeln( "Laenge:             " + fmt( m.lengthPx, 2 ) + " px" );
          console.writeln( "Winkelausdehnung:   " + formatAngle( m.arcsec ) );
          console.writeln( "Projizierte Groesse:" );
-         console.writeln( "   " + formatLy( m.ly ).replace( " lj", " Lichtjahre" ) );
+         console.writeln( "   " + formatLy( m.ly ).replace( " Lj", " Lichtjahre" ) );
          console.writeln( "   " + fmt( m.lightDays, 2 )  + " Lichttage" );
          console.writeln( "   " + fmt( m.lightHours, 1 ) + " Lichtstunden" );
          console.writeln( "   " + fmt( m.au, 0 )         + " AE" );
@@ -2580,6 +2586,13 @@ constructor( params, meta )
       // Faktor aus der Bildgroesse nur als Vorschlag fuer "Nein" eintragen: ob XPIXSZ schon angepasst ist, ist unbekannt
       if ( astScale === null && meta && meta.geomFactor !== null )
          this.edFactor.text = fmt( meta.geomFactor, 2 ).replace( /,?0+$/, "" );
+   }
+   // Erneuter Aufruf aus dem Messfenster ("Eingaben aendern"): vorige Antwort wieder vorbelegen
+   if ( astScale === null && typeof params.origAnswer === "number" && params.origAnswer > 0 && params.origAnswer <= 3 )
+   {
+      this.origCombo.currentItem = params.origAnswer;
+      if ( params.origAnswer === 2 && params.resampleFactor > 0 )
+         this.edFactor.text = fmt( params.resampleFactor, 4 ).replace( /,?0+$/, "" );
    }
    this.edFactor.enabled = ( this.origCombo.currentItem === 2 );
    // Super-Pixel-Debayer: PixInsight laesst XPIXSZ unveraendert (getestet), Faktor 2 korrigiert also nicht doppelt
@@ -3157,7 +3170,8 @@ constructor( params, meta )
          solarStageIdx:   self.solStageCombo.currentItem,
          useAstrometry:   ( astScale !== null && self.chkAst.checked ),
          resampleFactor:  fac,
-         scaleUnverified: unverified
+         scaleUnverified: unverified,
+         origAnswer:      ( astScale === null ) ? self.origCombo.currentItem : 0
       };
       self.ok();
    };
@@ -3435,40 +3449,44 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
 
    var isSolar = ( params.mode === "solarsys" );
    var objSuffix = ( meta && meta.objectName ) ? " – " + meta.objectName : "";
-   var modeTitle = isSolar ? " [Sonnensystem]" : " [Deepsky]";
-   this.windowTitle = TITLE + " v" + VERSION + modeTitle + objSuffix + " – Messmodus";
-   this.minWidth = 820;
+   function updateTitle()
+   {
+      self.windowTitle = TITLE + " v" + VERSION + ( isSolar ? " [Sonnensystem]" : " [Deepsky]" ) + objSuffix + " – Messmodus";
+   }
+   updateTitle();
+   this.minWidth = 1000;
    this.minHeight = 600;
-
-   var pixScale = getPixelscale( params, meta );
 
    this.headLabel = new Label( this );
    this.headLabel.useRichText = true;
    this.headLabel.wordWrapping = true;
-   var srcHint = "   |   Quelle: " + pixScale.source;
-   var warnHint = "";
-   if ( pixScale.deviationPct !== null && pixScale.deviationPct > SCALE_DEV_PCT )
+
+   // Kopfzeile mit Massstab, Entfernung und Quelle (wird nach "Eingaben aendern" neu aufgebaut)
+   function updateHead()
    {
-      var fhM = scaleFactorHint( pixScale.astrometryArcsecPerPx, pixScale.optArcsecPerPx );
-      warnHint = "<br><span style=\"color:#FF8000\">⚠ Brennweite/Pixelgröße weichen " + fmt( pixScale.deviationPct, 1 ) +
-                 " % von der Plate-Solve-Skala ab (" +
-                 ( pixScale.usesAstrometry ? "die Plate-Solve-Skala wird verwendet" : "die Plate-Solve-Skala wird NICHT verwendet – Messwerte evtl. falsch" ) + ")." +
-                 ( fhM !== null ? " " + fhM.text : "" ) + "</span>";
+      var pixScale = getPixelscale( params, meta );
+      var srcHint = "   |   Quelle: " + pixScale.source;
+      var warnHint = "";
+      if ( pixScale.deviationPct !== null && pixScale.deviationPct > SCALE_DEV_PCT )
+      {
+         var fhM = scaleFactorHint( pixScale.astrometryArcsecPerPx, pixScale.optArcsecPerPx );
+         warnHint = "<br><span style=\"color:#FF8000\">⚠ Brennweite/Pixelgröße weichen " + fmt( pixScale.deviationPct, 1 ) +
+                    " % von der Plate-Solve-Skala ab (" +
+                    ( pixScale.usesAstrometry ? "die Plate-Solve-Skala wird verwendet" : "die Plate-Solve-Skala wird NICHT verwendet – Messwerte evtl. falsch" ) + ")." +
+                    ( fhM !== null ? " " + fhM.text : "" ) + "</span>";
+      }
+      if ( !pixScale.usesAstrometry && params.scaleUnverified )
+         warnHint += "<br><span style=\"color:#FF8000\">⚠ Maßstab ungeprüft: kein Plate-Solve und Pixelgröße nicht bestätigt.</span>";
+      if ( isSolar )
+         self.headLabel.text = "<b>Maßstab:</b> " + fmt( pixScale.arcsecPerPx, 3 ) + " ″/px   |   " +
+                               fmt( pixScale.kmPerPx, 2 ) + " km/px" + srcHint +
+                               "   |   d = " + formatKm( params.distanceKm ) + " (" + formatAu( params.distanceKm / KM_PER_AU ) + ")" + warnHint;
+      else
+         self.headLabel.text = "<b>Maßstab:</b> " + fmt( pixScale.arcsecPerPx, 3 ) + " ″/px   |   " +
+                               fmt( pixScale.lyPerPx, 7 ) + " Lj/px" + srcHint +
+                               "   |   d = " + formatLy( params.distanceLy ) + warnHint;
    }
-   if ( !pixScale.usesAstrometry && params.scaleUnverified )
-      warnHint += "<br><span style=\"color:#FF8000\">⚠ Maßstab ungeprüft: kein Plate-Solve und Pixelgröße nicht bestätigt.</span>";
-   if ( isSolar )
-   {
-      this.headLabel.text = "<b>Maßstab:</b> " + fmt( pixScale.arcsecPerPx, 3 ) + " ″/px   |   " +
-                            fmt( pixScale.kmPerPx, 2 ) + " km/px" + srcHint +
-                            "   |   d = " + formatKm( params.distanceKm ) + " (" + formatAu( params.distanceKm / KM_PER_AU ) + ")" + warnHint;
-   }
-   else
-   {
-      this.headLabel.text = "<b>Maßstab:</b> " + fmt( pixScale.arcsecPerPx, 3 ) + " ″/px   |   " +
-                            fmt( pixScale.lyPerPx, 7 ) + " lj/px" + srcHint +
-                            "   |   d = " + formatLy( params.distanceLy ) + warnHint;
-   }
+   updateHead();
 
    this.liveLabel = new Label( this );
    this.liveLabel.useRichText = true;
@@ -3477,7 +3495,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    this.statusLabel = new Label( this );
    this.statusLabel.wordWrapping = true;
    this.statusLabel.text = "Linksklick + Ziehen = messen (L = Linie, K = Kreis/Fläche)  |  Mausrad = Zoom  |  Mitteltaste oder Pfeiltasten = Pan  |  " +
-                           "1 = 100 %, F = Fit  |  Rechtsklick = laufende Messung abbrechen  |  Esc = Beenden (mit Rückfrage)";
+                           "1 = 100 %, F = Einpassen  |  Rechtsklick oder Esc = laufende Messung abbrechen  |  Beenden über „Messmodus beenden“";
 
    this.scaleHint = new Label( this );
    this.scaleHint.wordWrapping = true;
@@ -3609,7 +3627,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    function setTool( t )
    {
       tool = t;
-      try { self.toolCombo.currentItem = t; } catch ( e ) {}
+      try { self.lineButton.checked = ( t == 0 ); self.circleButton.checked = ( t == 1 ); } catch ( e ) {}
       self.statusLabel.text = ( t == 1 ) ? "Werkzeug Kreis: Mittelpunkt klicken, zum Rand ziehen (misst Durchmesser & Fläche)."
                                          : "Werkzeug Linie: Anfangspunkt klicken, zum Endpunkt ziehen (misst Länge & Strecke).";
    }
@@ -3642,7 +3660,97 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
          return;
       history.pop();
       updateLive( null );
+      refreshList();
       vp.update();
+   }
+
+   // Laenge in Bildpixeln aus den gespeicherten Koordinaten (Kreis: Durchmesser)
+   function itemLengthPx( it )
+   {
+      var dx = it.x1 - it.x0, dy = it.y1 - it.y0;
+      var d = Math.sqrt( dx * dx + dy * dy );
+      return ( it.kind === "circle" ) ? 2 * d : d;
+   }
+
+   // Spanne nur im Sonnensystem mit Katalog-Koerper (Erdnaehe bis Erdferne); sonst "–"
+   function spanText( it )
+   {
+      if ( !isSolar || params.solarStageIdx === 3 || !( params.solarObjIdx >= 0 && params.solarObjIdx < SOLARSYS_CATALOG.length ) )
+         return "–";
+      var obj = SOLARSYS_CATALOG[ params.solarObjIdx ];
+      var th = itemLengthPx( it ) * getPixelscale( params, meta ).thetaRad;
+      return formatKm( projLength( obj.minKm, th ) ) + " – " + formatKm( projLength( obj.maxKm, th ) );
+   }
+
+   function refreshList()
+   {
+      var tb = self.resultTree;
+      if ( !tb ) return;
+      tb.clear();
+      for ( var i = 0; i < history.length; ++i )
+      {
+         var it = history[i], m = it.m, circle = ( it.kind === "circle" );
+         var node = new TreeBoxNode( tb );
+         node.setText( 0, "#" + it.n );
+         node.setText( 1, circle ? "Kreis Ø" : "Linie" );
+         node.setText( 2, formatAngle( m.arcsec ) );
+         node.setText( 3, ( m.mode === "solarsys" ) ? formatKm( m.km ) : formatLy( m.ly ) );
+         node.setText( 4, spanText( it ) );
+         try { node.setTextColor( 0, it.color ); } catch ( ec ) {}
+         node.setToolTip( 3, legendText( it ) );
+      }
+      for ( var c = 0; c < 5; ++c )
+         try { tb.adjustColumnWidthToContents( c ); } catch ( ew ) {}
+      self.delSelButton.enabled = ( history.length > 0 );
+   }
+
+   function removeSelected()
+   {
+      var tb = self.resultTree, keep = [], removed = 0;
+      for ( var i = 0; i < history.length; ++i )
+      {
+         var node = ( i < tb.numberOfChildren ) ? tb.child( i ) : null;
+         if ( node != null && node.selected ) ++removed; else keep.push( history[i] );
+      }
+      if ( removed == 0 )
+      {
+         self.statusLabel.text = "Erst eine Messung in der Liste anklicken, dann „Markierte löschen“.";
+         return;
+      }
+      history = keep;
+      updateLive( null );
+      refreshList();
+      vp.update();
+   }
+
+   function editParams()
+   {
+      if ( dragging || panning || haveLine ) cancelDrag();
+      var cp = {};
+      for ( var k in params ) cp[k] = params[k];
+      var pd = new ParameterDialog( cp, meta );
+      if ( !pd.execute() )
+         return;
+      params = pd.values;
+      saveParams( params );
+      isSolar = ( params.mode === "solarsys" );
+      for ( var i = 0; i < history.length; ++i )
+         history[i].m = computeMeasurement( itemLengthPx( history[i] ), params, meta );
+      if ( history.length > 0 ) dirty = true;
+      updateTitle();
+      updateHead();
+      refreshList();
+      updateLive( null );
+      vp.update();
+      console.writeln( "" );
+      console.writeln( "<b>=== Eingaben geändert – ab jetzt gelten diese Werte ===</b>" );
+      printParamSummary( params, meta );
+      if ( history.length > 0 )
+      {
+         console.writeln( "Vorhandene Messungen, neu berechnet:" );
+         for ( var j = 0; j < history.length; ++j )
+            report( history[j], params );
+      }
    }
 
    function textWidth( g, txt )
@@ -3834,6 +3942,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
                        color: PALETTE[ ( self.measureCount - 1 ) % PALETTE.length ] };
             history.push( it );
             dirty = true;
+            refreshList();
             updateLive( liveText( m, it.kind ) );
             report( it, params );
          }
@@ -3854,7 +3963,8 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
       var step = 40;
       if ( key == KEY_ESCAPE )
       {
-         if ( dragging || panning || haveLine ) cancelDrag(); else requestEnd();
+         // Esc bricht nur die laufende Messung ab; Beenden nur ueber den Knopf "Messmodus beenden"
+         if ( dragging || panning || haveLine ) cancelDrag();
          return true;
       }
       if ( key == KEY_ONE ) { zoomOne(); return true; }
@@ -3935,8 +4045,8 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    this.oneButton.onClick = function() { zoomOne(); };
 
    this.fitButton = new ToolButton( this );
-   this.fitButton.text = "Fit";
-   this.fitButton.toolTip = "Bild an Fenster anpassen";
+   this.fitButton.text = "Einpassen";
+   this.fitButton.toolTip = "Bild ins Fenster einpassen (Taste F)";
    this.fitButton.onClick = function() { fitZoom(); };
 
    // Export-Button
@@ -3947,6 +4057,12 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    {
       if ( saveAnnotatedImage( levels[0], imgW, imgH, history, params, meta ) ) dirty = false;
    };
+
+   this.editButton = new PushButton( this );
+   this.editButton.text = "Eingaben ändern …";
+   this.editButton.toolTip = "Öffnet den Parameter-Dialog mit den aktuellen Werten (Optik, Entfernung, Modus, Faktor).\n" +
+                             "Die vorhandenen Messungen bleiben erhalten und werden mit den neuen Werten neu berechnet.";
+   this.editButton.onClick = function() { editParams(); };
 
    // Doku-Button
    this.docButton = new PushButton( this );
@@ -3969,6 +4085,7 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    viewRow.add( this.fitButton );
    viewRow.add( this.zoomLabel );
    viewRow.addStretch();
+   viewRow.add( this.editButton );
    viewRow.add( this.saveButton );
    viewRow.add( this.docButton );
    viewRow.add( this.endButton );
@@ -3976,12 +4093,19 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    var toolLabel = new Label( this );
    toolLabel.text = "Werkzeug:";
 
-   this.toolCombo = new ComboBox( this );
-   this.toolCombo.addItem( "Linie (Strecke)" );
-   this.toolCombo.addItem( "Kreis (Fläche)" );
-   this.toolCombo.currentItem = 0;
-   this.toolCombo.toolTip = "Linie: Strecke ziehen.  Kreis: Mittelpunkt klicken und zum Rand ziehen (misst Durchmesser und Fläche).  (Tasten L / K)";
-   this.toolCombo.onItemSelected = function( index ) { setTool( index ); };
+   this.lineButton = new ToolButton( this );
+   this.lineButton.text = "Linie";
+   this.lineButton.checkable = true;
+   this.lineButton.checked = true;
+   this.lineButton.toolTip = "Linie: Anfangspunkt klicken, zum Endpunkt ziehen (Taste L).";
+   this.lineButton.onClick = function() { setTool( 0 ); };
+
+   this.circleButton = new ToolButton( this );
+   this.circleButton.text = "Kreis (Fläche)";
+   this.circleButton.checkable = true;
+   this.circleButton.checked = false;
+   this.circleButton.toolTip = "Kreis: Mittelpunkt klicken und zum Rand ziehen, misst Durchmesser und Fläche (Taste K).";
+   this.circleButton.onClick = function() { setTool( 1 ); };
 
    this.labelCheck = new CheckBox( this );
    this.labelCheck.text = "Beschriftung";
@@ -4014,13 +4138,15 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
       history = [];
       haveLine = false;
       updateLive( null );
+      refreshList();
       vp.update();
    };
 
    var measureRow = new HorizontalSizer;
    measureRow.spacing = 6;
    measureRow.add( toolLabel );
-   measureRow.add( this.toolCombo );
+   measureRow.add( this.lineButton );
+   measureRow.add( this.circleButton );
    measureRow.addSpacing( 10 );
    measureRow.add( this.labelCheck );
    measureRow.add( this.legendCheck );
@@ -4034,7 +4160,43 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
    this.sizer.add( this.headLabel );
    this.sizer.add( this.liveLabel );
    this.sizer.add( this.statusLabel );
-   this.sizer.add( this.sb, 100 );
+   // Ergebnisliste rechts vom Bild
+   this.resultTree = new TreeBox( this );
+   this.resultTree.numberOfColumns = 5;
+   this.resultTree.headerVisible = true;
+   this.resultTree.rootDecoration = false;
+   this.resultTree.alternateRowColor = true;
+   this.resultTree.multipleSelection = true;
+   this.resultTree.setHeaderText( 0, "Nr." );
+   this.resultTree.setHeaderText( 1, "Art" );
+   this.resultTree.setHeaderText( 2, "Winkel" );
+   this.resultTree.setHeaderText( 3, "Größe" );
+   this.resultTree.setHeaderText( 4, "Spanne" );
+   this.resultTree.setMinWidth( 340 );
+   this.resultTree.toolTip = "Alle Messungen dieser Sitzung. Zeilen anklicken (Strg/Umschalt für mehrere) und „Markierte löschen“.\n" +
+                             "Spanne: nur im Sonnensystem-Modus mit Katalog-Körper (Erdnähe bis Erdferne).";
+
+   this.delSelButton = new PushButton( this );
+   this.delSelButton.text = "Markierte löschen";
+   this.delSelButton.toolTip = "Entfernt die in der Liste markierten Messungen aus Anzeige und Legende (Konsolenbericht bleibt).";
+   this.delSelButton.enabled = false;
+   this.delSelButton.onClick = function() { removeSelected(); };
+
+   var listLabel = new Label( this );
+   listLabel.text = "Messungen";
+
+   var listSizer = new VerticalSizer;
+   listSizer.spacing = 4;
+   listSizer.add( listLabel );
+   listSizer.add( this.resultTree, 100 );
+   listSizer.add( this.delSelButton );
+
+   var midRow = new HorizontalSizer;
+   midRow.spacing = 8;
+   midRow.add( this.sb, 100 );
+   midRow.add( listSizer );
+
+   this.sizer.add( midRow, 100 );
    this.sizer.add( this.scaleHint );
    this.sizer.add( measureRow );
    this.sizer.add( viewRow );
@@ -4057,19 +4219,53 @@ constructor( preview, imgW, imgH, params, rebuildFn, meta )
       self.stretchCheck.onCheck = null;
       self.labelCheck.onCheck = null;
       self.legendCheck.onCheck = null;
-      self.toolCombo.onItemSelected = null;
+      self.lineButton.onClick = null;
+      self.circleButton.onClick = null;
+      self.editButton.onClick = null;
+      self.delSelButton.onClick = null;
       levels = [];
       stfCache.on = null;
       stfCache.off = null;
    };
 
-   this.resize( 1100, 800 );
+   this.resize( 1400, 820 );
 }
 }
 
 // ============================================================================
 // main()
 // ============================================================================
+function printParamSummary( params, meta )
+{
+   var sc = getPixelscale( params, meta );
+   console.writeln( "Modus: <b>" + ( params.mode === "solarsys" ? "Sonnensystem" : "Deepsky" ) + "</b>" );
+   console.writeln( "Brennweite: " + fmt( params.focalLengthMm, 1 ) + " mm, Pixelgröße: " +
+                    fmt( params.pixelSizeUm, 3 ) + " µm" +
+                    ( params.resampleFactor && params.resampleFactor !== 1 ? " × Faktor " + fmt( params.resampleFactor, 2 ) +
+                      " = " + fmt( params.pixelSizeUm * params.resampleFactor, 3 ) + " µm effektiv" : "" ) );
+   if ( params.mode === "solarsys" )
+   {
+      console.writeln( "Entfernung: " + formatKm( params.distanceKm ) + " (" + formatAu( params.distanceKm / KM_PER_AU ) + ")" );
+      console.writeln( "Maßstab: " + fmt( sc.arcsecPerPx, 4 ) + " ″/px, " + fmt( sc.kmPerPx, 3 ) + " km/px" );
+   }
+   else
+   {
+      console.writeln( "Entfernung: " + formatLy( params.distanceLy ) );
+      console.writeln( "Maßstab: " + fmt( sc.arcsecPerPx, 4 ) + " ″/px, " + fmt( sc.lyPerPx, 7 ) + " Lj/px" );
+   }
+   console.writeln( "Maßstab-Quelle: <b>" + sc.source + "</b>" +
+                    ( sc.astrometryArcsecPerPx ? " (Plate-Solve " + fmt( sc.astrometryArcsecPerPx, 4 ) + " ″/px, Optik " + fmt( sc.optArcsecPerPx, 4 ) + " ″/px)" : "" ) );
+   if ( sc.deviationPct !== null && sc.deviationPct > SCALE_DEV_PCT )
+   {
+      console.warningln( "** Brennweite/Pixelgröße weichen " + fmt( sc.deviationPct, 1 ) + " % von der Plate-Solve-Skala ab." );
+      var fhC = scaleFactorHint( sc.astrometryArcsecPerPx, sc.optArcsecPerPx );
+      if ( fhC !== null )
+         console.warningln( "** " + fhC.text );
+   }
+   if ( !sc.usesAstrometry && params.scaleUnverified )
+      console.warningln( "** Maßstab ungeprüft: kein Plate-Solve und Pixelgröße nicht bestätigt." );
+}
+
 function main()
 {
    console.show();
@@ -4125,33 +4321,7 @@ function main()
    params = pd.values;
    saveParams( params );
 
-   var sc = getPixelscale( params, meta );
-   console.writeln( "Modus: <b>" + ( params.mode === "solarsys" ? "Sonnensystem" : "Deepsky" ) + "</b>" );
-   console.writeln( "Brennweite: " + fmt( params.focalLengthMm, 1 ) + " mm, Pixelgröße: " +
-                    fmt( params.pixelSizeUm, 3 ) + " µm" +
-                    ( params.resampleFactor && params.resampleFactor !== 1 ? " × Faktor " + fmt( params.resampleFactor, 2 ) +
-                      " = " + fmt( params.pixelSizeUm * params.resampleFactor, 3 ) + " µm effektiv" : "" ) );
-   if ( params.mode === "solarsys" )
-   {
-      console.writeln( "Entfernung: " + formatKm( params.distanceKm ) + " (" + formatAu( params.distanceKm / KM_PER_AU ) + ")" );
-      console.writeln( "Maßstab: " + fmt( sc.arcsecPerPx, 4 ) + " ″/px, " + fmt( sc.kmPerPx, 3 ) + " km/px" );
-   }
-   else
-   {
-      console.writeln( "Entfernung: " + formatLy( params.distanceLy ) );
-      console.writeln( "Maßstab: " + fmt( sc.arcsecPerPx, 4 ) + " ″/px, " + fmt( sc.lyPerPx, 7 ) + " lj/px" );
-   }
-   console.writeln( "Maßstab-Quelle: <b>" + sc.source + "</b>" +
-                    ( sc.astrometryArcsecPerPx ? " (Plate-Solve " + fmt( sc.astrometryArcsecPerPx, 4 ) + " ″/px, Optik " + fmt( sc.optArcsecPerPx, 4 ) + " ″/px)" : "" ) );
-   if ( sc.deviationPct !== null && sc.deviationPct > SCALE_DEV_PCT )
-   {
-      console.warningln( "** Brennweite/Pixelgröße weichen " + fmt( sc.deviationPct, 1 ) + " % von der Plate-Solve-Skala ab." );
-      var fhC = scaleFactorHint( sc.astrometryArcsecPerPx, sc.optArcsecPerPx );
-      if ( fhC !== null )
-         console.warningln( "** " + fhC.text );
-   }
-   if ( !sc.usesAstrometry && params.scaleUnverified )
-      console.warningln( "** Maßstab ungeprüft: kein Plate-Solve und Pixelgröße nicht bestätigt." );
+   printParamSummary( params, meta );
 
    // 4. Bildvorschau erzeugen
    var st = null;
@@ -4176,7 +4346,7 @@ function main()
                               function( autoSTF ) { return buildPreview( image, st, autoSTF ); },
                               meta );
       preview = null;
-      console.writeln( "Messmodus aktiv (Werkzeuge: Taste L = Linie, Taste K = Kreisfläche)." );
+      console.writeln( "Messmodus aktiv (Werkzeuge: Taste L = Linie, Taste K = Kreisfläche; Esc bricht die laufende Messung ab)." );
       md.execute();
    }
    catch ( e )
