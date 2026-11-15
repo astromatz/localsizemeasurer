@@ -192,7 +192,7 @@
 <body>
 
 <header>
-  <h1>LocalSizeMeasurer <span class="version-tag">v2.3</span></h1>
+  <h1>LocalSizeMeasurer <span class="version-tag">v2.4</span></h1>
   <p class="subtitle">Interaktives physikalisches Mess-Lineal &amp; Fl&auml;chenberechnung f&uuml;r PixInsight</p>
 </header>
 
@@ -223,8 +223,8 @@
     <h3><span class="badge badge-deepsky">Deepsky</span> Deepsky-Modus (Lichtjahre &amp; Raumdimensionen)</h3>
     <p>Konzipiert f&uuml;r Gasnebel, Sternentstehungsgebiete, Molek&uuml;lwolken, Sternhaufen und Galaxien au&szlig;erhalb des Sonnensystems.</p>
     <ul>
-      <li><b>Entfernungsma&szlig;stab:</b> Lichtjahre (lj), Lichttage, Lichtstunden und Astronomische Einheiten (AE).</li>
-      <li><b>Fl&auml;chenma&szlig;stab:</b> Quadrat-Lichtjahre (lj&sup2;).</li>
+      <li><b>Entfernungsma&szlig;stab:</b> Lichtjahre (Lj), Lichttage, Lichtstunden und Astronomische Einheiten (AE).</li>
+      <li><b>Fl&auml;chenma&szlig;stab:</b> Quadrat-Lichtjahre (Lj&sup2;).</li>
       <li><b>Vergleichsgr&ouml;&szlig;e:</b> Vielfaches des Sonnensystems (definiert als 100 AE Scheibendurchmesser, Fl&auml;che ca. 7.854 AE&sup2;).</li>
       <li><b>Objekt-Erkennung:</b> Integrierter Gaia-EDR3- und Cepheiden-Katalog sowie direkte <b>SIMBAD-TAP- und NED-Online-Abfrage</b>.</li>
     </ul>
@@ -304,7 +304,7 @@
     <ul>
       <li><b>1. Gaia-Parallaxe (<i>&#960;</i> in mas):</b> Wird nur bei Signal-zu-Rausch &#8805; 5 als belastbar akzeptiert. Bei 3 bis 5 ist die Entfernung ausdr&#252;cklich als unsicher markiert.
         <div style="background: var(--code-bg); padding: 6px 12px; border-radius: 4px; margin: 6px 0; font-family: Consolas, monospace;">
-          Distanz [pc] = 1000 / &#960; [mas] &nbsp;&rArr;&nbsp; Distanz [lj] = Distanz [pc] &#215; 3,26156
+          Distanz [pc] = 1000 / &#960; [mas] &nbsp;&rArr;&nbsp; Distanz [Lj] = Distanz [pc] &#215; 3,26156
         </div>
         Eine Nullpunktkorrektur der Parallaxe wird nicht angewendet.
       </li>
@@ -318,7 +318,7 @@
     <ul>
       <li>Dezimaltrenner ist Komma oder Punkt. Bei Entfernungen und Brennweite gelten Punkte vor genau drei Ziffern als Tausendertrenner: &#8222;2.537.000&#8220; und &#8222;3.000&#8220; (= 3000) werden so gelesen.</li>
       <li>Bei der <b>Pixelgr&#246;&#223;e</b> ist der Punkt immer ein Dezimaltrenner (&#8222;3.75&#8220; = 3,75 &#181;m).</li>
-      <li>Ungew&#246;hnliche Werte (z. B. Entfernung unter 1 lj, Brennweite unter 5 mm, Pixelgr&#246;&#223;e &#252;ber 50 &#181;m) l&#246;sen eine R&#252;ckfrage aus.</li>
+      <li>Ungew&#246;hnliche Werte (z. B. Entfernung unter 1 Lj, Brennweite unter 5 mm, Pixelgr&#246;&#223;e &#252;ber 50 &#181;m) l&#246;sen eine R&#252;ckfrage aus.</li>
       <li>Wird die Entfernung von Hand ge&#228;ndert, wechselt die Auswahl automatisch auf &#8222;Freie Eingabe&#8220;. Der Wert bleibt dadurch beim n&#228;chsten Start erhalten.</li>
     </ul>
 
@@ -369,7 +369,7 @@
       </tr>
       <tr>
         <td><kbd>F</kbd></td>
-        <td><b>Fit:</b> Bild optimal an die aktuelle Fenstergr&ouml;&szlig;e anpassen.</td>
+        <td><b>Einpassen:</b> Bild optimal an die aktuelle Fenstergr&ouml;&szlig;e anpassen.</td>
       </tr>
       <tr>
         <td><kbd>Mausrad</kbd></td>
@@ -398,7 +398,7 @@
       </tr>
       <tr>
         <td><kbd>Esc</kbd></td>
-        <td>Bricht eine laufende Messung ab, sonst wird der Messmodus beendet. Gibt es noch nicht gespeicherte Messungen, fragt das Script vorher nach.</td>
+        <td>Bricht die <b>laufende Messung</b> ab (wie die rechte Maustaste). Ohne laufende Messung schlie&#223;t PixInsight das Fenster selbst. Gibt es dann nicht gespeicherte Messungen, fragt das Script nach und &#246;ffnet das Messfenster auf Wunsch mit allen Messungen wieder. Regul&#228;r beendet wird &#252;ber <b>Messmodus beenden</b>.</td>
       </tr>
     </tbody>
   </table>
@@ -412,15 +412,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td><b>Werkzeug</b></td><td>Auswahl zwischen <i>Linie (Strecke)</i> und <i>Kreis (Fl&#228;che)</i>, gleichwertig zu den Tasten <kbd>L</kbd> und <kbd>K</kbd>.</td></tr>
+      <tr><td><b>Linie / Kreis (Fl&#228;che)</b></td><td>Umschaltkn&#246;pfe f&#252;r das Werkzeug, gleichwertig zu den Tasten <kbd>L</kbd> und <kbd>K</kbd>. Voreingestellt ist <i>Linie</i>.</td></tr>
+      <tr><td><b>Messungen (Liste)</b></td><td>Rechts vom Bild: alle Messungen mit Nr., Art, Winkel, Gr&#246;&#223;e und Spanne. Die Spanne gibt es nur im Sonnensystem-Modus mit Katalog-K&#246;rper (Erdn&#228;he bis Erdferne). Zeilen anklicken (Strg/Umschalt f&#252;r mehrere) und <b>Markierte l&#246;schen</b> entfernt sie aus Anzeige und Legende.</td></tr>
       <tr><td><b>Beschriftung</b></td><td>Blendet das Kurzergebnis direkt an jeder Linie bzw. jedem Kreis ein oder aus.</td></tr>
       <tr><td><b>Legende</b></td><td>Blendet die Tafel mit allen Messungen links unten ein oder aus. Sie zeigt die letzten 12 Messungen, &#228;ltere werden mit &#8222;&hellip; &#228;ltere nicht angezeigt&#8220; zusammengefasst.</td></tr>
       <tr><td><b>Letzte l&#246;schen</b></td><td>Entfernt die letzte Messung (wie <kbd>Backspace</kbd> / <kbd>Entf</kbd>).</td></tr>
       <tr><td><b>Alle l&#246;schen</b></td><td>Entfernt alle Messungen aus der Anzeige, bei mehr als einer Messung mit R&#252;ckfrage. Der Konsolenbericht bleibt erhalten.</td></tr>
       <tr><td><b>AutoSTF</b></td><td>Schaltet die automatische Bildschirmstreckung ein oder aus. Zoom und Messungen bleiben erhalten; die Messwerte &#228;ndern sich dadurch nicht.</td></tr>
-      <tr><td><b>+ / &minus; / 1:1 / Fit</b></td><td>Zoom-Buttons, entsprechen Mausrad, <kbd>1</kbd> und <kbd>F</kbd>.</td></tr>
+      <tr><td><b>+ / &minus; / 1:1 / Einpassen</b></td><td>Zoom-Buttons, entsprechen Mausrad, <kbd>1</kbd> und <kbd>F</kbd>.</td></tr>
+      <tr><td><b>Eingaben &#228;ndern &hellip;</b></td><td>&#214;ffnet den Parameter-Dialog erneut, vorbelegt mit den aktuellen Werten. Optik, Entfernung, Faktor und auch der Modus (Deepsky/Sonnensystem) lassen sich &#228;ndern. Die vorhandenen Messungen bleiben erhalten und werden neu berechnet; die Konsole gibt die neuen Werte und alle Messungen erneut aus.</td></tr>
       <tr><td><b>Bild speichern &hellip;</b></td><td>Export des annotierten Bildes (siehe Abschnitt 6).</td></tr>
-      <tr><td><b>Messmodus beenden</b></td><td>Schlie&#223;t das Messfenster, bei nicht gespeicherten Messungen mit R&#252;ckfrage (wie <kbd>Esc</kbd>).</td></tr>
+      <tr><td><b>Messmodus beenden</b></td><td>Schlie&#223;t das Messfenster, bei nicht gespeicherten Messungen mit R&#252;ckfrage. Schlie&#223;t PixInsight das Fenster anders (<kbd>Esc</kbd>, Fenster-X), bietet das Script an, es mit allen Messungen wieder zu &#246;ffnen.</td></tr>
     </tbody>
   </table>
 
@@ -429,7 +431,7 @@
     <p>Mit dem Button <b>&bdquo;Bild speichern &hellip;&ldquo;</b> erzeugt <code>LocalSizeMeasurer</code> eine reproduzierbare Bilddatei:</p>
     <ul>
       <li><b>Formate:</b> PNG (verlustfrei) oder JPEG (Qualit&auml;t 95 %).</li>
-      <li><b>Inhalte:</b> Linien und Kreise in kontrastreichen Farben, dynamisch skalierte Messwert-Tags (#1, #2 &#8230;), eine &#252;bersichtliche Legenden-Tabelle in der Bildecke, eine <b>Ma&#223;stabsleiste</b> unten rechts (in lj bzw. km, gerundet auf 1-2-5-Schritte) sowie ein Metadaten-Banner mit Objekt, Entfernung, Ma&#223;stab und Ma&#223;stabsquelle.</li>
+      <li><b>Inhalte:</b> Linien und Kreise in kontrastreichen Farben, dynamisch skalierte Messwert-Tags (#1, #2 &#8230;), eine &#252;bersichtliche Legenden-Tabelle in der Bildecke, eine <b>Ma&#223;stabsleiste</b> unten rechts (in Lj bzw. km, gerundet auf 1-2-5-Schritte) sowie ein Metadaten-Banner mit Objekt, Entfernung, Ma&#223;stab und Ma&#223;stabsquelle.</li>
       <li><b>Unabh&#228;ngig von der Anzeige:</b> Der Export zeichnet immer alle Messungen mit Beschriftung und die Legende ein, auch wenn &#8222;Beschriftung&#8220; oder &#8222;Legende&#8220; im Messfenster abgeschaltet sind. Wer ein Bild ohne bestimmte Messungen m&#246;chte, l&#246;scht diese vorher.</li>
       <li><b>Legende im Export:</b> Sie enth&#228;lt die <b>letzten 14 Messungen</b>. Bei mehr Messungen fehlen die &#228;lteren in der Legende ohne gesonderten Hinweis; ihre Linien, Kreise und Beschriftungen sind aber im Bild eingezeichnet.</li>
       <li><b>Vor dem Beenden:</b> Beenden Sie den Messmodus mit nicht gespeicherten Messungen, fragt das Script nach. Auch &#8222;Alle l&#246;schen&#8220; fragt bei mehr als einer Messung nach. Der Konsolenbericht bleibt in jedem Fall erhalten.</li>
@@ -474,6 +476,7 @@
 
   <h2>9. Versionshistorie</h2>
   <ul>
+    <li><b>v2.4 (2.4.1):</b> Schlie&#223;en per <kbd>Esc</kbd> oder Fenster-X verliert keine Messungen mehr (R&#252;ckfrage und Wieder&#246;ffnen). <b>2.4.0:</b> Angleichung an LocalSizeMeasurer Web: Ergebnisliste im Messfenster mit L&#246;schen einzelner Messungen; <b>Eingaben &#228;ndern &hellip;</b> ohne Neustart (Messungen bleiben erhalten); <kbd>Esc</kbd> bricht nur die laufende Messung ab; Werkzeug als Umschaltkn&#246;pfe; &#8222;Einpassen&#8220; statt &#8222;Fit&#8220;; Einheit &#8222;Lj&#8220; statt &#8222;lj&#8220;.</li>
     <li><b>v2.3 (2.3.6):</b> Sonnensystem-Modus: Messwerte nur noch in km, AE nur f&#252;r die Objektentfernung; Faktor-Erkennung bei Skalenabweichung (2, 3, 4, 0,5) mit Ursache und Abhilfe; Plate-Solve-Skala aus Fenster-L&#246;sung, PCL-Matrix, Astrometry:Resolution und FITS-WCS mit Gegenpr&#252;fung; veraltete Header-L&#246;sungen werden &#252;ber die Bildgr&#246;&#223;e (NAXIS1/NAXIS2) erkannt und verworfen (behebt einen Ma&#223;stabsfehler um Faktor 2 nach Super-Pixel-Debayer); R&#252;ckfrage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; mit Faktor-Eingabe, wenn kein Plate-Solve vorliegt; Warnung vor doppelter Korrektur; Debayer- und Drizzle-Erkennung; Hinweis bei exakter &#220;bereinstimmung von Optik und Plate-Solve (ASIAIR); Konsolenbericht zeigt Matrix- und Vektor-Werte.</li>
     <li><b>v2.2:</b> Plate-Solve-Skala wird jetzt tats&#228;chlich f&#252;r die Messung verwendet (inkl. Abweichungswarnung, Quellenanzeige und Binning-Abgleich); WCS-Skala aus CD-Matrix bzw. CDELT&#215;PC; XISF-Brennweite korrekt in Metern; robustere Online-Suche (Einheiten-Whitelist, Median aus mehreren Literaturwerten, Parallaxe nur bei S/N &#8805; 5, Zentralstern-Fallback nur noch f&#252;r Nebel/Haufen, strenger NED-Parser, Hubble-Fluss nur f&#252;r 0,003 &#8804; z &#8804; 0,1, Zeitbudget und Offline-Erkennung, Abgleich mit dem Katalog, Sesame entfernt); Namensvarianten f&#252;r Sh2-132 u. &#228;. repariert; Zahleneingabe mit deutschen Tausenderpunkten und Plausibilit&#228;tsr&#252;ckfragen; handge&#228;nderte Entfernungen bleiben erhalten; Header-Objektnamen werden nur noch sicher zugeordnet; R&#252;ckfrage vor dem Beenden mit ungespeicherten Messungen; Rechtsklick bricht nur die laufende Messung ab; Scrollbalken, <kbd>1</kbd> und <kbd>F</kbd> funktionieren; AutoSTF-Umschalten mit Zwischenspeicher; Ma&#223;stabsleiste im Export; Dokumentation an den Code angeglichen (Formeln als HTML).</li>
     <li><b>v2.1 (Finale Version):</b> Umfassende Qualit&auml;tskontrolle und Code-H&auml;rtung; numerischer NaN/Inf-Schutz bei Bild-Sampling und Skalenberechnungen; erweiterte SIMBAD TAP Identifier-Aufl&ouml;sung mit Leerzeichen- und Case-Toleranz; intelligenter Zielordner-Vorschlag beim Export annotierter Bilder; Tastaturk&uuml;rzel f&uuml;r Bildzoom (<kbd>+</kbd> und <kbd>&minus;</kbd>); robustes Ressourcen- und Graphics-Lifecycle-Management.</li>
@@ -487,7 +490,7 @@
 </main>
 
 <footer>
-  LocalSizeMeasurer v2.3.6 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
+  LocalSizeMeasurer v2.4.1 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
 </footer>
 
 </body>

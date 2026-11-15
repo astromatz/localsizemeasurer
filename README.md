@@ -4,15 +4,16 @@
 
 LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du ziehst damit Linien oder Kreise über ein Objekt in deinem Astrofoto. Das Script rechnet daraus die tatsächliche Ausdehnung aus, in Lichtjahren bei Nebeln und Galaxien und in Kilometern bei Mond, Sonne und Planeten.
 
-> Aktuelle Version: **v2.3.6** · getestet mit PixInsight 1.9.6 (Build 1713)
+> Aktuelle Version: **v2.4.1** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.3, Testphase, siehe [unten](#web-app)).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.4, Testphase, siehe [unten](#web-app)).
 
 ---
 
 ## Funktionen
 
-- **Interaktiv messen:** Strecken (Linie) und Kreisflächen direkt im Bild, beliebig viele nacheinander, mit Legende und Beschriftung
+- **Interaktiv messen:** Strecken (Linie) und Kreisflächen direkt im Bild, beliebig viele nacheinander, mit Legende, Beschriftung und Ergebnisliste
+- **Eingaben ändern ohne Neustart:** Optik, Entfernung oder Modus im Messfenster anpassen – die Messungen bleiben erhalten und werden neu berechnet
 - **Zwei Modi:**
   - *Deepsky:* Ergebnis in Lichtjahren, Vergleich mit dem Sonnensystem (100 AE)
   - *Sonnensystem:* Ergebnis in Kilometern, Vergleich mit dem Erddurchmesser; Entfernungsstufen Minimal / Mittel / Maximal für Mond, Sonne und Planeten
@@ -26,20 +27,20 @@ LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du z
 
 | Datei | Inhalt |
 |---|---|
-| `LSM_2_3.js` | Das Script |
+| `LSM_2_4.js` | Das Script |
 | `LocalSizeMeasurer_Doc.html` | Ausführliche Dokumentation (öffnet sich auch über den Button „Dokumentation“ im Script) |
 | `index.html` | Die Web-App (eine einzelne Datei) |
 
-Lege beide Dateien **in denselben Ordner**, sonst findet der Doku-Button die Hilfe nicht.
+Lege **Script und Doku in denselben Ordner**, sonst findet der Doku-Button die Hilfe nicht.
 
 ## Installation
 
 **Zum Ausprobieren:**
-`Script > Execute Script File …` und `LSM_2_3.js` wählen. Dabei wird nichts installiert.
+`Script > Execute Script File …` und `LSM_2_4.js` wählen. Dabei wird nichts installiert.
 
 **Dauerhaft ins Menü:**
 1. `Script > Feature Scripts …` öffnen
-2. Mit **Add** den Ordner mit `LSM_2_3.js` hinzufügen
+2. Mit **Add** den Ordner mit `LSM_2_4.js` hinzufügen
 3. Mit **Done** bestätigen
 
 Danach findest du das Script unter `Script > Utilities > LocalSizeMeasurer`.
@@ -50,8 +51,10 @@ Danach findest du das Script unter `Script > Utilities > LocalSizeMeasurer`.
 2. Script starten
 3. Im Parameter-Dialog den Modus wählen und die Entfernung eintragen, online suchen oder aus dem Katalog übernehmen
 4. Maßstab prüfen: Orange Warnungen ernst nehmen. Ohne Plate-Solve fragt das Script, ob die Pixelgröße zum Bild passt.
-5. Im Messfenster mit gedrückter linker Maustaste messen: <kbd>L</kbd> = Linie, <kbd>K</kbd> = Kreis
+5. Im Messfenster mit gedrückter linker Maustaste messen: <kbd>L</kbd> = Linie, <kbd>K</kbd> = Kreis. <kbd>Esc</kbd> bricht die laufende Messung ab. Mit **Eingaben ändern …** lassen sich Optik und Entfernung nachträglich korrigieren.
 6. Mit **Bild speichern …** das annotierte Bild exportieren
+
+Schließt sich das Messfenster über <kbd>Esc</kbd> oder das Fenster-X, bietet das Script an, es mit allen nicht gespeicherten Messungen wieder zu öffnen.
 
 **Tipp:** Löse das Bild nach dem letzten Schritt, der die Bildgröße ändert, mit dem ImageSolver. Dann stimmt der Maßstab in jedem Fall.
 
@@ -66,10 +69,12 @@ Details stehen in der Dokumentation.
 ## Web-App
 
 **LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight: https://astromatz.github.io/localsizemeasurer/
-Aktuelle Version **v1.3**, noch in der Testphase.
+Aktuelle Version **v1.4**, noch in der Testphase.
 
 - **Bild bleibt bei dir:** Das Bild wird nur im Browser verarbeitet, nichts wird hochgeladen.
-- **Fünf Schritte:** Bild prüfen → Optik → Entfernung → Messen → Hinweise
+- **Vier Schritte:** Bild prüfen → Optik → Entfernung → Messen. Ein fünfter Reiter „Hinweise“ enthält Version, Credits und Datenschutz.
+- **Messen:** Die Linie ist voreingestellt. Verschieben mit der mittleren Maustaste oder Leertaste + Ziehen. Rechts stehen Live-Werte, die Messliste (einzeln löschbar) und die Messgrundlage, darüber Maßstab, Lj/px bzw. km/px und Entfernung mit Links zum Ändern.
+- **Bildzustand ist Pflicht:** Schritt 1 fragt, ob das Bild verändert wurde. Bei „Weiß ich nicht“ wird das Ergebnis als „Maßstab ungeprüft“ gekennzeichnet, solange kein Plate-Solve-Wert verwendet wird.
 - **Kameraliste:** Rund 60 Astro-, Spiegelreflex- und Systemkameras tragen Pixelgröße und Sensorbreite automatisch ein. Andere Kameras gibst du von Hand ein.
 - **Prüfungen:** Die App vergleicht Bild- und Sensorbreite und erkennt so Binning, Skalierung, Super-Pixel-Debayer und Zuschnitt. Optional gleicht sie mit deinem Plate-Solve-Wert ab.
 - **Entfernung:** Du trägst sie selbst ein oder übernimmst sie aus dem eingebauten Deepsky-Katalog. Für Mond, Sonne und Planeten gibt es Stufen von Erdnähe bis Erdferne.
