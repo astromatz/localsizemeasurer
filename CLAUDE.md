@@ -54,14 +54,14 @@ AutoSTF, FITS-Header, Bildexport mit Maßstabsleiste (Export kommt später).
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- v1.1 von Mathias erfolgreich getestet. v1.2 (Debayer-Streichung) noch nicht.
+- Browser-Test von v1.2 durch Mathias (nach dem Merge direkt auf GitHub Pages möglich).
 
 ## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
-- Web-App v1.1 fertig und im Browser automatisiert getestet: hell und dunkel, Kamerawahl, Umschalter Sensorbreite, Wechsel auf „eigene Werte“, Sperre ohne Brennweite. Keine Konsolenfehler. Die Messung selbst blieb unverändert.
-- Liegt auf Branch `claude/trusting-euler-aaclxv` (gepusht), **noch nicht in `main`** → auf GitHub Pages noch v1.0. Pull Request noch nicht angelegt, Mathias entscheidet.
+- Web-App v1.2 fertig: Kameraliste, aufgeräumter Schritt 2, Debayer-Auswahl gestrichen. Automatisch im Browser getestet (hell/dunkel, keine Konsolenfehler). Die Messung selbst blieb unverändert. v1.1 hat Mathias erfolgreich getestet.
+- Pull Request https://github.com/astromatz/localsizemeasurer/pull/1 (Branch `claude/trusting-euler-aaclxv` → `main`) ist angelegt. **Mathias muss ihn auf GitHub mergen**, erst danach zeigt GitHub Pages v1.2 (bis dahin v1.0).
 - Kameradaten: Herstellerseiten waren aus der Cloud gesperrt, Prüfung lief über die Websuche (Handbücher, Händler, Datenbanken). Mathias' Prüfdateien (camera_catalogue.json/.csv) liegen nicht im Repo.
 - Mods „Model selector“ und „cache clock“ laufen nur lokal bei Mathias, nicht in Cloud-Sitzungen. Option: als Plugin in ein GitHub-Repo legen. Offen, ob Mathias das will.
-- Nächster sinnvoller Schritt: Mathias testet v1.1 im Browser → Pull Request nach `main` → danach Debayer-Doppelung (siehe „Offen“) klären.
+- Nächster sinnvoller Schritt: Pull Request mergen → v1.2 online im Browser prüfen → an Karsten und Dietmar zum Testen geben.
 
 ## Nächste Schritte
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
