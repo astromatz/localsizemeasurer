@@ -56,6 +56,13 @@ Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub
 - Browser-Test von v1.1 (Kameraliste, aufgeräumter Schritt 2) durch Mathias.
 - Debayer-Auswahl in Schritt 2 fließt nicht in die Rechnung ein, sie überschneidet sich mit „Super-Pixel-Debayer“ in Schritt 1 – Kandidat zum Vereinfachen.
 
+## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
+- Web-App v1.1 fertig und im Browser automatisiert getestet: hell und dunkel, Kamerawahl, Umschalter Sensorbreite, Wechsel auf „eigene Werte“, Sperre ohne Brennweite. Keine Konsolenfehler. Die Messung selbst blieb unverändert.
+- Liegt auf Branch `claude/trusting-euler-aaclxv` (gepusht), **noch nicht in `main`** → auf GitHub Pages noch v1.0. Pull Request noch nicht angelegt, Mathias entscheidet.
+- Kameradaten: Herstellerseiten waren aus der Cloud gesperrt, Prüfung lief über die Websuche (Handbücher, Händler, Datenbanken). Mathias' Prüfdateien (camera_catalogue.json/.csv) liegen nicht im Repo.
+- Mods „Model selector“ und „cache clock“ laufen nur lokal bei Mathias, nicht in Cloud-Sitzungen. Option: als Plugin in ein GitHub-Repo legen. Offen, ob Mathias das will.
+- Nächster sinnvoller Schritt: Mathias testet v1.1 im Browser → Pull Request nach `main` → danach Debayer-Doppelung (siehe „Offen“) klären.
+
 ## Nächste Schritte
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
 - Vorstellung im nächsten Astro-Workshop.
