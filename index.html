@@ -85,6 +85,12 @@ kbd{background:var(--p2);border:1px solid var(--b);border-bottom-width:2px;borde
 #camInfo{margin:8px 0 0}
 button.lnk{background:none;border:0;padding:0;color:var(--a);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 button.lnk:hover{background:none;filter:brightness(1.15)}
+dialog{background:var(--p);color:var(--t);border:1px solid var(--b);border-radius:4px;padding:18px 22px 20px;width:min(500px,calc(100% - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h2{margin-bottom:6px}
+.stk{display:grid;gap:6px;margin-top:4px}
+#drop .dh{display:block;margin-top:6px;font-size:12px}
+button:disabled{opacity:.5;cursor:not-allowed}
 @media(min-width:1280px){.cols{display:grid;grid-template-columns:minmax(0,1fr) 332px;gap:30px;align-items:start}.side{position:sticky;top:14px}}
 </style></head><body><div class="w">
 <header class="hd"><div><h1>LocalSizeMeasurer Web</h1><p class="sub">Größe von Himmelsobjekten im eigenen Astrofoto messen · Deine Bilddaten bleiben im Browser</p></div>
@@ -92,7 +98,7 @@ button.lnk:hover{background:none;filter:brightness(1.15)}
 <div class="st" id="st"></div>
 
 <div class="card" id="s1"><h2>1 · Bild prüfen</h2><div class="cols"><div>
-<div id="drop">Bild hierher ziehen oder klicken (JPG, PNG, WebP). FITS/XISF bitte vorher als JPG oder PNG exportieren.<input type="file" id="file" accept="image/*" class="hide"></div>
+<div id="drop"><b>Bild hierher ziehen oder klicken</b> – JPG, PNG, WebP, TIFF oder FITS<span class="dh"><b>TIFF und FITS nur als bereits gestrecktes Bild</b> (nicht linear, z. B. nach der Histogrammtransformation) – die App streckt nicht selbst. Sie werden für die Anzeige auf 8 Bit reduziert; die Messung hängt davon nicht ab. XISF bitte vorher als TIFF, FITS oder PNG speichern.</span><input type="file" id="file" accept="image/*,.tif,.tiff,.fit,.fits,.fts" class="hide"></div>
 <div class="tb" style="margin-top:8px"><button id="demo">Mit Beispielbild ausprobieren</button><span class="hint" style="margin:0">Ein generiertes Bild zum Kennenlernen der Bedienung – die Messwerte daran haben keine Bedeutung.</span></div>
 <p id="imginfo" class="hint" style="margin-top:8px"></p><canvas id="pv" class="hide" style="width:auto;max-width:100%;max-height:220px;margin:6px 0"></canvas>
 <label>Ist das unverändertes Originalbild?</label>
@@ -152,24 +158,32 @@ button.lnk:hover{background:none;filter:brightness(1.15)}
 
 <div class="card hide" id="s4"><h2>4 · Messen</h2>
 <div class="tb"><button data-t="h" class="sel" title="Verschieben (Taste V)"><svg class="ic" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.5v13M1.5 8h13M8 1.5L6 3.5M8 1.5l2 2M8 14.5l-2-2M8 14.5l2-2M1.5 8l2-2M1.5 8l2 2M14.5 8l-2-2M14.5 8l-2 2"/></svg>Verschieben</button><button data-t="l" title="Linie (Taste L)"><svg class="ic" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M3 13L13 3M1.6 11.6l2.8 2.8M11.6 1.6l2.8 2.8"/></svg>Linie</button><button data-t="c" title="Kreis (Taste K)"><svg class="ic" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="5.6"/><path d="M8 8h5.6"/></svg>Kreis (Fläche)</button><button id="fit" title="Einpassen (Taste F)"><svg class="ic" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5V2h3M11 2h3v3M14 11v3h-3M5 14H2v-3"/></svg>Einpassen</button><button id="one" title="Originalgröße (Taste 1)">1:1</button><span id="zl" class="zl"></span></div>
-<div class="tb"><button id="undo" title="Entf / Rücktaste">Letzte löschen</button><button id="clr">Alle löschen</button><label class="chk"><input type="checkbox" id="shL" checked> Beschriftung</label><label class="chk"><input type="checkbox" id="shG" checked> Legende</label><label class="chk">Winkel <select id="au"><option value="a">automatisch</option><option value="s">Bogensekunden ″</option><option value="m">Bogenminuten ′</option><option value="d">Grad °</option></select></label></div>
+<div class="tb"><button id="undo" title="Entf / Rücktaste">Letzte löschen</button><button id="clr">Alle löschen</button><label class="chk"><input type="checkbox" id="shL" checked> Beschriftung</label><label class="chk"><input type="checkbox" id="shG" checked> Legende</label><label class="chk">Winkel <select id="au"><option value="a">automatisch</option><option value="s">Bogensekunden ″</option><option value="m">Bogenminuten ′</option><option value="d">Grad °</option></select></label><button id="svB" type="button" style="margin-left:auto" title="Bild mit Messungen, Legende und Maßstabsleiste speichern">Bild speichern …</button></div>
 <canvas id="cv" height="500"></canvas>
 <p class="hint" style="margin:6px 0 0">Linke Maustaste: je nach Werkzeug · Mittlere Maustaste: verschieben · Rechtsklick oder <kbd>Esc</kbd>: laufende Messung abbrechen · Mausrad oder <kbd>+</kbd>/<kbd>−</kbd>: Zoom · <kbd>L</kbd> Linie, <kbd>K</kbd> Kreis, <kbd>V</kbd> Verschieben, <kbd>F</kbd> Einpassen, <kbd>1</kbd> = 100 % · Pfeiltasten verschieben · <kbd>Entf</kbd> letzte Messung löschen · Kreis: Mittelpunkt klicken, zum Rand ziehen.</p>
 <div class="live" id="lv4"><div>Ziehe eine Messung auf …</div></div>
 <h2 style="margin-top:18px">Ergebnisse</h2><div id="res"></div>
-<h2 style="margin-top:18px">Zusammenfassung</h2><div id="sum"></div></div>
+<h2 style="margin-top:18px">Zusammenfassung</h2><div id="sum"></div>
+<div class="tb" style="margin-top:14px"><button id="svE" type="button" class="pr">Bild mit Messungen speichern …</button><span class="hint" style="margin:0">Volle Auflösung mit Messungen, Legende, Maßstabsleiste und Info-Leiste als PNG oder JPEG.</span></div></div>
 
+<dialog id="exD"><h2>Bild mit Messungen speichern</h2>
+<label for="exN">Dateiname</label><input id="exN" autocomplete="off">
+<label>Format</label><div class="tb"><label class="chk"><input type="radio" name="exF" value="png" checked> PNG (verlustfrei)</label><label class="chk"><input type="radio" name="exF" value="jpg"> JPEG (kleiner)</label></div>
+<label>Einzeichnen</label><div class="stk"><label class="chk"><input type="checkbox" id="exL" checked> Beschriftung der Messungen</label><label class="chk"><input type="checkbox" id="exG" checked> Legende mit allen Messwerten</label><label class="chk"><input type="checkbox" id="exB" checked> Maßstabsleiste</label><label class="chk"><input type="checkbox" id="exT" checked> Info-Leiste unter dem Bild (Maßstab, Entfernung, Bildzustand)</label></div>
+<p class="hint" id="exI"></p><p class="hint">Chrome und Edge fragen nach dem Speicherort. Firefox und Safari legen die Datei im Download-Ordner ab oder fragen je nach Einstellung nach. Das Bild entsteht in deinem Browser und wird nirgendwohin hochgeladen.</p>
+<div id="exM"></div>
+<div class="nav" style="margin-top:12px"><button id="exC" type="button">Abbrechen</button><button id="exS" type="button" class="pr">Speichern …</button></div></dialog>
 <div class="nav"><button id="bk">← Zurück</button><button id="nx" class="pr">Weiter →</button></div>
 
 <div class="card hide" id="s5"><h2>5 · Hinweise</h2>
-<div class="ft"><b>LocalSizeMeasurer Web v1.2</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
+<div class="ft"><b>LocalSizeMeasurer Web v1.3</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
 <b>Credits:</b> Idee und ursprünglicher Excel-Rechner von Rainer und Daniel – <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank" rel="noopener">„Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen“</a> (YouTube). Danke und Gruß an die beiden!<br><br>
-<b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
+<b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Bilder mit Messungen erzeugt der Browser direkt auf deinem Rechner. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
 </div>
 </div>
 <script>
 // ===== Daten =====
-var VERSION="1.2";
+var VERSION="1.3";
 // Kameras: [Hersteller, Modell, Pixel horizontal, Pixelgröße µm (0 = aus Sensorbreite berechnen), Sensorbreite mm (0 = nicht nötig), Typ c/m, Hinweis]
 // Geprüft 11/2026 gegen Hersteller-, Handbuch- und Händlerangaben. Astrokameras: Pixelgröße laut Hersteller.
 // Foto-Kameras: Pixelgröße = Sensorbreite ÷ Pixelzahl (Hersteller nennen sie meist nicht).
@@ -302,6 +316,131 @@ function fAng(a){var u=$("au").value;if(!isFinite(a))return "–";
  if(u==="s")return fx(a,2)+" ″";if(u==="m")return fx(a/60,3)+" ′";if(u==="d")return fx(a/3600,4)+" °";
  return a<120?fx(a,2)+" ″":a<10800?fx(a/60,2)+" ′":fx(a/3600,3)+" °"}
 function fLT(s){return !isFinite(s)?"–":s<60?fx(s,2)+" s":s<3600?fx(s/60,2)+" min":fx(s/3600,2)+" h"}
+// ===== TIFF und FITS (eigener Leser, nur gestreckte Bilder, Anzeige in 8 Bit) =====
+function Err(t){return new Error(t)}
+var HOST_LE=new Uint8Array(new Uint16Array([1]).buffer)[0]===1;
+function swapB(b,n){if(n<2)return;for(var i=0;i+n<=b.length;i+=n)for(var j=0,k=n-1;j<k;j++,k--){var t=b[i+j];b[i+j]=b[i+k];b[i+k]=t}}
+function typed(b,bps,sf){var B=b.buffer,o=b.byteOffset,n=b.length/(bps/8);
+ if(sf===3)return bps===32?new Float32Array(B,o,n):new Float64Array(B,o,n);
+ if(sf===2)return bps===8?new Int8Array(B,o,n):bps===16?new Int16Array(B,o,n):new Int32Array(B,o,n);
+ return bps===8?b:bps===16?new Uint16Array(B,o,n):new Uint32Array(B,o,n)}
+function inflate(bytes){if(typeof DecompressionStream==="undefined")return Promise.reject(Err("Dieser Browser kann ZIP-komprimierte TIFFs nicht entpacken. Bitte ohne Komprimierung oder mit LZW speichern."));
+ var s=new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate"));
+ return new Response(s).arrayBuffer().then(function(a){return new Uint8Array(a)})}
+function lzw(src,outLen){var out=new Uint8Array(outLen),op=0,pre=new Int32Array(4096),suf=new Uint8Array(4096),ln=new Int32Array(4096),fst=new Uint8Array(4096),i;
+ for(i=0;i<256;i++){pre[i]=-1;suf[i]=i;ln[i]=1;fst[i]=i}
+ var nxt=258,w=9,old=-1,bp=0,nb=src.length*8;
+ function put(c){var L=ln[c],p=op+L-1;while(c>=0){if(p<outLen)out[p]=suf[c];p--;c=pre[c]}op+=L}
+ while(op<outLen&&bp+w<=nb){var q=bp>>3,v=((src[q]<<16)|((src[q+1]||0)<<8)|(src[q+2]||0))>>>(24-(bp&7)-w)&((1<<w)-1);bp+=w;
+  if(v===257)break;
+  if(v===256){nxt=258;w=9;old=-1;continue}
+  if(old<0){if(v>255)break;out[op++]=v;old=v;continue}
+  if(v<nxt){put(v);if(nxt<4096){pre[nxt]=old;suf[nxt]=fst[v];ln[nxt]=ln[old]+1;fst[nxt]=fst[old];nxt++}}
+  else if(v===nxt&&nxt<4096){pre[nxt]=old;suf[nxt]=fst[old];ln[nxt]=ln[old]+1;fst[nxt]=fst[old];nxt++;put(v)}
+  else break;
+  old=v;if(nxt>=(1<<w)-1&&w<12)w++}
+ return out}
+function packbits(src,outLen){var out=new Uint8Array(outLen),i=0,o=0,k;
+ while(i<src.length&&o<outLen){var n=src[i++];if(n>127)n-=256;
+  if(n>=0){for(k=0;k<=n&&o<outLen;k++)out[o++]=src[i++]}else if(n!==-128){var b=src[i++];for(k=0;k<1-n&&o<outLen;k++)out[o++]=b}}
+ return out}
+// Predictor 2 (horizontale Differenz) für Ganzzahlen
+function pred2(d,rows,cols,spp,bpS,le){var rb=cols*spp*bpS,dv=new DataView(d.buffer,d.byteOffset,d.length),r,i;
+ for(r=0;r<rows;r++){var o=r*rb;
+  if(bpS===1){for(i=spp;i<cols*spp;i++)d[o+i]=(d[o+i]+d[o+i-spp])&255}
+  else if(bpS===2){for(i=spp;i<cols*spp;i++)dv.setUint16(o+2*i,(dv.getUint16(o+2*i,le)+dv.getUint16(o+2*(i-spp),le))&65535,le)}
+  else{for(i=spp;i<cols*spp;i++)dv.setUint32(o+4*i,(dv.getUint32(o+4*i,le)+dv.getUint32(o+4*(i-spp),le))>>>0,le)}}}
+// Predictor 3 (Gleitkomma): Bytes je Zeile nach Wertigkeit sortiert und differenziert
+function pred3(d,rows,cols,spp,bpS,le){var n=cols*spp,rb=n*bpS,out=new Uint8Array(d.length),r,i,b;
+ for(r=0;r<rows;r++){var o=r*rb;for(i=spp;i<rb;i++)d[o+i]=(d[o+i]+d[o+i-spp])&255;
+  for(i=0;i<n;i++)for(b=0;b<bpS;b++)out[o+i*bpS+(le?bpS-1-b:b)]=d[o+b*n+i]}
+ return out}
+function readTIFF(buf){var b=new Uint8Array(buf),dv=new DataView(buf),le;
+ if(b[0]===73&&b[1]===73)le=true;else if(b[0]===77&&b[1]===77)le=false;else return Promise.reject(Err("Keine gültige TIFF-Datei."));
+ var mg=dv.getUint16(2,le);if(mg===43)return Promise.reject(Err("BigTIFF wird nicht unterstützt. Bitte als normales TIFF (unter 4 GB) oder PNG speichern."));
+ if(mg!==42)return Promise.reject(Err("Keine gültige TIFF-Datei."));
+ var ifd=dv.getUint32(4,le),n=dv.getUint16(ifd,le),T={},NEED={256:1,257:1,258:1,259:1,262:1,273:1,277:1,278:1,279:1,284:1,317:1,322:1,323:1,324:1,325:1,339:1};
+ for(var i=0;i<n;i++){var e=ifd+2+i*12,tag=dv.getUint16(e,le);if(!NEED[tag])continue;
+  var ty=dv.getUint16(e+2,le),cnt=dv.getUint32(e+4,le),sz=ty===3?2:ty===4?4:1,off=sz*cnt<=4?e+8:dv.getUint32(e+8,le),v=[];
+  if(ty!==1&&ty!==3&&ty!==4)continue;
+  for(var j=0;j<cnt;j++)v.push(ty===3?dv.getUint16(off+2*j,le):ty===4?dv.getUint32(off+4*j,le):dv.getUint8(off+j));T[tag]=v}
+ function g1(t,d){return T[t]&&T[t].length?T[t][0]:d}
+ var W=g1(256,0),H=g1(257,0),bps=g1(258,1),cmp=g1(259,1),pho=g1(262,1),spp=g1(277,1),plc=g1(284,1),pred=g1(317,1),sf=g1(339,1);
+ if(!(W>0&&H>0))return Promise.reject(Err("TIFF ohne gültige Bildgröße."));
+ if(T[258]&&T[258].some(function(x){return x!==bps}))return Promise.reject(Err("TIFF mit unterschiedlicher Bittiefe je Kanal wird nicht unterstützt."));
+ if(cmp===7||cmp===6)return Promise.reject(Err("JPEG-komprimiertes TIFF wird nicht unterstützt. Bitte ohne Komprimierung, mit LZW oder ZIP speichern – oder gleich als PNG/JPG."));
+ if(pho===3)return Promise.reject(Err("TIFF mit Farbpalette wird nicht unterstützt. Bitte als RGB oder Graustufen speichern."));
+ if(pho>2)return Promise.reject(Err("Farbraum des TIFF wird nicht unterstützt (CMYK, YCbCr o. Ä.). Bitte als RGB oder Graustufen speichern."));
+ if(!(bps===8||bps===16||bps===32||(bps===64&&sf===3)))return Promise.reject(Err("TIFF mit "+bps+" Bit je Kanal wird nicht unterstützt (möglich: 8, 16 oder 32 Bit)."));
+ if(sf===3&&bps<32)return Promise.reject(Err("TIFF mit 16-Bit-Gleitkomma wird nicht unterstützt. Bitte 16 Bit Ganzzahl oder 32 Bit Gleitkomma verwenden."));
+ if([1,5,8,32946,32773].indexOf(cmp)<0)return Promise.reject(Err("TIFF-Komprimierung Nr. "+cmp+" wird nicht unterstützt. Bitte ohne Komprimierung, mit LZW oder ZIP speichern."));
+ var tl=!!T[322],cw=tl?g1(322):W,ch=tl?g1(323):Math.min(g1(278,H),H),offs=tl?T[324]:T[273],cnts=tl?T[325]:T[279];
+ if(!offs||!cnts)return Promise.reject(Err("TIFF ohne Bilddaten-Verweise."));
+ var bpS=bps/8,cs=plc===2?1:spp,nPl=plc===2?spp:1,acr=tl?Math.ceil(W/cw):1,dn=Math.ceil(H/ch),per=acr*dn,rowB=W*cs*bpS,crb=cw*cs*bpS;
+ var planes=[],jobs=[],p,k;
+ try{for(p=0;p<nPl;p++)planes.push(new Uint8Array(H*rowB))}catch(x){return Promise.reject(Err("Zu wenig Arbeitsspeicher für dieses Bild."))}
+ for(p=0;p<nPl;p++)for(k=0;k<per;k++)(function(p,k){var idx=p*per+k,ty=Math.floor(k/acr),tx=k%acr,cr=tl?ch:Math.min(ch,H-ty*ch),need=cr*crb;
+  if(idx>=offs.length||cr<=0)return;
+  var src=b.subarray(offs[idx],offs[idx]+cnts[idx]);
+  var pr=cmp===1?Promise.resolve(src.slice(0,need)):cmp===5?Promise.resolve(lzw(src,need)):cmp===32773?Promise.resolve(packbits(src,need)):inflate(src);
+  jobs.push(pr.then(function(d){if(d.length<need){var z=new Uint8Array(need);z.set(d);d=z}else if(d.length>need)d=d.subarray(0,need);
+   if(pred===2&&sf!==3)pred2(d,cr,cw,cs,bpS,le);else if(pred===3)d=pred3(d,cr,cw,cs,bpS,le);
+   var cp=Math.min(cw,W-tx*cw)*cs*bpS,pl=planes[p];
+   for(var r=0;r<cr;r++){var y=ty*ch+r;if(y>=H)break;pl.set(d.subarray(r*crb,r*crb+cp),y*rowB+tx*cw*cs*bpS)}}))})(p,k);
+ return Promise.all(jobs).then(function(){
+  var arr=planes.map(function(pl){if(le!==HOST_LE)swapB(pl,bpS);return typed(pl,bps,sf)});
+  var nc=(pho===2&&spp>=3)?3:1,chs=[];
+  for(var c=0;c<nc;c++)chs.push(plc===2?{a:arr[c],o:0}:{a:arr[0],o:c});
+  var st=plc===2?1:spp,lo=0,hi=sf===2?Math.pow(2,bps-1)-1:Math.pow(2,bps)-1;
+  if(sf===3){var r=rangeF(chs,st,W*H,0,1);lo=r[0];hi=r[1]}
+  var img=to8(chs,st,W,H,lo,hi,0,1,pho===0,false);
+  img.note="TIFF "+bps+" Bit "+(sf===3?"Gleitkomma":"Ganzzahl")+", "+(nc===3?"RGB":"Graustufen")+(bps>8?", für die Anzeige auf 8 Bit reduziert":"");return img})}
+function rangeF(chs,st,n,bz,bs){var mn=Infinity,mx=-Infinity;
+ chs.forEach(function(C){var a=C.a,o=C.o;for(var i=0;i<n;i++){var v=a[i*st+o];if(v<mn)mn=v;if(v>mx)mx=v}});
+ if(!isFinite(mn)||!isFinite(mx))return[0,1];
+ var lo=bz+bs*mn,hi=bz+bs*mx;if(lo>hi){var t=lo;lo=hi;hi=t}
+ if(lo>=-1e-4&&hi<=1.0001)return[0,1];lo=Math.min(lo,0);return[lo,hi>lo?hi:lo+1]}
+// Lineare Abbildung auf 8 Bit (keine Streckung), optional invertiert bzw. vertikal gespiegelt
+function to8(chs,st,W,H,lo,hi,bz,bs,inv,flip){var id;try{id=new ImageData(W,H)}catch(x){throw Err("Zu wenig Arbeitsspeicher für dieses Bild.")}
+ var d=id.data,s=255/(hi-lo),a=bs*s,c=(bz-lo)*s,mono=chs.length===1;
+ for(var y=0;y<H;y++){var oy=(flip?H-1-y:y)*W;
+  for(var x=0;x<W;x++){var i=y*W+x,p=(oy+x)*4,v;
+   if(mono){v=chs[0].a[i*st+chs[0].o]*a+c;if(inv)v=255-v;d[p]=d[p+1]=d[p+2]=v}
+   else for(var q=0;q<3;q++){v=chs[q].a[i*st+chs[q].o]*a+c;d[p+q]=inv?255-v:v}
+   d[p+3]=255}}
+ var cv2=document.createElement("canvas");cv2.width=W;cv2.height=H;var x2=cv2.getContext("2d");
+ if(!x2)throw Err("Das Bild ist zu groß für den Browser.");x2.putImageData(id,0,0);
+ return{c:cv2,w:W,h:H,dark:isDark(d)}}
+// Wirkt das Bild ungestreckt (linear)? Median und 99-%-Wert der Helligkeit
+function isDark(d){var n=d.length/4,st=Math.max(1,Math.floor(n/250000)),h=new Uint32Array(256),t=0,i,v;
+ for(i=0;i<n;i+=st){var p=i*4;h[(d[p]*.299+d[p+1]*.587+d[p+2]*.114)|0]++;t++}
+ var acc=0,med=-1;for(v=0;v<256;v++){acc+=h[v];if(med<0&&acc>=t*.5)med=v;if(acc>=t*.99)return med<8&&v<40}return false}
+function readFITS(buf){var b=new Uint8Array(buf),pos=0,hdu=0;
+ while(pos<b.length&&hdu<20){var K={},end=false;
+  for(;pos+80<=b.length;pos+=80){var cd=String.fromCharCode.apply(null,b.subarray(pos,pos+80)),key=cd.slice(0,8).trim();
+   if(key==="END"){end=true;pos+=80;break}
+   if(cd.slice(8,10)==="= "){var v=cd.slice(10).trim(),m=/^'((?:[^']|'')*)'/.exec(v);K[key]=m?m[1].replace(/''/g,"'").trim():v.split("/")[0].trim()}}
+  if(!end)throw Err(hdu?"FITS-Datei unvollständig.":"Keine gültige FITS-Datei (Header ohne END).");
+  if(hdu===0&&K.SIMPLE!=="T")throw Err("Keine gültige FITS-Datei.");
+  pos=Math.ceil(pos/2880)*2880;
+  var bp=+K.BITPIX,na=+K.NAXIS||0,dims=[],cnt=na?1:0;for(var i=1;i<=na;i++){dims.push(+K["NAXIS"+i]||0);cnt*=dims[i-1]}
+  if(K.XTENSION==="BINTABLE"&&K.ZIMAGE==="T")throw Err("Komprimiertes FITS (.fz) wird nicht unterstützt. Bitte unkomprimiert speichern.");
+  if((hdu===0||K.XTENSION==="IMAGE")&&na>=2&&dims[0]>0&&dims[1]>0)return fitsImg(b,pos,K,dims,bp);
+  var size=Math.abs(bp)/8*(+K.GCOUNT||1)*((+K.PCOUNT||0)+cnt);pos+=Math.ceil(size/2880)*2880;hdu++}
+ throw Err("Keine Bilddaten in der FITS-Datei gefunden.")}
+function fitsImg(b,pos,K,dims,bp){var W=dims[0],H=dims[1],P=dims.length>2?dims[2]:1,nc=P>=3?3:1,bpS=Math.abs(bp)/8,n=W*H;
+ if([8,16,32,-32,-64].indexOf(bp)<0)throw Err("FITS mit BITPIX "+bp+" wird nicht unterstützt (möglich: 8, 16, 32 Bit Ganzzahl, 32/64 Bit Gleitkomma).");
+ if(pos+nc*n*bpS>b.length)throw Err("FITS-Datei unvollständig – die Bilddaten sind kürzer als im Header angegeben.");
+ var bz=K.BZERO!=null?+K.BZERO:0,bs=K.BSCALE!=null?+K.BSCALE:1,chs=[],c,a;if(!isFinite(bz))bz=0;if(!isFinite(bs)||bs===0)bs=1;
+ for(c=0;c<nc;c++){try{a=b.slice(pos+c*n*bpS,pos+(c+1)*n*bpS)}catch(x){throw Err("Zu wenig Arbeitsspeicher für dieses Bild.")}
+  if(HOST_LE)swapB(a,bpS);chs.push({a:typed(a,Math.abs(bp),bp<0?3:bp===8?1:2),o:0})}
+ var lo,hi;
+ if(bp<0){var r=rangeF(chs,1,n,bz,bs);lo=r[0];hi=r[1]}
+ else{var mn=bp===8?0:-Math.pow(2,bp-1),mx=bp===8?255:Math.pow(2,bp-1)-1;lo=bz+bs*mn;hi=bz+bs*mx;if(lo>hi){var t=lo;lo=hi;hi=t}if(hi>0)lo=Math.max(lo,0)}
+ var flip=String(K.ROWORDER||"").toUpperCase()!=="TOP-DOWN";
+ var img=to8(chs,1,W,H,lo,hi,bz,bs,false,flip);
+ img.note="FITS "+(bp<0?(-bp)+" Bit Gleitkomma":bp+" Bit Ganzzahl")+", "+(nc===3?"RGB":"Graustufen")+(P>3||P===2?" (nur "+(nc===3?"die ersten 3 Ebenen":"die erste Ebene")+" von "+P+")":"")+(bp!==8?", für die Anzeige auf 8 Bit reduziert":"");
+ img.bayer=nc===1&&!!K.BAYERPAT;return img}
 // ===== Bild =====
 function sample(){var c=document.createElement("canvas");c.width=1600;c.height=1000;var g=c.getContext("2d");g.fillStyle="#02030a";g.fillRect(0,0,1600,1000);
 [[800,500,420,"110,60,160"],[950,560,260,"200,70,110"],[640,420,230,"60,110,200"]].forEach(function(n){var r=g.createRadialGradient(n[0],n[1],10,n[0],n[1],n[2]);r.addColorStop(0,"rgba("+n[3]+",.75)");r.addColorStop(1,"rgba("+n[3]+",0)");g.fillStyle=r;g.fillRect(0,0,1600,1000)});
@@ -310,7 +449,16 @@ for(var i=0;i<900;i++){var r=Math.pow(rnd(),4)*2.6+.4,a=.3+rnd()*.7;g.fillStyle=
 S.img={el:c,w:1600,h:1000,name:"Beispielbild (generiert, nur zum Ausprobieren)"};S.shapes=[];info();upd()}
 function msg(t){var e=$("imginfo");e.textContent=t;e.style.color="var(--r)"}
 function loadFile(f){if(!f)return;var e=$("imginfo");e.style.color="";e.textContent="Lade "+f.name+" …";
-if(!/^image\/(jpeg|png|gif|webp|bmp)/.test(f.type)&&!/\.(jpe?g|png|gif|webp|bmp)$/i.test(f.name)){msg("Format nicht unterstützt ("+(f.type||f.name)+"). Bitte JPG oder PNG verwenden.");return}
+var ext=((f.name.match(/\.([^.]+)$/)||[])[1]||"").toLowerCase(),
+ kind=/^tiff?$/.test(ext)||f.type==="image/tiff"?"tif":/^(fits?|fts)$/.test(ext)||f.type==="image/fits"?"fits":/^xisf$/.test(ext)?"xisf":(/^image\/(jpeg|png|gif|webp|bmp)/.test(f.type)||/^(jpe?g|png|gif|webp|bmp)$/.test(ext))?"web":"";
+if(kind==="xisf"){msg("XISF kann der Browser nicht lesen. Bitte in PixInsight das gestreckte Bild als TIFF, FITS oder PNG speichern.");return}
+if(!kind){msg("Format nicht unterstützt ("+(f.type||f.name)+"). Bitte JPG, PNG, TIFF oder FITS verwenden.");return}
+if(kind!=="web"){e.textContent="Lade "+f.name+" … große TIFF- und FITS-Dateien brauchen einige Sekunden.";var rd=f.arrayBuffer?f.arrayBuffer():new Promise(function(ok,ko){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=function(){ko(Err("Datei konnte nicht gelesen werden."))};r.readAsArrayBuffer(f)});
+ rd.then(function(buf){return new Promise(function(ok){setTimeout(function(){ok(buf)},20)})})
+ .then(function(buf){return kind==="tif"?readTIFF(buf):readFITS(buf)})
+ .then(function(r){S.img={el:r.c,w:r.w,h:r.h,name:f.name,note:r.note,dark:r.dark,bayer:!!r.bayer};S.shapes=[];info();upd()})
+ .catch(function(x){msg((x instanceof RangeError?"Zu wenig Arbeitsspeicher für dieses Bild.":x&&x.message||"Unbekannter Fehler beim Lesen.")+" (Datei: "+f.name+")")});
+ return}
 var fr=new FileReader();
 fr.onerror=function(){msg("Datei konnte nicht gelesen werden.")};
 fr.onload=function(){var im=new Image();
@@ -319,7 +467,7 @@ im.onerror=function(){msg("Der Browser konnte das Bild nicht dekodieren (zu gro�
 im.src=fr.result};
 fr.readAsDataURL(f)}
 function info(){var p=$("pv");if(!S.img){$("imginfo").textContent="Noch kein Bild geladen.";p.classList.add("hide");return}
-$("imginfo").style.color="";$("imginfo").textContent=S.img.name+": "+S.img.w.toLocaleString("de-DE")+" × "+S.img.h.toLocaleString("de-DE")+" px";p.classList.remove("hide");p.width=360;p.height=Math.max(1,Math.round(360*S.img.h/S.img.w));p.getContext("2d").drawImage(S.img.el,0,0,p.width,p.height)}
+$("imginfo").style.color="";$("imginfo").textContent=S.img.name+": "+S.img.w.toLocaleString("de-DE")+" × "+S.img.h.toLocaleString("de-DE")+" px"+(S.img.note?" · "+S.img.note:"");p.classList.remove("hide");p.width=360;p.height=Math.max(1,Math.round(360*S.img.h/S.img.w));p.getContext("2d").drawImage(S.img.el,0,0,p.width,p.height)}
 // ===== Berechnung =====
 function calc(){var o={};o.fl=N("fl");o.acc=N("acc")||1;o.bar=N("bar")||1;o.efl=o.fl*o.acc*o.bar;
 o.pm=$("pm").value;o.sp=N("sp");o.spOk=o.sp>0;
@@ -358,6 +506,8 @@ function details(k,circ){var a=[];
 // ===== Prüfungen ===== (jede Meldung trägt den Schritt, in dem sie behoben wird)
 function checks(){var o=calc(),a=[],L=function(l,m,s){a.push({l:l,m:m,s:s||0})};
 if(!S.img)L("r","Schritt 1: Noch kein Bild geladen.",1);
+if(S.img&&S.img.dark)L("y","Das Bild ist fast überall sehr dunkel – vermutlich ein ungestrecktes (lineares) TIFF/FITS. Die App streckt nicht selbst: bitte das Bild vorher strecken (z. B. Histogrammtransformation) und neu speichern. Bei Mond- oder Planetenbildern mit viel schwarzem Himmel kann diese Warnung unbegründet sein.",1);
+if(S.img&&S.img.bayer)L("y","Der FITS-Header nennt ein Bayer-Muster (BAYERPAT) bei nur einem Kanal – das Bild ist womöglich nicht debayert. Für die Messung zählt das nicht, die Darstellung zeigt dann aber ein Rastermuster.",1);
 if(S.orig===null)L("r","Schritt 1: „Unverändertes Originalbild?“ ist nicht beantwortet.",1);
 if(S.orig==="no"&&!$("chgT").value)L("r","Schritt 1: Bitte angeben, was am Bild verändert wurde.",1);
 if(S.orig==="no"&&$("chgT").value&&!$("cropToo").checked&&!(N("fF")>0)&&!(N("fW")>0))L("y","Kein Faktor und keine Originalbreite angegeben – es gilt der Breitenvergleich mit dem Sensor.",1);
@@ -378,7 +528,7 @@ if(o.psOk){if(o.ps<.01||o.ps>1000)L("y","Plate-Solve-Skala "+fmt(o.ps)+" ″/px 
  else if(o.scOpt>0){if(o.dev>2){var q=o.ps/o.scOpt,cause="";
    [2,3,4].forEach(function(f){if(Math.abs(q/f-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu Binning "+f+"×"+f+(f===2?" oder Super-Pixel-Debayer":"")+". In Schritt 1 nicht angegeben?"});
    if(Math.abs(q/.5-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu 2×-Drizzle oder Hochskalierung. In Schritt 1 nicht angegeben?";
-   L("y","Brennweite und Pixelgröße ergeben "+fx(o.scOpt,4)+" ″/px, der Plate-Solve "+fx(o.ps,4)+" ″/px – Abweichung "+fx(o.dev,1)+" %."+cause+" Mögliche Ursachen: Binning, Debayer (Super-Pixel), Resampling, Drizzle, Reducer. Außerdem möglich: Das JPG/PNG wurde beim Export kleiner skaliert als das für den Plate-Solve genutzte Bild. "+(o.psUse?"Die Plate-Solve-Skala wird verwendet; sie ist nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde und sich auf exakt dieses Bild bezieht.":"Die Plate-Solve-Skala wird NICHT verwendet – die Messwerte sind womöglich falsch."),2)}
+   L("y","Brennweite und Pixelgröße ergeben "+fx(o.scOpt,4)+" ″/px, der Plate-Solve "+fx(o.ps,4)+" ″/px – Abweichung "+fx(o.dev,1)+" %."+cause+" Mögliche Ursachen: Binning, Debayer (Super-Pixel), Resampling, Drizzle, Reducer. Außerdem möglich: Das Bild wurde beim Export kleiner skaliert als das für den Plate-Solve genutzte Bild. "+(o.psUse?"Die Plate-Solve-Skala wird verwendet; sie ist nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde und sich auf exakt dieses Bild bezieht.":"Die Plate-Solve-Skala wird NICHT verwendet – die Messwerte sind womöglich falsch."),2)}
   else L("g","Plate-Solve und Optik stimmen überein (Abweichung "+fx(o.dev,2)+" %).",2)}}
 var scLo=$("ot").value==="s"?.05:.3;if(o.sc<scLo||o.sc>10)L("y","Maßstab "+fmt(o.sc)+" ″/px ist ungewöhnlich (erwartet "+fmt(scLo)+"–10 für diese Objektart) – Brennweite/Pixelgröße in falscher Einheit?",2);
 if(!o.psUse){if(o.px<.3||o.px>50)L("y","Pixelgröße "+fmt(o.px)+" µm liegt außerhalb des Plausibilitätsbereichs (0,3–50) – µm statt mm?",2);else if(o.px<1||o.px>20)L("y","Pixelgröße "+fmt(o.px)+" µm ist für Astrokameras ungewöhnlich (üblich 1–20) – bitte prüfen.",2);
@@ -446,22 +596,23 @@ function fit(){if(!S.img)return;var w=cv.clientWidth||900,hh=Math.max(420,Math.m
 function zoomAt(ns,sx,sy){if(!S.img)return;ns=Math.max(.01,Math.min(32,ns));var ix=(sx-S.v.x)/S.v.s,iy=(sy-S.v.y)/S.v.s;S.v.x=sx-ix*ns;S.v.y=sy-iy*ns;S.v.s=ns;drawAll()}
 function toI(e){var r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width,y=(e.clientY-r.top)*cv.height/r.height,ix=(x-S.v.x)/S.v.s,iy=(y-S.v.y)/S.v.s;
  if(S.img){ix=Math.max(0,Math.min(S.img.w,ix));iy=Math.max(0,Math.min(S.img.h,iy))}return{x:ix,y:iy,sx:x,sy:y}}
-function shp(s,col){var v=S.v,ax=s.a.x*v.s+v.x,ay=s.a.y*v.s+v.y,bx=s.b.x*v.s+v.x,by=s.b.y*v.s+v.y,dx=bx-ax,dy=by-ay;g.strokeStyle=col;g.lineWidth=2;g.beginPath();
-if(s.t==="c"){var r=Math.hypot(dx,dy);g.arc(ax,ay,r,0,2*Math.PI);g.moveTo(ax-5,ay);g.lineTo(ax+5,ay);g.moveTo(ax,ay-5);g.lineTo(ax,ay+5);g.moveTo(ax,ay);g.lineTo(bx,by);g.stroke();return{x:ax,y:ay-r-8,c:1}}
+// R = {g: Zeichenfläche, v: Ansicht, W/H: Größe, k: Strichstärke/Schrift}
+function shp(R,s,col){var g=R.g,v=R.v,k=R.k,ax=s.a.x*v.s+v.x,ay=s.a.y*v.s+v.y,bx=s.b.x*v.s+v.x,by=s.b.y*v.s+v.y,dx=bx-ax,dy=by-ay;g.strokeStyle=col;g.lineWidth=2*k;g.beginPath();
+if(s.t==="c"){var r=Math.hypot(dx,dy);g.arc(ax,ay,r,0,2*Math.PI);g.moveTo(ax-5*k,ay);g.lineTo(ax+5*k,ay);g.moveTo(ax,ay-5*k);g.lineTo(ax,ay+5*k);g.moveTo(ax,ay);g.lineTo(bx,by);g.stroke();return{x:ax,y:ay-r-8*k,c:1}}
 var l=Math.hypot(dx,dy),nx=0,ny=1;if(l>.5){nx=-dy/l;ny=dx/l}
-g.moveTo(ax,ay);g.lineTo(bx,by);g.moveTo(ax-5*nx,ay-5*ny);g.lineTo(ax+5*nx,ay+5*ny);g.moveTo(bx-5*nx,by-5*ny);g.lineTo(bx+5*nx,by+5*ny);g.stroke();return{x:(ax+bx)/2+8,y:(ay+by)/2-8,c:0}}
-function tag(x,y,txt,col,center){g.font="bold 12px system-ui,sans-serif";var w=g.measureText(txt).width;if(center)x-=w/2;x=Math.max(4,Math.min(cv.width-w-8,x));y=Math.max(16,Math.min(cv.height-6,y));
- g.fillStyle="rgba(8,9,11,.78)";g.fillRect(x-4,y-13,w+8,18);g.fillStyle=col;g.fillText(txt,x,y)}
-function legend(o){if(!$("shG").checked||!S.shapes.length)return;g.font="12px system-ui,sans-serif";var max=12,st=Math.max(0,S.shapes.length-max),rows=[{t:"Messungen ("+S.shapes.length+") – "+(SOL()?"Sonnensystem":"Deepsky"),c:"#e8e8e6"}];
+g.moveTo(ax,ay);g.lineTo(bx,by);g.moveTo(ax-5*k*nx,ay-5*k*ny);g.lineTo(ax+5*k*nx,ay+5*k*ny);g.moveTo(bx-5*k*nx,by-5*k*ny);g.lineTo(bx+5*k*nx,by+5*k*ny);g.stroke();return{x:(ax+bx)/2+8*k,y:(ay+by)/2-8*k,c:0}}
+function tag(R,x,y,txt,col,center){var g=R.g,k=R.k;g.font="bold "+(12*k)+"px system-ui,sans-serif";var w=g.measureText(txt).width;if(center)x-=w/2;x=Math.max(4*k,Math.min(R.W-w-8*k,x));y=Math.max(16*k,Math.min(R.H-6*k,y));
+ g.fillStyle="rgba(8,9,11,.78)";g.fillRect(x-4*k,y-13*k,w+8*k,18*k);g.fillStyle=col;g.fillText(txt,x,y)}
+function legend(R,o,max){if(!S.shapes.length)return 0;var g=R.g,k=R.k;g.font=(12*k)+"px system-ui,sans-serif";var st=Math.max(0,S.shapes.length-max),rows=[{t:"Messungen ("+S.shapes.length+") – "+(SOL()?"Sonnensystem":"Deepsky"),c:"#e8e8e6"}];
  if(st>0)rows.push({t:"… "+st+" ältere nicht angezeigt",c:"#9aa0a6"});
  for(var i=st;i<S.shapes.length;i++)rows.push({t:legTxt(S.shapes[i],i,o),c:S.shapes[i].col,sw:1});
- var rh=18,pad=8,w=0;rows.forEach(function(r){w=Math.max(w,g.measureText(r.t).width+(r.sw?18:0))});w=Math.min(w+2*pad,cv.width-20);
- var h=rows.length*rh+10,x=10,y=Math.max(4,cv.height-10-h);g.fillStyle="rgba(8,9,11,.85)";g.fillRect(x,y,w,h);
- rows.forEach(function(r,j){var top=y+5+j*rh,tx=x+pad;if(r.sw){g.fillStyle=r.c;g.fillRect(tx,top+4,10,10);tx+=18}g.fillStyle=r.c;g.fillText(r.t,tx,top+13)})}
-function drawAll(){if(!S.img)return;var o=calc(),ok=o.sc>0&&o.dkm>0;g.clearRect(0,0,cv.width,cv.height);g.imageSmoothingEnabled=S.v.s<1;g.drawImage(S.img.el,S.v.x,S.v.y,S.img.w*S.v.s,S.img.h*S.v.s);
-S.shapes.forEach(function(s,i){var an=shp(s,s.col);if($("shL").checked)tag(an.x,an.y,"#"+(i+1)+(ok?"  "+shortTxt(s,o):""),s.col,an.c)});
-if(S.cur){var an=shp(S.cur,"#59d668");if(ok)tag(an.x,an.y,shortTxt(S.cur,o),"#59d668",an.c)}
-if(ok)legend(o);$("zl").textContent="Zoom "+fx(S.v.s*100,0)+" %"}
+ var rh=18*k,pad=8*k,w=0;rows.forEach(function(r){w=Math.max(w,g.measureText(r.t).width+(r.sw?18*k:0))});w=Math.min(w+2*pad,R.W-20*k);
+ var h=rows.length*rh+10*k,x=10*k,y=Math.max(4*k,R.H-10*k-h);g.fillStyle="rgba(8,9,11,.85)";g.fillRect(x,y,w,h);
+ rows.forEach(function(r,j){var top=y+5*k+j*rh,tx=x+pad;if(r.sw){g.fillStyle=r.c;g.fillRect(tx,top+4*k,10*k,10*k);tx+=18*k}g.fillStyle=r.c;g.fillText(r.t,tx,top+13*k)});return x+w}
+function drawAll(){if(!S.img)return;var o=calc(),ok=o.sc>0&&o.dkm>0,R={g:g,v:S.v,W:cv.width,H:cv.height,k:1};g.clearRect(0,0,cv.width,cv.height);g.imageSmoothingEnabled=S.v.s<1;g.drawImage(S.img.el,S.v.x,S.v.y,S.img.w*S.v.s,S.img.h*S.v.s);
+S.shapes.forEach(function(s,i){var an=shp(R,s,s.col);if($("shL").checked)tag(R,an.x,an.y,"#"+(i+1)+(ok?"  "+shortTxt(s,o):""),s.col,an.c)});
+if(S.cur){var an=shp(R,S.cur,"#59d668");if(ok)tag(R,an.x,an.y,shortTxt(S.cur,o),"#59d668",an.c)}
+if(ok&&$("shG").checked)legend(R,o,12);$("zl").textContent="Zoom "+fx(S.v.s*100,0)+" %"}
 function liveVals(s){var o=calc(),px=len(s),z=size(o,px),c=s.t==="c";var h="<div>"+(c?"Durchmesser":"Länge")+"<b>"+fx(px,1)+" px</b></div><div>Winkel<b>"+fAng(z.as)+"</b></div><div>Größe<b>"+fSize(z.k)+"</b></div><div>Vergleich<b>≈ "+fCmp(z.k,0)+"</b></div>";
 if(c)h+="<div style=\"grid-column:1/-1\">Fläche<b>"+fArea(z.k)+" (≈ "+fCmp(z.k,1)+")</b></div>";$("lv4").innerHTML=h;
 if(px<5)$("lv4").innerHTML+='<div class="box y" style="grid-column:1/-1">'+IC.y+'<div><b class="pfx">Warnung:</b> Unter 5 px – von Bildrauschen dominiert.</div></div>'}
@@ -486,9 +637,57 @@ document.addEventListener("keydown",function(e){if(S.step!==3||e.ctrlKey||e.meta
  else h=false;if(h)e.preventDefault()});
 function results(c){var o=calc(),ok=o.sc>0&&o.dkm>0;$("res").innerHTML=S.shapes.length&&ok?"<table><tr><th></th><th>Art</th><th>Pixel</th><th>Winkel</th><th>Größe (Spanne)</th><th>Fläche (Kreis)</th><th>Details</th></tr>"+S.shapes.map(function(s,i){var px=len(s),z=size(o,px),ci=s.t==="c";
 return '<tr><td><span class="sw" style="background:'+s.col+'"></span>#'+(i+1)+"</td><td>"+(ci?"Kreis Ø":"Linie")+"</td><td>"+fx(px,1)+"</td><td>"+fAng(z.as)+"</td><td><b>"+fSize(z.k)+"</b><br>("+fSize(z.lo)+" – "+fSize(z.hi)+")</td><td>"+(ci?fArea(z.k):"–")+"</td><td>"+details(z.k,ci)+"</td></tr>"}).join("")+"</table>":'<p class="hint">'+(ok?"Noch keine Messung.":"Ohne gültigen Maßstab und Entfernung gibt es keine Ergebnisse – siehe Schritte 2 und 3.")+'</p>';
-var ch=S.orig==="yes"?"unverändert":S.orig==="crop"?"zugeschnitten (Maßstab unverändert)":S.orig==="no"?"verändert (Faktor "+fmt(o.ratio)+", "+o.rsrc+($("cropToo").checked?", zusätzlich zugeschnitten":"")+")":"nicht angegeben";
-var scTxt=o.psUse?"aus Plate-Solve":fmt(o.efl)+" mm eff. Brennweite, "+fmt(o.epx)+" µm eff. Pixel";
-$("sum").innerHTML='<div class="box i">'+IC.i+'<div>Dein Ergebnis beruht auf: Maßstab <b>'+fx(o.sc,4)+' ″/px</b> ('+scTxt+'), Entfernung <b>'+(SOL()?fKm(o.dkm):fLy(o.dly))+'</b> ('+o.span+', '+(S.cat!=null&&!SOL()?'Katalogwert, Quelle: '+DSO[S.cat][3]+' – bitte prüfen':'Eingabe von dir')+'), Bild <b>'+ch+'</b>. Größen exakt nach 2 · d · tan(θ/2).</div></div>'+c.map(row).join("")}
+var bs=basis(o);
+$("sum").innerHTML='<div class="box i">'+IC.i+'<div>Dein Ergebnis beruht auf: Maßstab <b>'+fx(o.sc,4)+' ″/px</b> ('+bs.sc+'), Entfernung <b>'+(SOL()?fKm(o.dkm):fLy(o.dly))+'</b> ('+o.span+', '+(S.cat!=null&&!SOL()?'Katalogwert, Quelle: '+DSO[S.cat][3]+' – bitte prüfen':'Eingabe von dir')+'), Bild <b>'+bs.ch+'</b>. Größen exakt nach 2 · d · tan(θ/2).</div></div>'+c.map(row).join("")}
+// ===== Bild mit Messungen speichern =====
+function basis(o){return{
+ ch:S.orig==="yes"?"unverändert":S.orig==="crop"?"zugeschnitten (Maßstab unverändert)":S.orig==="no"?"verändert (Faktor "+fmt(o.ratio)+", "+o.rsrc+($("cropToo").checked?", zusätzlich zugeschnitten":"")+")":"nicht angegeben",
+ sc:o.psUse?"aus Plate-Solve":fmt(o.efl)+" mm eff. Brennweite, "+fmt(o.epx)+" µm eff. Pixel",
+ dist:(SOL()?fKm(o.dkm):fLy(o.dly))+" ("+o.span+", "+(S.cat!=null&&!SOL()?"Katalogwert, Quelle: "+DSO[S.cat][3]:"Eingabe")+")"}}
+function scaleBar(R,o,avoidW){var g=R.g,k=R.k,u=SOL()?["km",1]:(size(o,R.W*.18).k/KMLY>=.01?["Lj",KMLY]:["AE",KMAU]);
+ var val=size(o,R.W*.18).k/u[1];if(!(val>0))return;var nc=Math.pow(10,Math.floor(Math.log10(val))),m=val/nc;nc*=m>=5?5:m>=2?2:1;
+ var px=2*Math.atan(nc*u[1]/(2*o.dkm))*ARC/o.sc;if(!(px>2))return;
+ var lab=fmt(nc,4)+" "+u[0]+"  ·  "+fAng(px*o.sc);g.font="bold "+(13*k)+"px system-ui,sans-serif";var tw=g.measureText(lab).width,bw=Math.max(px,tw)+20*k,bh=44*k;
+ var x=R.W-bw-12*k,y=R.H-bh-12*k;if(avoidW&&avoidW+20*k>x)y=12*k;
+ g.fillStyle="rgba(8,9,11,.85)";g.fillRect(x,y,bw,bh);var bx=x+bw-10*k-px,by=y+bh-12*k;
+ g.strokeStyle="#ffffff";g.lineWidth=3*k;g.beginPath();g.moveTo(bx,by);g.lineTo(bx+px,by);g.moveTo(bx,by-7*k);g.lineTo(bx,by+1*k);g.moveTo(bx+px,by-7*k);g.lineTo(bx+px,by+1*k);g.stroke();
+ g.fillStyle="#ffffff";g.fillText(lab,x+bw-10*k-tw,y+20*k)}
+function wrapTxt(g,parts,maxW){var lines=[],cur="";parts.forEach(function(p){var t=cur?cur+"  ·  "+p:p;if(cur&&g.measureText(t).width>maxW){lines.push(cur);cur=p}else cur=t});if(cur)lines.push(cur);return lines}
+function exportCanvas(op){var o=calc(),W=S.img.w,H=S.img.h,k=Math.max(1,Math.max(W,H)/1400),c=document.createElement("canvas"),x=c.getContext("2d");
+ if(!x)throw Err("Das Bild ist zu groß für den Browser.");c.width=W;c.height=H;
+ var lines=[],fs=12*k,lh=18*k,bh=0;
+ if(op.ban){var bs=basis(o),d=new Date();x.font=fs+"px system-ui,sans-serif";
+  lines=wrapTxt(x,["LocalSizeMeasurer Web v"+VERSION,S.img.name,d.toLocaleDateString("de-DE"),"Maßstab "+fx(o.sc,4)+" ″/px ("+bs.sc+")","Entfernung "+bs.dist,"Bild "+bs.ch,"Bildfeld "+fAng(o.fov*3600)+" breit","Projizierte Größen nach 2 · d · tan(θ/2)"],W-24*k);
+  bh=Math.round(lines.length*lh+16*k)}
+ c.height=H+bh;if(c.height!==H+bh||c.width!==W)throw Err("Das Bild ist zu groß für den Browser.");
+ x.fillStyle="#08090b";x.fillRect(0,0,W,H+bh);x.drawImage(S.img.el,0,0,W,H);
+ var R={g:x,v:{s:1,x:0,y:0},W:W,H:H,k:k};
+ S.shapes.forEach(function(s,i){var an=shp(R,s,s.col);if(op.lab)tag(R,an.x,an.y,"#"+(i+1)+"  "+shortTxt(s,o),s.col,an.c)});
+ var lw=op.leg?legend(R,o,Math.max(3,Math.floor(H*.6/(18*k))-2)):0;
+ if(op.bar)scaleBar(R,o,lw);
+ if(bh){x.fillStyle="#141517";x.fillRect(0,H,W,bh);x.fillStyle="#2e3133";x.fillRect(0,H,W,Math.max(1,k));x.font=fs+"px system-ui,sans-serif";
+  lines.forEach(function(t,i){x.fillStyle=i?"#c8ccd0":"#e8e8e6";x.fillText(t,12*k,H+8*k+(i+1)*lh-5*k)})}
+ return c}
+function exName(){var n=S.img&&S.img.name||"Bild";if(/^Beispielbild/.test(n))n="Beispielbild";n=n.replace(/\.[^.]+$/,"").replace(/[\\\/:*?"<>|]+/g,"_").trim()||"Bild";return n+"_LSM"}
+function exFmt(){var r=document.querySelector("input[name=exF]:checked");return r?r.value:"png"}
+function exOpen(){if(!S.img)return;var o=calc(),ok=o.sc>0&&o.dkm>0,d=$("exD");$("exN").value=exName();
+ ["exL","exG"].forEach(function(id,i){$(id).checked=$(i?"shG":"shL").checked});
+ $("exI").textContent="Volle Auflösung: "+S.img.w.toLocaleString("de-DE")+" × "+S.img.h.toLocaleString("de-DE")+" px · "+S.shapes.length+" Messung"+(S.shapes.length===1?"":"en");
+ $("exM").innerHTML=ok?"":'<div class="box r">'+IC.r+'<div><b class="pfx">Fehler:</b> Ohne gültigen Maßstab und Entfernung lässt sich nichts einzeichnen – siehe Schritte 2 und 3.</div></div>';
+ $("exS").disabled=!ok;$("exC").textContent="Abbrechen";if(d.showModal)d.showModal();else d.setAttribute("open","")}
+function exClose(){var d=$("exD");if(d.close)d.close();else d.removeAttribute("open")}
+function exSave(){var f=exFmt(),ext=f==="png"?".png":".jpg",mime=f==="png"?"image/png":"image/jpeg",name=($("exN").value.trim().replace(/[\\\/:*?"<>|]+/g,"_").replace(/\.(png|jpe?g)$/i,"")||exName())+ext,
+ op={lab:$("exL").checked,leg:$("exG").checked,bar:$("exB").checked,ban:$("exT").checked},st=$("exM");
+ function say(l,t){st.innerHTML='<div class="box '+l+'">'+IC[l]+"<div>"+t+"</div></div>"}
+ var pick=window.showSaveFilePicker&&window.self===window.top?window.showSaveFilePicker({suggestedName:name,types:[{description:f==="png"?"PNG-Bild":"JPEG-Bild",accept:f==="png"?{"image/png":[".png"]}:{"image/jpeg":[".jpg",".jpeg"]}}]}).catch(function(e){if(e&&e.name==="AbortError")throw e;return null}):Promise.resolve(null);
+ $("exS").disabled=true;
+ pick.then(function(h){say("i","Bild wird erzeugt …");return new Promise(function(r){setTimeout(function(){r(h)},30)})})
+ .then(function(h){var c=exportCanvas(op);return new Promise(function(res,rej){c.toBlob(function(bl){bl?res({h:h,b:bl}):rej(Err("Das Bild ist zu groß für den Browser."))},mime,.92)})})
+ .then(function(r){if(r.h)return r.h.createWritable().then(function(w){return w.write(r.b).then(function(){return w.close()})}).then(function(){return r.h.name||name});
+  var a=document.createElement("a"),u=URL.createObjectURL(r.b);a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove()},5000);return null})
+ .then(function(n){say("g",n?"Gespeichert als <b>"+n.replace(/</g,"&lt;")+"</b>.":"Das Bild <b>"+name.replace(/</g,"&lt;")+"</b> wurde an den Browser übergeben und liegt im Download-Ordner (je nach Einstellung fragt der Browser nach dem Ort).");$("exC").textContent="Schließen"})
+ .catch(function(e){if(e&&e.name==="AbortError"){st.innerHTML="";return}say("r","<b class=\"pfx\">Fehler:</b> Speichern fehlgeschlagen – "+(e&&e.message||e))})
+ .then(function(){$("exS").disabled=false})}
 // ===== Katalog =====
 function NK(s){return String(s).toUpperCase().replace(/[\s\-_]/g,"")}
 function findDSO(q){var k=NK(q),i,j;if(k.length<2)return -1;
@@ -561,6 +760,8 @@ document.querySelectorAll("[data-t]").forEach(function(b){b.onclick=function(){s
 $("fit").onclick=fit;$("one").onclick=function(){zoomAt(1,cv.width/2,cv.height/2)};$("undo").onclick=undo;
 $("clr").onclick=function(){if(S.shapes.length<2||confirm("Alle Messungen löschen?")){S.shapes=[];upd()}};
 $("demo").onclick=sample;
+$("svB").onclick=exOpen;$("svE").onclick=exOpen;$("exC").onclick=exClose;$("exS").onclick=exSave;
+$("exD").addEventListener("keydown",function(e){e.stopPropagation()});
 var dr=$("drop");dr.onclick=function(){$("file").click()};$("file").onclick=function(e){e.stopPropagation()};$("file").onchange=function(){loadFile(this.files[0]);this.value=""};
 dr.ondragover=function(e){e.preventDefault();dr.classList.add("h")};dr.ondragleave=function(){dr.classList.remove("h")};dr.ondrop=function(e){e.preventDefault();dr.classList.remove("h");loadFile(e.dataTransfer.files[0])};
 function profs(){try{return JSON.parse(localStorage.getItem("lsmProfiles")||"{}")}catch(e){return{}}}
