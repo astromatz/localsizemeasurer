@@ -17,7 +17,7 @@ Stand: 15.11.2026
 ## Teil 1: PixInsight-Script (LSM_2_3.js)
 - Interaktives Mess-Lineal: zeigt die projizierte physische Größe einer gezogenen Linie am angenommenen Zielort.
 - Ziel: PixInsight 1.9.6 (Build 1713), V8-Engine.
-- Referenz-Setup zum Testen: Brennweite 480 mm (Apo), Pixel 3,75 µm (ASI2600MC), Entfernung 3000 Lichtjahre.
+- Referenz-Setup zum Testen: Brennweite 480 mm (Apo), Pixel 3,76 µm (ASI2600MC Pro), Entfernung 3000 Lichtjahre.
 - Wichtig: Maus-Events am ImageWindow funktionieren nicht. Interaktion läuft ausschließlich **dialog-intern** (Bitmap in ScrollBox mit eigenen Maus-Handlern).
 - Skalenberechnung in `getPixelscale()` gekapselt; Maßstab kann aus Plate-Solve kommen.
 - Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → **v2.3** (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample). v2.3 in PixInsight an einem gelösten Bild getestet.
@@ -38,6 +38,11 @@ Ziel: niederschwellige, teilbare Browser-Version ohne PixInsight. Keine Astromet
 - Deepsky-Objektkatalog integriert.
 - Optionales Kontrollfeld „Maßstab aus Plate-Solve“ in Schritt 2: Wert muss manuell aus ImageSolver/ASTAP/astrometry.net übernommen werden und gilt nur bei unveränderter Export-Auflösung. Haken „verwenden“ erst aktiv, wenn ein Wert drinsteht. Link zu nova.astrometry.net (nur zum Vorher-Lösen, außerhalb der App).
 - Teleskopöffnung wird nicht abgefragt (ggf. v2 mit Abtastfaktor/Seeing).
+- **v1.1:** Keine Teleskopliste mehr – Brennweite ist Pflichtfeld ohne Vorbelegung (Sperre vor Schritt 3, wie bei der Entfernung). Reducer/Barlow bleiben.
+- Kameraliste (63 Modelle, 4 Gruppen: Deep-Sky, Planeten/Guiding, DSLR, DSLM) aus Mathias' Liste, 11/2026 per Websuche gegen Hersteller-/Händlerangaben geprüft. Gespeichert nur: Pixelzahl horizontal, Pixelgröße (Astro: Herstellerangabe) bzw. Sensorbreite (Foto-Kameras: Pixelgröße berechnet), Farbe/Mono, ggf. Hinweis. Infobox zeigt Herkunft des Werts. Keine Vorauswahl. Eigene Änderung an den Sensordaten setzt die Auswahl auf „eigene Werte“.
+- Korrekturen ggü. Alt-CSV: GPM174M = IMX249 (1920 px), ATR2600 23,5 mm, EOS 7D II 4,1 µm. ATR533M-Pixelzahl in Händlerquellen widersprüchlich (Hinweis in der App).
+- **v1.2:** Debayer-Auswahl und Sensortyp aus Schritt 2 gestrichen (wirkten nicht auf die Rechnung). Super-Pixel nur noch in Schritt 1: Hinweis „auch beim Stacken, z. B. WBPP“, Faktor 2 wird bei Auswahl vorbelegt (wie im Script). Restrisiko: Kamera ohne Sensor-Pixelbreite + Super-Pixel + „unverändert“ fängt nur der Plate-Solve-Abgleich.
+- Schritt 2 aufgeräumt: Abschnitte Teleskop / Kamera / Kontrolle mit Plate-Solve, Profile oben rechts, Pixelgröße standardmäßig direkt (Umschalter „aus Sensorbreite berechnen“), Seitenleiste ohne doppelte Werte. Optik-Profile speichern jetzt auch das Kameramodell.
 - Generiertes Beispielbild nur über einen „Ausprobieren“-Knopf.
 - Redesign: hell/dunkel umschaltbar, präzises Werkzeug, am Look von PixInsight orientiert, eher grau, Desktop-Fokus. Features dabei unverändert.
 - Versionsinfo, Credits (Rainer und Daniel) und Datenschutzhinweis in einem eigenen 5. Tab „Hinweise“ neben „Messen“.
@@ -49,7 +54,14 @@ AutoSTF, FITS-Header, Bildexport mit Maßstabsleiste (Export kommt später).
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- Browser-Test des Redesigns durch Mathias steht noch aus.
+- Browser-Test von v1.2 durch Mathias (nach dem Merge direkt auf GitHub Pages möglich).
+
+## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
+- Web-App v1.2 fertig: Kameraliste, aufgeräumter Schritt 2, Debayer-Auswahl gestrichen. Automatisch im Browser getestet (hell/dunkel, keine Konsolenfehler). Die Messung selbst blieb unverändert. v1.1 hat Mathias erfolgreich getestet.
+- Pull Request https://github.com/astromatz/localsizemeasurer/pull/1 (Branch `claude/trusting-euler-aaclxv` → `main`) ist angelegt. **Mathias muss ihn auf GitHub mergen**, erst danach zeigt GitHub Pages v1.2 (bis dahin v1.0).
+- Kameradaten: Herstellerseiten waren aus der Cloud gesperrt, Prüfung lief über die Websuche (Handbücher, Händler, Datenbanken). Mathias' Prüfdateien (camera_catalogue.json/.csv) liegen nicht im Repo.
+- Mods „Model selector“ und „cache clock“ laufen nur lokal bei Mathias, nicht in Cloud-Sitzungen. Option: als Plugin in ein GitHub-Repo legen. Offen, ob Mathias das will.
+- Nächster sinnvoller Schritt: Pull Request mergen → v1.2 online im Browser prüfen → an Karsten und Dietmar zum Testen geben.
 
 ## Nächste Schritte
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
