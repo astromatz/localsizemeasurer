@@ -6,8 +6,8 @@ LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du z
 
 > Aktuelle Version: **v2.3.6** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-Alternative: Web-App unter https://astromatz.github.io/localsizemeasurer/
-Achtung: Diese Version ist noch in der Entwicklungsphase (Alpha).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.2, Testphase, siehe [unten](#web-app)).
+
 ---
 
 ## Funktionen
@@ -28,6 +28,7 @@ Achtung: Diese Version ist noch in der Entwicklungsphase (Alpha).
 |---|---|
 | `LSM_2_3.js` | Das Script |
 | `LocalSizeMeasurer_Doc.html` | Ausführliche Dokumentation (öffnet sich auch über den Button „Dokumentation“ im Script) |
+| `index.html` | Die Web-App (eine einzelne Datei) |
 
 Lege beide Dateien **in denselben Ordner**, sonst findet der Doku-Button die Hilfe nicht.
 
@@ -62,22 +63,35 @@ Danach findest du das Script unter `Script > Utilities > LocalSizeMeasurer`.
 
 Details stehen in der Dokumentation.
 
-## Web-App (in Arbeit)
+## Web-App
 
-Eine Browser-Version, die ohne PixInsight läuft, ist in Arbeit, aber noch nicht fertig. Sie wird hier ergänzt, sobald sie einsatzbereit ist.
+**LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight: https://astromatz.github.io/localsizemeasurer/
+Aktuelle Version **v1.2**, noch in der Testphase.
+
+- **Bild bleibt bei dir:** Das Bild wird nur im Browser verarbeitet, nichts wird hochgeladen.
+- **Fünf Schritte:** Bild prüfen → Optik → Entfernung → Messen → Hinweise
+- **Kameraliste:** Rund 60 Astro-, Spiegelreflex- und Systemkameras tragen Pixelgröße und Sensorbreite automatisch ein. Andere Kameras gibst du von Hand ein.
+- **Prüfungen:** Die App vergleicht Bild- und Sensorbreite und erkennt so Binning, Skalierung, Super-Pixel-Debayer und Zuschnitt. Optional gleicht sie mit deinem Plate-Solve-Wert ab.
+- **Entfernung:** Du trägst sie selbst ein oder übernimmst sie aus dem eingebauten Deepsky-Katalog. Für Mond, Sonne und Planeten gibt es Stufen von Erdnähe bis Erdferne.
+- **Hell oder dunkel:** Das Design ist umschaltbar. Optik-Profile werden lokal im Browser gespeichert.
+
+**Unterschiede zum Script:** Die Web-App liest nur JPG, PNG oder WebP, also keine FITS-Header und keine Plate-Solve-Daten aus der Datei. Brennweite, Kamera und Bearbeitungsschritte gibst du deshalb selbst an. Eine Online-Entfernungssuche und einen Bildexport gibt es (noch) nicht.
+
+**Offline nutzen:** `index.html` herunterladen und per Doppelklick öffnen.
 
 ## Feedback
 
 Fehler gefunden, Rechnung unplausibel oder eine Idee? Ich freue mich über ein [Issue](../../issues) oder eine Nachricht. Hilfreich sind dabei:
 - Kamera, Brennweite und Bearbeitungsschritte (Debayer, Binning, Resample, Drizzle)
 - der Konsolenbericht des Scripts (steht in der PixInsight-Konsole)
+- bei der Web-App: ein Screenshot der Seitenleiste „Prüfungen“
 
 ## Credits
 
 Die ursprüngliche Idee und die Excel-Tabelle, mit der ich seit 2021 gerechnet habe, stammen von **Rainer und Daniel**. Herzlichen Dank für die Vorarbeit und die Inspiration!
 ▶ [Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen (YouTube)](https://www.youtube.com/watch?v=s6AZzTCcYxc)
 
-Das Script ist mit Unterstützung von KI („Vibe Coding“) entstanden.
+Script und Web-App sind mit Unterstützung von KI („Vibe Coding“) entstanden.
 
 ## Lizenz
 

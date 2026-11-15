@@ -54,14 +54,14 @@ AutoSTF, FITS-Header, Bildexport mit Maßstabsleiste (Export kommt später).
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- Browser-Test von v1.2 durch Mathias (nach dem Merge direkt auf GitHub Pages möglich).
+- Browser-Test von v1.2 durch Mathias (online auf GitHub Pages).
 
 ## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
 - Web-App v1.2 fertig: Kameraliste, aufgeräumter Schritt 2, Debayer-Auswahl gestrichen. Automatisch im Browser getestet (hell/dunkel, keine Konsolenfehler). Die Messung selbst blieb unverändert. v1.1 hat Mathias erfolgreich getestet.
-- Pull Request https://github.com/astromatz/localsizemeasurer/pull/1 (Branch `claude/trusting-euler-aaclxv` → `main`) ist angelegt. **Mathias muss ihn auf GitHub mergen**, erst danach zeigt GitHub Pages v1.2 (bis dahin v1.0).
+- Pull Request #1 gemerged, v1.2 ist auf GitHub Pages online. README um einen Web-App-Abschnitt ergänzt.
 - Kameradaten: Herstellerseiten waren aus der Cloud gesperrt, Prüfung lief über die Websuche (Handbücher, Händler, Datenbanken). Mathias' Prüfdateien (camera_catalogue.json/.csv) liegen nicht im Repo.
 - Mods „Model selector“ und „cache clock“ laufen nur lokal bei Mathias, nicht in Cloud-Sitzungen. Option: als Plugin in ein GitHub-Repo legen. Offen, ob Mathias das will.
-- Nächster sinnvoller Schritt: Pull Request mergen → v1.2 online im Browser prüfen → an Karsten und Dietmar zum Testen geben.
+- Nächster sinnvoller Schritt: v1.2 online prüfen → an Karsten und Dietmar zum Testen geben.
 
 ## Nächste Schritte
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
