@@ -47,14 +47,19 @@ Ziel: niederschwellige, teilbare Browser-Version ohne PixInsight. Keine Astromet
 - Redesign: hell/dunkel umschaltbar, präzises Werkzeug, am Look von PixInsight orientiert, eher grau, Desktop-Fokus. Features dabei unverändert.
 - Versionsinfo, Credits (Rainer und Daniel) und Datenschutzhinweis in einem eigenen 5. Tab „Hinweise“ neben „Messen“.
 
+- **v1.3:** TIFF und FITS laden (eigener Leser in index.html, keine Bibliothek): TIFF 8/16/32 Bit Ganzzahl + 32/64 Bit Gleitkomma, RGB/Graustufen, chunky/planar, Strips/Tiles, unkomprimiert/LZW/ZIP/PackBits, Predictor 2 und 3; FITS BITPIX 8/16/32/-32/-64 mit BZERO/BSCALE, RGB über NAXIS3, IMAGE-Extension, Zeilenfolge nach ROWORDER (Standard: unten zuerst). Entscheidung Mathias: **nur bereits gestreckte Bilder**, keine Streckung, lineare Abbildung auf 8 Bit (Ganzzahl: Typbereich; Gleitkomma: 0–1, sonst 0–Max). Hinweis im Ladefeld. Warnung in Schritt 1, wenn das Bild linear wirkt (Median < 8 und 99-%-Wert < 40 von 255) bzw. bei BAYERPAT. Nicht unterstützt (mit Fehlermeldung): JPEG-TIFF, Palette/CMYK/YCbCr, BigTIFF, 16-Bit-Float, .fz, XISF.
+- **v1.3:** Speichern-Dialog („Bild speichern …“ in der Werkzeugleiste und am Ende von Schritt 4): volle Auflösung, PNG/JPEG, wählbar Beschriftung, Legende, Maßstabsleiste (runde Länge in Lj/AE/km plus Winkel), Info-Leiste unter dem Bild. Chrome/Edge: echter Speichern-Dialog (showSaveFilePicker), sonst Download. Zeichenfunktionen nehmen dafür ein Render-Objekt (Strichstärke/Schrift skaliert mit der Bildgröße).
+- Getestet (automatisch, Chromium): 16 Testdateien pixelgenau gegen Sollwerte, 26-MP-Dateien laden in 3–7 s, Export als Download und über den Speichern-Dialog.
+
 ### Bewusst nicht übernommen
-AutoSTF, FITS-Header, Bildexport mit Maßstabsleiste (Export kommt später).
+AutoSTF bzw. eigene Streckung, FITS-Header (Brennweite/Pixelgröße werden nicht ausgelesen).
 
 ### Bekannte Eigenheit
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- Browser-Test von v1.2 durch Mathias (online auf GitHub Pages).
+- Browser-Test von v1.3 durch Mathias mit echten Exporten aus PixInsight (TIFF 16/32 Bit, FITS) – vor allem: Ist ein FITS aus PixInsight richtig herum oder gespiegelt? (Messung ist davon unabhängig.)
+- Export in Firefox/Safari prüfen (dort Download statt Speichern-Dialog).
 
 ## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
 - Web-App v1.2 fertig: Kameraliste, aufgeräumter Schritt 2, Debayer-Auswahl gestrichen. Automatisch im Browser getestet (hell/dunkel, keine Konsolenfehler). Die Messung selbst blieb unverändert. v1.1 hat Mathias erfolgreich getestet.

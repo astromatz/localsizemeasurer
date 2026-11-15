@@ -6,7 +6,7 @@ LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du z
 
 > Aktuelle Version: **v2.3.6** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.2, Testphase, siehe [unten](#web-app)).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.3, Testphase, siehe [unten](#web-app)).
 
 ---
 
@@ -66,7 +66,7 @@ Details stehen in der Dokumentation.
 ## Web-App
 
 **LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight: https://astromatz.github.io/localsizemeasurer/
-Aktuelle Version **v1.2**, noch in der Testphase.
+Aktuelle Version **v1.3**, noch in der Testphase.
 
 - **Bild bleibt bei dir:** Das Bild wird nur im Browser verarbeitet, nichts wird hochgeladen.
 - **Fünf Schritte:** Bild prüfen → Optik → Entfernung → Messen → Hinweise
@@ -75,7 +75,11 @@ Aktuelle Version **v1.2**, noch in der Testphase.
 - **Entfernung:** Du trägst sie selbst ein oder übernimmst sie aus dem eingebauten Deepsky-Katalog. Für Mond, Sonne und Planeten gibt es Stufen von Erdnähe bis Erdferne.
 - **Hell oder dunkel:** Das Design ist umschaltbar. Optik-Profile werden lokal im Browser gespeichert.
 
-**Unterschiede zum Script:** Die Web-App liest nur JPG, PNG oder WebP, also keine FITS-Header und keine Plate-Solve-Daten aus der Datei. Brennweite, Kamera und Bearbeitungsschritte gibst du deshalb selbst an. Eine Online-Entfernungssuche und einen Bildexport gibt es (noch) nicht.
+**Bildformate:** JPG, PNG, WebP sowie TIFF und FITS (8/16/32 Bit, unkomprimiert, LZW oder ZIP). TIFF und FITS müssen **bereits gestreckt** sein – die App streckt nicht selbst und reduziert die Anzeige auf 8 Bit. XISF bitte vorher als TIFF, FITS oder PNG speichern.
+
+**Bild speichern:** Am Ende lässt sich das Bild mit Messungen, Legende, Maßstabsleiste und Info-Leiste in voller Auflösung als PNG oder JPEG sichern.
+
+**Unterschiede zum Script:** Die Web-App liest keine FITS-Header und keine Plate-Solve-Daten aus der Datei. Brennweite, Kamera und Bearbeitungsschritte gibst du deshalb selbst an. Eine Online-Entfernungssuche gibt es nicht.
 
 **Offline nutzen:** `index.html` herunterladen und per Doppelklick öffnen.
 
