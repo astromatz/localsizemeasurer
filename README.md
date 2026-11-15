@@ -54,6 +54,8 @@ Danach findest du das Script unter `Script > Utilities > LocalSizeMeasurer`.
 5. Im Messfenster mit gedrückter linker Maustaste messen: <kbd>L</kbd> = Linie, <kbd>K</kbd> = Kreis. <kbd>Esc</kbd> bricht die laufende Messung ab. Mit **Eingaben ändern …** lassen sich Optik und Entfernung nachträglich korrigieren.
 6. Mit **Bild speichern …** das annotierte Bild exportieren
 
+Schließt sich das Messfenster über <kbd>Esc</kbd> oder das Fenster-X, bietet das Script an, es mit allen nicht gespeicherten Messungen wieder zu öffnen.
+
 **Tipp:** Löse das Bild nach dem letzten Schritt, der die Bildgröße ändert, mit dem ImageSolver. Dann stimmt der Maßstab in jedem Fall.
 
 ## Wichtige Hinweise zur Genauigkeit

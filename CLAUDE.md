@@ -20,7 +20,7 @@ Stand: 15.11.2026 (Script v2.4.1, Web v1.4)
 - Referenz-Setup zum Testen: Brennweite 480 mm (Apo), Pixel 3,76 µm (ASI2600MC Pro), Entfernung 3000 Lichtjahre.
 - Wichtig: Maus-Events am ImageWindow funktionieren nicht. Interaktion läuft ausschließlich **dialog-intern** (Bitmap in ScrollBox mit eigenen Maus-Handlern).
 - Skalenberechnung in `getPixelscale()` gekapselt; Maßstab kann aus Plate-Solve kommen.
-- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten; von Mathias in PixInsight erfolgreich getestet).
+- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten) → **v2.4.1** (Wiederöffnen nach Esc/Fenster-X). Beide von Mathias in PixInsight erfolgreich getestet.
 - 10–100 Lj mit einer Nachkommastelle: im Script schon seit v2.3, in der Web-App seit v1.4.
 - Später geplant: Bild mit Maßstab speichern/exportieren.
 
@@ -78,7 +78,7 @@ Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj*
 - Esc bricht nur die laufende Messung ab; Beenden nur über „Messmodus beenden“. Werkzeug als zwei ToolButtons (Text, umschaltbar) statt Auswahlliste. „Fit“ → „Einpassen“. „lj“ → „Lj“ überall.
 - Doku (`LocalSizeMeasurer_Doc.html`) und README nachgezogen.
 - Test Mathias: Esc ohne laufende Messung schließt das Messfenster sofort (PixInsight/Qt, vom Script nicht abfangbar; war vermutlich schon in v2.3 so, die Rückfrage griff nur beim Knopf).
-- **v2.4.1:** `main()` führt den Messdialog in einer Schleife aus. Endete er nicht über „Messmodus beenden“ (`md.endedByButton`) und gibt es ungespeicherte Messungen (`md.unsavedCount()`), Rückfrage und erneutes `md.execute()` mit allen Messungen. **Ungetestet:** ob PixInsight einen geschlossenen Dialog erneut öffnet.
+- **v2.4.1:** `main()` führt den Messdialog in einer Schleife aus. Endete er nicht über „Messmodus beenden“ (`md.endedByButton`) und gibt es ungespeicherte Messungen (`md.unsavedCount()`), Rückfrage und erneutes `md.execute()` mit allen Messungen. Von Mathias getestet: Wiederöffnen mit allen Messungen funktioniert (Esc und Fenster-X), nach dem Speichern keine Rückfrage.
 
 **Bedienunterschiede, die bleiben:** Taste V/Verschieben-Werkzeug nur Web. Script nummeriert Messungen nach dem Löschen nicht um (passt zum Konsolenbericht), Web schon.
 
@@ -99,6 +99,7 @@ Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj*
 - Nächster sinnvoller Schritt: v1.2 online prüfen → an Karsten und Dietmar zum Testen geben.
 
 ## Nächste Schritte
+- PR „Script v2.4.1 / Web v1.4“ mergen → GitHub Pages zeigt v1.4.
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
 - Vorstellung im nächsten Astro-Workshop.
 - Grundsatz: Die Web-App soll alle Faktoren berücksichtigen, die PixInsight ab Werk mitbringt, oder sie als Fehlerquelle ausschließen. Dabei komfortable Nutzerführung ohne überfrachtete Oberfläche.
