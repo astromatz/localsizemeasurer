@@ -41,6 +41,7 @@ Ziel: niederschwellige, teilbare Browser-Version ohne PixInsight. Keine Astromet
 - **v1.1:** Keine Teleskopliste mehr – Brennweite ist Pflichtfeld ohne Vorbelegung (Sperre vor Schritt 3, wie bei der Entfernung). Reducer/Barlow bleiben.
 - Kameraliste (63 Modelle, 4 Gruppen: Deep-Sky, Planeten/Guiding, DSLR, DSLM) aus Mathias' Liste, 11/2026 per Websuche gegen Hersteller-/Händlerangaben geprüft. Gespeichert nur: Pixelzahl horizontal, Pixelgröße (Astro: Herstellerangabe) bzw. Sensorbreite (Foto-Kameras: Pixelgröße berechnet), Farbe/Mono, ggf. Hinweis. Infobox zeigt Herkunft des Werts. Keine Vorauswahl. Eigene Änderung an den Sensordaten setzt die Auswahl auf „eigene Werte“.
 - Korrekturen ggü. Alt-CSV: GPM174M = IMX249 (1920 px), ATR2600 23,5 mm, EOS 7D II 4,1 µm. ATR533M-Pixelzahl in Händlerquellen widersprüchlich (Hinweis in der App).
+- **v1.2:** Debayer-Auswahl und Sensortyp aus Schritt 2 gestrichen (wirkten nicht auf die Rechnung). Super-Pixel nur noch in Schritt 1: Hinweis „auch beim Stacken, z. B. WBPP“, Faktor 2 wird bei Auswahl vorbelegt (wie im Script). Restrisiko: Kamera ohne Sensor-Pixelbreite + Super-Pixel + „unverändert“ fängt nur der Plate-Solve-Abgleich.
 - Schritt 2 aufgeräumt: Abschnitte Teleskop / Kamera / Kontrolle mit Plate-Solve, Profile oben rechts, Pixelgröße standardmäßig direkt (Umschalter „aus Sensorbreite berechnen“), Seitenleiste ohne doppelte Werte. Optik-Profile speichern jetzt auch das Kameramodell.
 - Generiertes Beispielbild nur über einen „Ausprobieren“-Knopf.
 - Redesign: hell/dunkel umschaltbar, präzises Werkzeug, am Look von PixInsight orientiert, eher grau, Desktop-Fokus. Features dabei unverändert.
@@ -53,8 +54,7 @@ AutoSTF, FITS-Header, Bildexport mit Maßstabsleiste (Export kommt später).
 Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub Pages geöffnet wird (nicht in einer eingebetteten Vorschau).
 
 ### Offen
-- Browser-Test von v1.1 (Kameraliste, aufgeräumter Schritt 2) durch Mathias.
-- Debayer-Auswahl in Schritt 2 fließt nicht in die Rechnung ein, sie überschneidet sich mit „Super-Pixel-Debayer“ in Schritt 1 – Kandidat zum Vereinfachen.
+- v1.1 von Mathias erfolgreich getestet. v1.2 (Debayer-Streichung) noch nicht.
 
 ## Übergabe (Sitzung 15.11.2026, Claude Code Cloud)
 - Web-App v1.1 fertig und im Browser automatisiert getestet: hell und dunkel, Kamerawahl, Umschalter Sensorbreite, Wechsel auf „eigene Werte“, Sperre ohne Brennweite. Keine Konsolenfehler. Die Messung selbst blieb unverändert.

@@ -97,12 +97,12 @@ button.lnk:hover{background:none;filter:brightness(1.15)}
 <p id="imginfo" class="hint" style="margin-top:8px"></p><canvas id="pv" class="hide" style="width:auto;max-width:100%;max-height:220px;margin:6px 0"></canvas>
 <label>Ist das unverändertes Originalbild?</label>
 <div class="tb"><button data-o="yes">Ja, unverändert</button><button data-o="crop">Nur zugeschnitten</button><button data-o="no">Nein, anders verändert</button></div>
-<p class="why">Zuschneiden ändert den Maßstab nicht (nur das Bildfeld). Skalieren, Binning, Drizzle und Super-Pixel-Debayer ändern ihn. Ein unbemerkt falscher Maßstab ist der häufigste Fehler.</p>
+<p class="why">Zuschneiden ändert den Maßstab nicht. Skalieren, Binning, Drizzle und Super-Pixel-Debayer ändern ihn – auch wenn das beim Stacken passiert ist (z. B. Optionen in WBPP). Dann „Nein, anders verändert“ wählen.</p>
 <div id="chg" class="hide"><label>Was wurde gemacht?</label>
 <select id="chgT"><option value="">– bitte wählen –</option><option value="scale">Skaliert / Resampling</option><option value="bin">Gebinnt</option><option value="drz">Gedrizzelt</option><option value="sp">Super-Pixel-Debayer</option></select>
-<div id="fac" class="row"><div><label>Pixel wurden größer um Faktor</label><div class="u"><input id="fF" inputmode="decimal" placeholder="z. B. 2"><span>×</span></div><p class="hint">Binning 2×2 oder Super-Pixel = 2; 2×-Drizzle = 0,5.</p></div>
+<div id="fac" class="row"><div><label>Pixel wurden größer um Faktor</label><div class="u"><input id="fF" inputmode="decimal" placeholder="z. B. 2"><span>×</span></div><p class="hint">Binning 2×2 oder Super-Pixel = 2 · 2×-Drizzle = 0,5</p></div>
 <div id="fWw"><label>… oder ursprüngliche Bildbreite</label><div class="u"><input id="fW" inputmode="decimal"><span>px</span></div><p class="hint">Alternative zum Faktor, falls du die Originalbreite kennst.</p></div></div>
-<label class="chk" style="margin-top:10px"><input type="checkbox" id="cropToo"> Zusätzlich zugeschnitten (z. B. Stacking-Rand)</label><p class="hint">Stacking beschneidet meist die Ränder. Dann darf die Bildbreite vom Faktor abweichen; der Maßstab folgt allein dem Faktor (die Originalbreite wird ignoriert).</p></div>
+<label class="chk" style="margin-top:10px"><input type="checkbox" id="cropToo"> Zusätzlich zugeschnitten (z. B. Stacking-Rand)</label><p class="hint">Stacking beschneidet meist die Ränder. Mit Haken zählt nur der Faktor, nicht die Bildbreite.</p></div>
 </div><div class="side"><h3 class="sh">Prüfungen</h3><div id="c1"></div></div></div></div>
 
 <div class="card hide" id="s2"><h2 class="hx"><span>2 · Optik</span><span class="pf"><select id="ldP" title="Gespeichertes Optik-Profil laden"><option value="">Profil laden …</option></select><button id="svP" type="button" title="Aktuelle Optik als Profil im Browser speichern">Profil speichern</button></span></h2><div class="cols"><div>
@@ -116,9 +116,9 @@ button.lnk:hover{background:none;filter:brightness(1.15)}
 <div class="row r3"><div id="pxdw"><label for="pxd">Pixelgröße</label><div class="u"><input id="pxd" class="in" inputmode="decimal" placeholder="z. B. 3,76"><span>µm</span></div></div>
 <div id="sww"><label for="sw">Sensorbreite</label><div class="u"><input id="sw" class="in" inputmode="decimal" placeholder="z. B. 23,5"><span>mm</span></div></div>
 <div><label for="sp">Sensor-Pixelbreite<span id="spOpt" class="opt"> (optional)</span></label><div class="u"><input id="sp" class="in" inputmode="decimal" placeholder="z. B. 6248"><span>px</span></div></div>
-<div><label for="col">Sensortyp</label><div class="u"><select id="col" class="in"><option value="c">Farbe (Bayer)</option><option value="m">Mono</option></select><span></span></div></div></div>
+</div>
 <p class="hint"><span id="pmTxt"></span> <button type="button" class="lnk" id="pmT"></button><input type="hidden" id="pm" value="d"></p>
-<div id="dbw" class="row r3"><div><label for="deb">Debayer-Verfahren</label><div class="u"><select id="deb" class="in"><option value="">– bitte wählen –</option><option value="n">Normal (Bildbreite bleibt)</option><option value="s">Super-Pixel (halbe Breite)</option><option value="d">Drizzle</option></select><span></span></div></div><div class="wide"><p class="hint" style="margin-top:34px">Super-Pixel halbiert die Auflösung und verdoppelt die Pixelgröße.</p></div></div></section>
+</section>
 <section class="sec"><h3 class="sh">Kontrolle mit Plate-Solve <span class="opt">(optional)</span></h3>
 <div class="row r3"><div><label for="ps">Bildskala aus dem Plate-Solve</label><div class="u"><input id="ps" class="in" inputmode="decimal" placeholder="z. B. 1,62"><span>″/px</span></div></div>
 <div class="wide"><label class="chk" style="margin-top:36px"><input type="checkbox" id="psUse" class="in" disabled> Diese Bildskala für die Messung verwenden</label></div></div>
@@ -162,14 +162,14 @@ button.lnk:hover{background:none;filter:brightness(1.15)}
 <div class="nav"><button id="bk">← Zurück</button><button id="nx" class="pr">Weiter →</button></div>
 
 <div class="card hide" id="s5"><h2>5 · Hinweise</h2>
-<div class="ft"><b>LocalSizeMeasurer Web v1.1</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
+<div class="ft"><b>LocalSizeMeasurer Web v1.2</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
 <b>Credits:</b> Idee und ursprünglicher Excel-Rechner von Rainer und Daniel – <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank" rel="noopener">„Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen“</a> (YouTube). Danke und Gruß an die beiden!<br><br>
 <b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
 </div>
 </div>
 <script>
 // ===== Daten =====
-var VERSION="1.1";
+var VERSION="1.2";
 // Kameras: [Hersteller, Modell, Pixel horizontal, Pixelgröße µm (0 = aus Sensorbreite berechnen), Sensorbreite mm (0 = nicht nötig), Typ c/m, Hinweis]
 // Geprüft 11/2026 gegen Hersteller-, Handbuch- und Händlerangaben. Astrokameras: Pixelgröße laut Hersteller.
 // Foto-Kameras: Pixelgröße = Sensorbreite ÷ Pixelzahl (Hersteller nennen sie meist nicht).
@@ -362,8 +362,6 @@ if(S.orig===null)L("r","Schritt 1: „Unverändertes Originalbild?“ ist nicht 
 if(S.orig==="no"&&!$("chgT").value)L("r","Schritt 1: Bitte angeben, was am Bild verändert wurde.",1);
 if(S.orig==="no"&&$("chgT").value&&!$("cropToo").checked&&!(N("fF")>0)&&!(N("fW")>0))L("y","Kein Faktor und keine Originalbreite angegeben – es gilt der Breitenvergleich mit dem Sensor.",1);
 if(S.orig==="no"&&$("cropToo").checked&&!(N("fF")>0))L("r","Bei zusätzlichem Zuschnitt bitte den Faktor angeben (die Originalbreite reicht nicht, weil sie sich auf das ungeschnittene Bild bezieht).",1);
-if($("col").value==="c"&&!$("deb").value)L("y","Farbkamera: Debayer-Verfahren nicht beantwortet.",2);
-if($("col").value==="c"&&$("deb").value==="s"&&S.orig==="yes")L("y","Super-Pixel-Debayer angegeben, Bild aber als unverändert markiert – bitte Schritt 1 prüfen.",1);
 if(!(o.sc>0)){var miss=[];if(!(o.fl>0))miss.push("Brennweite");if(!(o.px>0))miss.push(o.pm==="d"?"Pixelgröße":"Sensorbreite und Sensor-Pixelbreite");
  L("r","Für den Maßstab fehlt noch: "+(miss.length?miss.join(", "):"Optik/Kamera unvollständig")+".",2);return a}
 var r=o.sp/o.cw;
@@ -434,7 +432,6 @@ var isS=$("ot").value==="s";$("sbw").style.display=isS?"":"none";$("dsw").style.
  else{var dv=PN($("d").value,true);$("dEcho").textContent=isFinite(dv)&&dv>0?"gelesen als "+dv.toLocaleString("de-DE")+" "+$("du").value:""}
 var _d=$("pm").value==="d";$("pxdw").style.display=_d?"":"none";$("sww").style.display=_d?"none":"";$("spOpt").style.display=_d?"":"none";
 $("pmTxt").textContent=_d?"Die Sensor-Pixelbreite dient der Prüfung auf Binning, Skalierung und Zuschnitt. Pixelgröße unbekannt?":"Pixelgröße = Sensorbreite ÷ Sensor-Pixelbreite.";$("pmT").textContent=_d?"Aus Sensorbreite berechnen":"Pixelgröße direkt eingeben";
-$("dbw").style.display=$("col").value==="c"?"":"none";
 var _psOk=N("ps")>0;$("psUse").disabled=!_psOk;if(!_psOk)$("psUse").checked=false;
 var c=checks();show("c1",c,1);show("c2",c,2);show("c3",c,3);$("chg").classList.toggle("hide",S.orig!=="no");$("fWw").style.display=$("cropToo").checked?"none":"";
 document.querySelectorAll("[data-o]").forEach(function(b){b.classList.toggle("sel",b.dataset.o===S.orig)});
@@ -531,17 +528,17 @@ function camInfo(){var v=$("cam").value,c=CAMI[v],t;
  if(c){t="<b>"+(c.ow?"Pixelgröße "+dec(c.px)+" µm laut Hersteller":"Pixelgröße "+dec(c.px)+" µm, berechnet aus "+dec(c.sw)+" mm Sensorbreite ÷ "+c.w.toLocaleString("de-DE")+" px")+"</b> · "+c.w.toLocaleString("de-DE")+" px breit · "+(c.c==="c"?"Farbe":"Mono")+
   (c.note?"<br>"+c.note:"")+'<br><span class="dim">Bitte mit dem Datenblatt deiner Kamera abgleichen. Alle Werte lassen sich überschreiben.</span>'}
  else if(v==="m")t="<b>Eigene Werte.</b> Pixelgröße und Pixelbreite stehen im Datenblatt der Kamera (ohne Binning).";
- else t="Kamera wählen – die App trägt Pixelgröße, Sensor-Pixelbreite und Sensortyp ein. Nicht in der Liste? „Andere Kamera – eigene Werte“ wählen.";
+ else t="Kamera wählen – die App trägt Pixelgröße und Sensor-Pixelbreite ein. Nicht in der Liste? „Andere Kamera – eigene Werte“ wählen.";
  $("camInfo").innerHTML=IC.i+"<div>"+t+"</div>"}
 function camPick(){var c=CAMI[$("cam").value];
- if(c){$("pm").value="d";$("pxd").value=dec(c.px);$("sp").value=c.w;$("sw").value=dec(c.sw>0?c.sw:Math.round(c.px*c.w/10)/100);$("col").value=c.c}
+ if(c){$("pm").value="d";$("pxd").value=dec(c.px);$("sp").value=c.w;$("sw").value=dec(c.sw>0?c.sw:Math.round(c.px*c.w/10)/100);}
  camInfo();upd()}
 $("cam").addEventListener("change",camPick);
 // Eigene Änderung an den Sensordaten: Auswahl auf „eigene Werte“ setzen, damit kein falscher Modellname stehen bleibt
 function camCheck(){var c=CAMI[$("cam").value];if(!c)return;
  var px=$("pm").value==="d"?N("pxd"):N("sw")/N("sp")*1000;
- if(!(Math.abs(px-c.px)<.002&&N("sp")===c.w&&$("col").value===c.c)){$("cam").value="m";camInfo()}}
-["pxd","sw","sp","col"].forEach(function(id){$(id).addEventListener("input",camCheck);$(id).addEventListener("change",camCheck)});
+ if(!(Math.abs(px-c.px)<.002&&N("sp")===c.w)){$("cam").value="m";camInfo()}}
+["pxd","sw","sp"].forEach(function(id){$(id).addEventListener("input",camCheck);$(id).addEventListener("change",camCheck)});
 $("pmT").onclick=function(){var d=$("pm").value==="d";
  if(d){var sw=N("pxd")*N("sp")/1000;if(sw>0&&!(N("sw")>0))$("sw").value=dec(Math.round(sw*100)/100);$("pm").value="c"}
  else{var c=CAMI[$("cam").value],v=c?c.px:Math.round(N("sw")/N("sp")*1e6)/1000;if(v>0)$("pxd").value=dec(v);$("pm").value="d"}
@@ -557,6 +554,7 @@ $("ot").addEventListener("change",function(){if(this.value==="s")setSolar();upd(
 setSolar();
 camInfo();
 document.querySelectorAll(".in,#fF,#fW,#chgT,#cropToo").forEach(function(e){e.oninput=upd;e.onchange=upd});
+$("chgT").addEventListener("change",function(){if(this.value==="sp"&&!(N("fF")>0)){$("fF").value="2";upd()}});
 document.querySelectorAll("[data-o]").forEach(function(b){b.onclick=function(){S.orig=b.dataset.o;upd()}});
 document.querySelectorAll("[data-t]").forEach(function(b){b.onclick=function(){setTool(b.dataset.t)}});
 ["shL","shG","au"].forEach(function(id){$(id).onchange=function(){upd()}});
@@ -567,7 +565,7 @@ var dr=$("drop");dr.onclick=function(){$("file").click()};$("file").onclick=func
 dr.ondragover=function(e){e.preventDefault();dr.classList.add("h")};dr.ondragleave=function(){dr.classList.remove("h")};dr.ondrop=function(e){e.preventDefault();dr.classList.remove("h");loadFile(e.dataTransfer.files[0])};
 function profs(){try{return JSON.parse(localStorage.getItem("lsmProfiles")||"{}")}catch(e){return{}}}
 function fillP(){var p=profs();$("ldP").innerHTML="<option value=''>Profil laden …</option>"+Object.keys(p).map(function(k){var n=k.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");return '<option value="'+n+'">'+n+"</option>"}).join("")}
-$("svP").onclick=function(){var n=prompt("Profilname:");if(!n)return;try{var p=profs();p[n]={};["fl","acc","bar","cam","pm","pxd","sw","sp","col","deb"].forEach(function(i){p[n][i]=$(i).value});localStorage.setItem("lsmProfiles",JSON.stringify(p));fillP()}catch(e){alert("Speichern im Browser nicht möglich.")}};
+$("svP").onclick=function(){var n=prompt("Profilname:");if(!n)return;try{var p=profs();p[n]={};["fl","acc","bar","cam","pm","pxd","sw","sp"].forEach(function(i){p[n][i]=$(i).value});localStorage.setItem("lsmProfiles",JSON.stringify(p));fillP()}catch(e){alert("Speichern im Browser nicht möglich.")}};
 $("ldP").onchange=function(){var p=profs()[this.value];if(p){for(var k in p)if($(k))$(k).value=p[k];if(!$("cam").value&&(N("pxd")>0||N("sw")>0))$("cam").value="m";camCheck();camInfo();upd()}};
 try{fillP()}catch(e){}
 window.onresize=function(){if(S.step===3)fit()};
