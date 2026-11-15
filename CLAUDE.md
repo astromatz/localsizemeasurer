@@ -50,7 +50,6 @@ Bild-Upload funktioniert nur, wenn die Datei lokal gespeichert oder über GitHub
 
 ### Offen
 - Browser-Test des Redesigns durch Mathias steht noch aus.
-- Prüfen, ob die letzte Fassung (Tab „Hinweise“, gekürzter Plate-Solve-Text) schon auf main liegt.
 
 ## Nächste Schritte
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
