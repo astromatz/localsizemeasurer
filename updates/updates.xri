@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xri version="1.0">
+   <description>
+      <p>LocalSizeMeasurer – Update-Repository von astromatz (https://github.com/astromatz/localsizemeasurer)</p>
+   </description>
+   <platform os="all" arch="noarch" version="1.9.4:2.9.9">
+      <package fileName="20261121-LocalSizeMeasurer-2.4.1.zip" sha1="126da5f71efc0bc5a69d7be24dac06bfb9cf33e5" type="script" releaseDate="20261121">
+         <title>LocalSizeMeasurer 2.4.1</title>
+         <description>
+            <p>Interaktives Mess-Lineal: zeigt die projizierte physische Größe und Fläche einer gezogenen Strecke oder Kreisfläche (Deepsky in Lichtjahren, Sonnensystem in km). Menü: Script &gt; Utilities &gt; LocalSizeMeasurer.</p>
+         </description>
+      </package>
+   </platform>
+</xri>

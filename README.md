@@ -35,6 +35,20 @@ Lege **Script und Doku in denselben Ordner**, sonst findet der Doku-Button die H
 
 ## Installation
 
+**Empfohlen: über das Update-Repository (Updates kommen automatisch)**
+1. In PixInsight `Resources > Updates > Manage Repositories` öffnen
+2. **Add** klicken und diese Adresse eintragen (mit „/“ am Ende):
+   ```
+   https://raw.githubusercontent.com/astromatz/localsizemeasurer/main/updates/
+   ```
+3. `Resources > Updates > Check for Updates`, das Paket mit **Apply** installieren, PixInsight neu starten
+4. Das Script steht unter `Script > Utilities > LocalSizeMeasurer`. Neue Versionen erscheinen künftig beim Start von PixInsight bzw. bei *Check for Updates*.
+
+Hinweise:
+- Das Repository ist **nicht signiert**. PixInsight warnt deshalb vor dem Download – mit „Ja“ bestätigen.
+- Voraussetzung: PixInsight ab 1.9.4.
+- Wer das Script vorher über *Feature Scripts* eingebunden hat: diesen Ordner dort mit **Remove** entfernen, sonst steht es doppelt im Menü.
+
 **Zum Ausprobieren:**
 `Script > Execute Script File …` und `LSM_2_4.js` wählen. Dabei wird nichts installiert.
 
