@@ -6,9 +6,9 @@
 
 LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du ziehst damit Linien oder Kreise über ein Objekt in deinem Astrofoto. Das Script rechnet daraus die tatsächliche Ausdehnung aus, in Lichtjahren bei Nebeln und Galaxien und in Kilometern bei Mond, Sonne und Planeten.
 
-> Aktuelle Version: **v2.4.2** · getestet mit PixInsight 1.9.6 (Build 1713)
+> Aktuelle Version des Scripts: **v2.4.2** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v2.4.2, Testphase, siehe [unten](#web-app)).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.4.1, Testphase, siehe [unten](#web-app)).
 
 ---
 
