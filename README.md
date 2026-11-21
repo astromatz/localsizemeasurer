@@ -8,7 +8,7 @@ LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du z
 
 > Aktuelle Version: **v2.4.2** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.4.1, Testphase, siehe [unten](#web-app)).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v2.4.2, Testphase, siehe [unten](#web-app)).
 
 ---
 
