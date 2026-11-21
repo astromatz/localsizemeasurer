@@ -1,12 +1,14 @@
+<img src="LocalSizeMeasurer.svg" alt="LocalSizeMeasurer-Icon: Galaxie mit Messlinie" width="96">
+
 # LocalSizeMeasurer
 
 **Wie groß ist das, was ich da fotografiert habe, wirklich?**
 
 LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du ziehst damit Linien oder Kreise über ein Objekt in deinem Astrofoto. Das Script rechnet daraus die tatsächliche Ausdehnung aus, in Lichtjahren bei Nebeln und Galaxien und in Kilometern bei Mond, Sonne und Planeten.
 
-> Aktuelle Version: **v2.4.1** · getestet mit PixInsight 1.9.6 (Build 1713)
+> Aktuelle Version: **v2.4.2** · getestet mit PixInsight 1.9.6 (Build 1713)
 
-**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.4, Testphase, siehe [unten](#web-app)).
+**Ohne PixInsight:** Die Web-App läuft direkt im Browser → https://astromatz.github.io/localsizemeasurer/ (v1.4.1, Testphase, siehe [unten](#web-app)).
 
 ---
 
@@ -30,8 +32,10 @@ LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du z
 | `LSM_2_4.js` | Das Script |
 | `LocalSizeMeasurer_Doc.html` | Ausführliche Dokumentation (öffnet sich auch über den Button „Dokumentation“ im Script) |
 | `index.html` | Die Web-App (eine einzelne Datei) |
+| `LocalSizeMeasurer.svg` | Das Icon von Script und Web-App |
+| `updates/` | Das PixInsight-Update-Repository (Paket und `updates.xri`) |
 
-Lege **Script und Doku in denselben Ordner**, sonst findet der Doku-Button die Hilfe nicht.
+Lege **Script und Doku in denselben Ordner**, sonst findet der Doku-Button die Hilfe nicht. Liegt dort auch `LocalSizeMeasurer.svg`, zeigt der Parameter-Dialog das Icon. Ohne die Datei läuft das Script genauso, nur ohne Icon.
 
 ## Installation
 
@@ -43,6 +47,8 @@ Lege **Script und Doku in denselben Ordner**, sonst findet der Doku-Button die H
    ```
 3. `Resources > Updates > Check for Updates`, das Paket mit **Apply** installieren, PixInsight neu starten
 4. Das Script steht unter `Script > Utilities > LocalSizeMeasurer`. Neue Versionen erscheinen künftig beim Start von PixInsight bzw. bei *Check for Updates*.
+
+Das Paket installiert auch das Icon. Nur auf diesem Weg kennt PixInsight es auch außerhalb des Script-Dialogs.
 
 Hinweise:
 - Das Repository ist **nicht signiert**. PixInsight warnt deshalb vor dem Download – mit „Ja“ bestätigen.
@@ -83,7 +89,7 @@ Details stehen in der Dokumentation.
 ## Web-App
 
 **LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight: https://astromatz.github.io/localsizemeasurer/
-Aktuelle Version **v1.4**, noch in der Testphase.
+Aktuelle Version **v1.4.1**, noch in der Testphase. Der Browser-Tab zeigt das Icon von LocalSizeMeasurer.
 
 - **Bild bleibt bei dir:** Das Bild wird nur im Browser verarbeitet, nichts wird hochgeladen.
 - **Vier Schritte:** Bild prüfen → Optik → Entfernung → Messen. Ein fünfter Reiter „Hinweise“ enthält Version, Credits und Datenschutz.

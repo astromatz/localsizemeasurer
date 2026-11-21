@@ -4,8 +4,8 @@
       <p>LocalSizeMeasurer – Update-Repository von astromatz (https://github.com/astromatz/localsizemeasurer)</p>
    </description>
    <platform os="all" arch="noarch" version="1.9.4:2.9.9">
-      <package fileName="20261121-LocalSizeMeasurer-2.4.1.zip" sha1="126da5f71efc0bc5a69d7be24dac06bfb9cf33e5" type="script" releaseDate="20261121">
-         <title>LocalSizeMeasurer 2.4.1</title>
+      <package fileName="20261121-LocalSizeMeasurer-2.4.2.zip" sha1="979c29591f2cca9c9460a285de8a9afe7e4195ba" type="script" releaseDate="20261121">
+         <title>LocalSizeMeasurer 2.4.2</title>
          <description>
             <p>Interaktives Mess-Lineal: zeigt die projizierte physische Größe und Fläche einer gezogenen Strecke oder Kreisfläche (Deepsky in Lichtjahren, Sonnensystem in km). Menü: Script &gt; Utilities &gt; LocalSizeMeasurer.</p>
          </description>

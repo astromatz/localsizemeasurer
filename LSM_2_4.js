@@ -1,5 +1,6 @@
 #engine v8
 #feature-id    LocalSizeMeasurer : Utilities > LocalSizeMeasurer
+#feature-icon  @script_icons_dir/LocalSizeMeasurer.svg
 #feature-info  Interaktives Mess-Lineal: zeigt die projizierte physische Groesse und \
                Flaeche einer im Dialog-Bild gezogenen Strecke oder Kreisflaeche. \
                Unterstuetzt Deepsky- und Sonnensystem-Objekte mit Katalogen \
@@ -13,7 +14,7 @@
 #include <pjsr/StdCursor.jsh>
 
 /*
- * LocalSizeMeasurer v2.4.1
+ * LocalSizeMeasurer v2.4.2
  *
  * Interaktives Mess-Lineal fuer PixInsight (PJSR):
  *  - Echte physikalische Raumdimensionen (Lichtjahre, Lichttage, km, AE)
@@ -50,6 +51,11 @@
  *    Rueckfrage und Wiederoeffnen mit allen Messungen
  *  - Werkzeug Linie/Kreis als Umschaltknoepfe; "Einpassen" statt "Fit"; Einheit "Lj" statt "Lj"
  *
+ * Neu in v2.4.2:
+ *  - Script-Icon (#feature-icon, Datei LocalSizeMeasurer.svg; das Update-Repository installiert es
+ *    nach rsc/icons/script/LocalSizeMeasurer/)
+ *  - Icon als Emblem im Kopf des Parameter-Dialogs (fehlt die Datei, bleibt der Kopf wie bisher)
+ *
  * Credits & Inspiration:
  *  - Urspruengliche Idee & Excel-Rechner (seit 2021 genutzt): Rainer und Daniel
  *    Quelle: "Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen"
@@ -60,7 +66,7 @@
 // ============================================================================
 // Konstanten & Physikalische Referenzen
 // ============================================================================
-#define VERSION            "2.4.1"
+#define VERSION            "2.4.2"
 #define TITLE              "LocalSizeMeasurer"
 
 var ARCSEC_PER_RAD     = 648000 / Math.PI;          // 206264,806247...
@@ -163,6 +169,68 @@ function openDocumentation()
       ( new MessageBox( "Der PixInsight-Browser konnte die Dokumentation nicht öffnen.\n\n" +
                         "Bitte die Datei manuell in einem Browser öffnen:\n\n" + docPath,
                         TITLE + " Dokumentation", StdIcon_Warning, StdButton_Ok ) ).execute();
+}
+
+// ============================================================================
+// Script-Icon als Emblem im Dialogkopf
+// ============================================================================
+// Sucht LocalSizeMeasurer.svg neben dem Script (manuelle Installation) und im
+// Icon-Ordner der PixInsight-Installation (Update-Repository, #feature-icon).
+// Fehlt die Datei oder laesst sie sich nicht laden, gibt die Funktion null
+// zurueck und der Dialogkopf bleibt ohne Emblem.
+function makeIconControl( parent, logicalSize )
+{
+   var scriptDir = File.extractDrive( #__FILE__ ) + File.extractDirectory( #__FILE__ );
+   var candidates = [
+      scriptDir + "/LocalSizeMeasurer.svg",
+      // src/scripts/LocalSizeMeasurer/ -> drei Ebenen hoch = Installationsordner
+      scriptDir + "/../../../rsc/icons/script/LocalSizeMeasurer/LocalSizeMeasurer.svg"
+   ];
+
+   var px = logicalSize;
+   try
+   {
+      if ( typeof parent.logicalPixelsToPhysical == "function" )
+         px = Math.max( 1, Math.round( parent.logicalPixelsToPhysical( logicalSize ) ) );
+   }
+   catch ( e0 ) { px = logicalSize; }
+
+   var bmp = null;
+   for ( var i = 0; i < candidates.length && bmp == null; ++i )
+   {
+      try
+      {
+         if ( !File.exists( candidates[i] ) )
+            continue;
+         var b = new Bitmap( candidates[i] );
+         if ( b == null || b.width <= 0 || b.height <= 0 )
+            continue;
+         var s = null;
+         try { if ( typeof b.scaledTo == "function" ) s = b.scaledTo( px, px ); } catch ( e1 ) { s = null; }
+         if ( s == null || s.width <= 0 )
+            try { if ( typeof b.scaled == "function" ) s = b.scaled( px / b.width ); } catch ( e2 ) { s = null; }
+         if ( s != null && s.width > 0 )
+            bmp = s;
+      }
+      catch ( e )
+      {
+         bmp = null;
+      }
+   }
+   if ( bmp == null )
+      return null;
+
+   var ctrl = new Control( parent );
+   ctrl.setScaledFixedSize( logicalSize, logicalSize );
+   ctrl.toolTip = TITLE + " v" + VERSION;
+   ctrl.iconBitmap = bmp;
+   ctrl.onPaint = function()
+   {
+      var g = new Graphics( this );
+      try { g.drawBitmap( 0, 0, this.iconBitmap ); } catch ( e ) {}
+      g.end();
+   };
+   return ctrl;
 }
 
 // ============================================================================
@@ -3189,10 +3257,17 @@ constructor( params, meta )
    btnSizer.add( this.okButton );
    btnSizer.add( this.cancelButton );
 
+   var headSizer = new HorizontalSizer;
+   headSizer.spacing = 10;
+   this.iconControl = makeIconControl( this, 40 );
+   if ( this.iconControl != null )
+      headSizer.add( this.iconControl );
+   headSizer.add( this.infoLabel, 100 );
+
    this.sizer = new VerticalSizer;
    this.sizer.margin = 10;
    this.sizer.spacing = 8;
-   this.sizer.add( this.infoLabel );
+   this.sizer.add( headSizer );
    if ( metaBox != null )
    {
       this.sizer.add( metaBox );

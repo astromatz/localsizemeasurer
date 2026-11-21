@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="256" height="256" viewBox="0 0 256 256">
+  <!-- LocalSizeMeasurer – Icon (Variante A: Galaxie mit Messlinie).
+       Nur einfache SVG-Elemente (kein CSS, keine Filter), damit PixInsight (Qt SVG) es darstellen kann. -->
+  <title>LocalSizeMeasurer</title>
+  <defs>
+    <linearGradient id="lsmBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1D3566"/>
+      <stop offset="1" stop-color="#0A1328"/>
+    </linearGradient>
+    <radialGradient id="lsmGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF1CC"/>
+      <stop offset="0.3" stop-color="#A9C2FF" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#5B7CE0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Hintergrund -->
+  <rect x="0" y="0" width="256" height="256" rx="56" ry="56" fill="url(#lsmBg)"/>
+  <!-- Sterne -->
+  <circle cx="52" cy="62" r="2.5" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="196" cy="40" r="3" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="32" cy="132" r="2" fill="#FFFFFF" fill-opacity="0.7"/>
+  <circle cx="226" cy="168" r="2" fill="#FFFFFF" fill-opacity="0.7"/>
+  <g transform="translate(128 128) scale(0.9) rotate(-34) translate(-128 -128)">
+    <!-- Galaxie -->
+    <ellipse cx="128" cy="116" rx="88" ry="32" fill="url(#lsmGlow)"/>
+    <ellipse cx="128" cy="116" rx="88" ry="32" fill="none" stroke="#A9C2FF" stroke-opacity="0.5" stroke-width="3"/>
+    <path d="M44 116 C 70 86, 108 88, 128 116 C 148 144, 186 146, 212 116" fill="none" stroke="#D6E4FF" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="128" cy="116" r="12" fill="#FFF1CC"/>
+    <!-- Messlinie mit Endstrichen und Mittelmarke -->
+    <line x1="42" y1="170" x2="214" y2="170" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+    <line x1="42" y1="154" x2="42" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+    <line x1="214" y1="154" x2="214" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+    <line x1="128" y1="162" x2="128" y2="178" stroke="#FFB547" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
