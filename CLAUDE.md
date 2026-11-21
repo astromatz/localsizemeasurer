@@ -1,7 +1,7 @@
 # CLAUDE.md – LocalSizeMeasurer (LSM)
 
 Diese Datei übergibt den Projektstand aus dem claude.ai-Projekt „LSM“ an Claude Code.
-Stand: 15.11.2026 (Script v2.4.1, Web v1.4)
+Stand: 21.11.2026 (Script v2.4.2, Web v1.4.1)
 
 ## Über den Nutzer (Mathias)
 - Kann nicht programmieren. Bei Code-Änderungen immer **komplette, fertige Dateien** liefern, keine Schnipsel zum Einfügen.
@@ -11,7 +11,9 @@ Stand: 15.11.2026 (Script v2.4.1, Web v1.4)
 
 ## Repo-Inhalt (astromatz/localsizemeasurer, Branch main)
 - `index.html` – **LocalSizeMeasurer Web**, Standalone-Web-App (eine HTML-Datei, läuft lokal per Doppelklick und auf GitHub Pages)
-- `LSM_2_4.js` – aktuelles PixInsight-Script (PJSR), v2.4.1
+- `LSM_2_4.js` – aktuelles PixInsight-Script (PJSR), v2.4.2
+- `LocalSizeMeasurer.svg` – Icon (Quelle für Script, Update-Paket, Doku und Web-App)
+- `updates/` + `tools/build_update.py` – PixInsight-Update-Repository
 - Dokumentation (`LocalSizeMeasurer_Doc.html`), `README`, MIT-Lizenz
 
 ## Teil 1: PixInsight-Script (LSM_2_4.js)
@@ -20,7 +22,7 @@ Stand: 15.11.2026 (Script v2.4.1, Web v1.4)
 - Referenz-Setup zum Testen: Brennweite 480 mm (Apo), Pixel 3,76 µm (ASI2600MC Pro), Entfernung 3000 Lichtjahre.
 - Wichtig: Maus-Events am ImageWindow funktionieren nicht. Interaktion läuft ausschließlich **dialog-intern** (Bitmap in ScrollBox mit eigenen Maus-Handlern).
 - Skalenberechnung in `getPixelscale()` gekapselt; Maßstab kann aus Plate-Solve kommen.
-- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten) → **v2.4.1** (Wiederöffnen nach Esc/Fenster-X). Beide von Mathias in PixInsight erfolgreich getestet.
+- Versionsgeschichte: v1.0 → Merge mit v0.93 (gecachte Bitmap, Mausrad-Zoom, AutoSTF per PixelMath) → v2.1 → v2.2 (Plate-Solve-Maßstab, robustere Online-Suche, Eingabe-Parser, Rückfrage vor Beenden) → v2.3 (AE-Ausgabe im Sonnensystem-Modus entfernt, Plausibilitätsprüfung Binning/Debayern/Resample; in PixInsight an einem gelösten Bild getestet) → **v2.4** (Angleichung an die Web-App, siehe unten) → **v2.4.1** (Wiederöffnen nach Esc/Fenster-X). Beide von Mathias in PixInsight erfolgreich getestet. → **v2.4.2** (Script-Icon, siehe Abschnitt „Icon“; Test in PixInsight offen).
 - 10–100 Lj mit einer Nachkommastelle: im Script schon seit v2.3, in der Web-App seit v1.4.
 - Später geplant: Bild mit Maßstab speichern/exportieren.
 
@@ -104,9 +106,18 @@ Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj*
 - Paket installiert nach `src/scripts/LocalSizeMeasurer/` als `LocalSizeMeasurer.js` + `LocalSizeMeasurer_Doc.html` (fester Dateiname, damit keine Duplikate entstehen).
 - **Neue Version veröffentlichen:** neues `LSM_x_y.js` (VERSION erhöhen) bzw. Doku ändern → `python3 tools/build_update.py` → `updates/` committen. Das Script nimmt automatisch die höchste `LSM_*.js`. Pro Tag nur ein Release (Datum im Zip-Namen; bei zweitem Release am selben Tag vorher VERSION erhöhen reicht, Name enthält Version).
 - Versionsbereich im XRI: 1.9.4–2.9.9 (in `tools/build_update.py`, `PI_VERSIONS`).
+- Seit v2.4.2 enthält das Paket zusätzlich `rsc/icons/script/LocalSizeMeasurer/LocalSizeMeasurer.svg`.
+- Es gibt keinen Push an die Nutzer: PixInsight prüft beim Start und bei *Check for Updates*. Neu ist ein Paket, wenn sich die SHA-1 im XRI ändert. Ein zweites Release am selben Tag ist deshalb unproblematisch.
+
+## Icon (21.11.2026)
+- Entscheidung Mathias: Variante A „Galaxie mit Messlinie“ (dunkelblaue Kachel, Galaxie mit hellem Kern, amberfarbene Messlinie). Entwürfe B (Messkreis) und C (Monogramm) verworfen.
+- Quelle: `LocalSizeMeasurer.svg` (256×256, nur einfache SVG-Elemente ohne CSS/Filter, damit Qt SVG sie darstellt; mit Qt 6 `QSvgRenderer` geprüft).
+- Script: `#feature-icon @script_icons_dir/LocalSizeMeasurer.svg` (= `rsc/icons/script/LocalSizeMeasurer/` der PixInsight-Installation). Emblem (40 px) im Kopf des Parameter-Dialogs über `makeIconControl()`: sucht die SVG neben dem Script und im rsc-Ordner; fehlt sie, kein Emblem, kein Fehler.
+- Kopien des Icons (bei Änderung alle nachziehen): `index.html` (Logo im Kopf als Inline-SVG + Favicon als Data-URI) und `LocalSizeMeasurer_Doc.html` (Inline-SVG im Kopf).
+- Offen: Test in PixInsight (Emblem im Dialog, Icon nach Update-Installation). Ob und wo PixInsight das `#feature-icon` außerhalb des Dialogs anzeigt, ist nicht geprüft.
 
 ## Nächste Schritte
-- PR „Script v2.4.1 / Web v1.4“ mergen → GitHub Pages zeigt v1.4.
+- v2.4.2 über das Update-Repository in PixInsight installieren und prüfen (Emblem im Parameter-Dialog).
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
 - Vorstellung im nächsten Astro-Workshop.
 - Grundsatz: Die Web-App soll alle Faktoren berücksichtigen, die PixInsight ab Werk mitbringt, oder sie als Fehlerquelle ausschließen. Dabei komfortable Nutzerführung ohne überfrachtete Oberfläche.

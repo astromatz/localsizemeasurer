@@ -32,6 +32,14 @@
     background: linear-gradient(135deg, #1e272e 0%, #2f3542 100%);
     border-bottom: 2px solid var(--accent);
     padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  header .app-icon {
+    width: 64px;
+    height: 64px;
+    flex: none;
   }
   header h1 {
     margin: 0 0 6px 0;
@@ -192,8 +200,28 @@
 <body>
 
 <header>
-  <h1>LocalSizeMeasurer <span class="version-tag">v2.4</span></h1>
-  <p class="subtitle">Interaktives physikalisches Mess-Lineal &amp; Fl&auml;chenberechnung f&uuml;r PixInsight</p>
+  <svg class="app-icon" viewBox="0 0 256 256" aria-hidden="true">
+    <defs>
+      <linearGradient id="lsmBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D3566"/><stop offset="1" stop-color="#0A1328"/></linearGradient>
+      <radialGradient id="lsmGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFF1CC"/><stop offset="0.3" stop-color="#A9C2FF" stop-opacity="0.85"/><stop offset="1" stop-color="#5B7CE0" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="256" height="256" rx="56" fill="url(#lsmBg)"/>
+    <circle cx="52" cy="62" r="2.5" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="196" cy="40" r="3" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="32" cy="132" r="2" fill="#FFFFFF" fill-opacity="0.7"/><circle cx="226" cy="168" r="2" fill="#FFFFFF" fill-opacity="0.7"/>
+    <g transform="translate(128 128) scale(0.9) rotate(-34) translate(-128 -128)">
+      <ellipse cx="128" cy="116" rx="88" ry="32" fill="url(#lsmGlow)"/>
+      <ellipse cx="128" cy="116" rx="88" ry="32" fill="none" stroke="#A9C2FF" stroke-opacity="0.5" stroke-width="3"/>
+      <path d="M44 116 C 70 86, 108 88, 128 116 C 148 144, 186 146, 212 116" fill="none" stroke="#D6E4FF" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="128" cy="116" r="12" fill="#FFF1CC"/>
+      <line x1="42" y1="170" x2="214" y2="170" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+      <line x1="42" y1="154" x2="42" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+      <line x1="214" y1="154" x2="214" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/>
+      <line x1="128" y1="162" x2="128" y2="178" stroke="#FFB547" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <div>
+    <h1>LocalSizeMeasurer <span class="version-tag">v2.4</span></h1>
+    <p class="subtitle">Interaktives physikalisches Mess-Lineal &amp; Fl&auml;chenberechnung f&uuml;r PixInsight</p>
+  </div>
 </header>
 
 <main>
@@ -203,8 +231,9 @@
   </div>
 
   <h2>1. Schnellanleitung (Workflow)</h2>
-  <p><b>Installation:</b> Die Script-Datei (<code>.js</code>) und <code>LocalSizeMeasurer_Doc.html</code> m&#252;ssen im <b>selben Ordner</b> liegen, sonst findet der Button &#8222;Dokumentation&#8220; die Hilfe nicht. Es gibt zwei Wege, das Script zu starten:</p>
+  <p><b>Installation:</b> Die Script-Datei (<code>.js</code>) und <code>LocalSizeMeasurer_Doc.html</code> m&#252;ssen im <b>selben Ordner</b> liegen, sonst findet der Button &#8222;Dokumentation&#8220; die Hilfe nicht. Es gibt drei Wege, das Script zu starten:</p>
   <ul>
+    <li><b>Empfohlen &#8211; &#252;ber das Update-Repository:</b> Unter <code>Resources &gt; Updates &gt; Manage Repositories</code> mit <b>Add</b> die Adresse <code>https://raw.githubusercontent.com/astromatz/localsizemeasurer/main/updates/</code> eintragen, dann <code>Check for Updates</code>, <b>Apply</b> und PixInsight neu starten. Neue Versionen bietet PixInsight danach beim Start bzw. bei <code>Check for Updates</code> an. Das Repository ist nicht signiert, PixInsight warnt deshalb vor dem Download.</li>
     <li><b>Einmalig ausprobieren:</b> <code>Script &gt; Execute Script File &hellip;</code> und die <code>.js</code>-Datei w&#228;hlen. Dabei wird nichts installiert, das Script erscheint auch nicht im Men&#252;.</li>
     <li><b>Dauerhaft ins Men&#252;:</b> <code>Script &gt; Feature Scripts &hellip;</code>, mit <b>Add</b> den Ordner mit der <code>.js</code>-Datei hinzuf&#252;gen und mit <b>Done</b> best&#228;tigen. Danach steht das Script unter <code>Script &gt; Utilities &gt; LocalSizeMeasurer</code>.</li>
   </ul>
@@ -476,7 +505,7 @@
 
   <h2>9. Versionshistorie</h2>
   <ul>
-    <li><b>v2.4 (2.4.1):</b> Schlie&#223;en per <kbd>Esc</kbd> oder Fenster-X verliert keine Messungen mehr (R&#252;ckfrage und Wieder&#246;ffnen). <b>2.4.0:</b> Angleichung an LocalSizeMeasurer Web: Ergebnisliste im Messfenster mit L&#246;schen einzelner Messungen; <b>Eingaben &#228;ndern &hellip;</b> ohne Neustart (Messungen bleiben erhalten); <kbd>Esc</kbd> bricht nur die laufende Messung ab; Werkzeug als Umschaltkn&#246;pfe; &#8222;Einpassen&#8220; statt &#8222;Fit&#8220;; Einheit &#8222;Lj&#8220; statt &#8222;lj&#8220;.</li>
+    <li><b>v2.4 (2.4.2):</b> Eigenes Script-Icon (Galaxie mit Messlinie), auch als Emblem im Parameter-Dialog. <b>2.4.1:</b> Schlie&#223;en per <kbd>Esc</kbd> oder Fenster-X verliert keine Messungen mehr (R&#252;ckfrage und Wieder&#246;ffnen). <b>2.4.0:</b> Angleichung an LocalSizeMeasurer Web: Ergebnisliste im Messfenster mit L&#246;schen einzelner Messungen; <b>Eingaben &#228;ndern &hellip;</b> ohne Neustart (Messungen bleiben erhalten); <kbd>Esc</kbd> bricht nur die laufende Messung ab; Werkzeug als Umschaltkn&#246;pfe; &#8222;Einpassen&#8220; statt &#8222;Fit&#8220;; Einheit &#8222;Lj&#8220; statt &#8222;lj&#8220;.</li>
     <li><b>v2.3 (2.3.6):</b> Sonnensystem-Modus: Messwerte nur noch in km, AE nur f&#252;r die Objektentfernung; Faktor-Erkennung bei Skalenabweichung (2, 3, 4, 0,5) mit Ursache und Abhilfe; Plate-Solve-Skala aus Fenster-L&#246;sung, PCL-Matrix, Astrometry:Resolution und FITS-WCS mit Gegenpr&#252;fung; veraltete Header-L&#246;sungen werden &#252;ber die Bildgr&#246;&#223;e (NAXIS1/NAXIS2) erkannt und verworfen (behebt einen Ma&#223;stabsfehler um Faktor 2 nach Super-Pixel-Debayer); R&#252;ckfrage &#8222;Pixelgr&#246;&#223;e passt zum Bild?&#8220; mit Faktor-Eingabe, wenn kein Plate-Solve vorliegt; Warnung vor doppelter Korrektur; Debayer- und Drizzle-Erkennung; Hinweis bei exakter &#220;bereinstimmung von Optik und Plate-Solve (ASIAIR); Konsolenbericht zeigt Matrix- und Vektor-Werte.</li>
     <li><b>v2.2:</b> Plate-Solve-Skala wird jetzt tats&#228;chlich f&#252;r die Messung verwendet (inkl. Abweichungswarnung, Quellenanzeige und Binning-Abgleich); WCS-Skala aus CD-Matrix bzw. CDELT&#215;PC; XISF-Brennweite korrekt in Metern; robustere Online-Suche (Einheiten-Whitelist, Median aus mehreren Literaturwerten, Parallaxe nur bei S/N &#8805; 5, Zentralstern-Fallback nur noch f&#252;r Nebel/Haufen, strenger NED-Parser, Hubble-Fluss nur f&#252;r 0,003 &#8804; z &#8804; 0,1, Zeitbudget und Offline-Erkennung, Abgleich mit dem Katalog, Sesame entfernt); Namensvarianten f&#252;r Sh2-132 u. &#228;. repariert; Zahleneingabe mit deutschen Tausenderpunkten und Plausibilit&#228;tsr&#252;ckfragen; handge&#228;nderte Entfernungen bleiben erhalten; Header-Objektnamen werden nur noch sicher zugeordnet; R&#252;ckfrage vor dem Beenden mit ungespeicherten Messungen; Rechtsklick bricht nur die laufende Messung ab; Scrollbalken, <kbd>1</kbd> und <kbd>F</kbd> funktionieren; AutoSTF-Umschalten mit Zwischenspeicher; Ma&#223;stabsleiste im Export; Dokumentation an den Code angeglichen (Formeln als HTML).</li>
     <li><b>v2.1 (Finale Version):</b> Umfassende Qualit&auml;tskontrolle und Code-H&auml;rtung; numerischer NaN/Inf-Schutz bei Bild-Sampling und Skalenberechnungen; erweiterte SIMBAD TAP Identifier-Aufl&ouml;sung mit Leerzeichen- und Case-Toleranz; intelligenter Zielordner-Vorschlag beim Export annotierter Bilder; Tastaturk&uuml;rzel f&uuml;r Bildzoom (<kbd>+</kbd> und <kbd>&minus;</kbd>); robustes Ressourcen- und Graphics-Lifecycle-Management.</li>
@@ -490,7 +519,7 @@
 </main>
 
 <footer>
-  LocalSizeMeasurer v2.4.1 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
+  LocalSizeMeasurer v2.4.2 &bull; Script f&uuml;r PixInsight (PJSR), getestet mit PixInsight 1.9.6
 </footer>
 
 </body>

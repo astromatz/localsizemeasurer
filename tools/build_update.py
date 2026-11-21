@@ -8,7 +8,10 @@ Was passiert:
   1. Sucht das neueste Script LSM_*.js und liest VERSION daraus.
   2. Packt es als src/scripts/LocalSizeMeasurer/LocalSizeMeasurer.js
      zusammen mit LocalSizeMeasurer_Doc.html (gleicher Ordner, damit der
-     Doku-Button funktioniert) in updates/<Datum>-LocalSizeMeasurer-<Version>.zip
+     Doku-Button funktioniert) und dem Icon LocalSizeMeasurer.svg
+     (nach rsc/icons/script/LocalSizeMeasurer/, dort sucht PixInsight es fuer
+     #feature-icon @script_icons_dir) in
+     updates/<Datum>-LocalSizeMeasurer-<Version>.zip
   3. Schreibt updates/updates.xri mit SHA-1, Datum und Version.
   4. Loescht alte Zip-Pakete in updates/.
 
@@ -25,7 +28,9 @@ import zipfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPDATES = os.path.join(ROOT, "updates")
 DOC = os.path.join(ROOT, "LocalSizeMeasurer_Doc.html")
+ICON = os.path.join(ROOT, "LocalSizeMeasurer.svg")
 INSTALL_DIR = "src/scripts/LocalSizeMeasurer/"
+ICON_DIR = "rsc/icons/script/LocalSizeMeasurer/"
 # Ab PixInsight 1.9.4 (V8-Engine, getestet mit 1.9.6) bis einschliesslich 2.9.x
 PI_VERSIONS = "1.9.4:2.9.9"
 
@@ -47,6 +52,8 @@ def main():
     version = m.group(1).decode()
     if not os.path.exists(DOC):
         sys.exit("LocalSizeMeasurer_Doc.html fehlt.")
+    if not os.path.exists(ICON):
+        sys.exit("LocalSizeMeasurer.svg fehlt.")
 
     today = datetime.datetime.now(datetime.timezone.utc)
     date = today.strftime("%Y%m%d")
@@ -62,6 +69,7 @@ def main():
         for arc, data in (
             (INSTALL_DIR + "LocalSizeMeasurer.js", src),
             (INSTALL_DIR + "LocalSizeMeasurer_Doc.html", open(DOC, "rb").read()),
+            (ICON_DIR + "LocalSizeMeasurer.svg", open(ICON, "rb").read()),
         ):
             info = zipfile.ZipInfo(arc, date_time=stamp)
             info.compress_type = zipfile.ZIP_DEFLATED
