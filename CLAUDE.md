@@ -98,6 +98,13 @@ Entscheidungen Mathias: „Weiß ich nicht“ in der Web-App ja · Einheit **Lj*
 - Mods „Model selector“ und „cache clock“ laufen nur lokal bei Mathias, nicht in Cloud-Sitzungen. Option: als Plugin in ein GitHub-Repo legen. Offen, ob Mathias das will.
 - Nächster sinnvoller Schritt: v1.2 online prüfen → an Karsten und Dietmar zum Testen geben.
 
+## PixInsight-Update-Repository (21.11.2026)
+- Ordner `updates/` mit `updates.xri` und `<Datum>-LocalSizeMeasurer-<Version>.zip`. URL für Nutzer: `https://raw.githubusercontent.com/astromatz/localsizemeasurer/main/updates/`
+- Entscheidung Mathias: unsigniert (Warnung beim Download ist ok), kein CPD-Antrag.
+- Paket installiert nach `src/scripts/LocalSizeMeasurer/` als `LocalSizeMeasurer.js` + `LocalSizeMeasurer_Doc.html` (fester Dateiname, damit keine Duplikate entstehen).
+- **Neue Version veröffentlichen:** neues `LSM_x_y.js` (VERSION erhöhen) bzw. Doku ändern → `python3 tools/build_update.py` → `updates/` committen. Das Script nimmt automatisch die höchste `LSM_*.js`. Pro Tag nur ein Release (Datum im Zip-Namen; bei zweitem Release am selben Tag vorher VERSION erhöhen reicht, Name enthält Version).
+- Versionsbereich im XRI: 1.9.4–2.9.9 (in `tools/build_update.py`, `PI_VERSIONS`).
+
 ## Nächste Schritte
 - PR „Script v2.4.1 / Web v1.4“ mergen → GitHub Pages zeigt v1.4.
 - Script und Web-App an Karsten und Dietmar zum Testen geben, Feedback einarbeiten.
