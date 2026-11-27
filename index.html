@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LocalSizeMeasurer Web – Größenmessung im Astrofoto</title>
-<meta name="description" content="Projizierte Größe von Nebeln, Galaxien, Sternhaufen, Mond und Planeten im eigenen Astrofoto messen – direkt im Browser, ohne Upload.">
+<title>LocalSizeMeasurer Web – SkySolver-Testversion</title>
+<meta name="description" content="Projizierte Größe von Nebeln, Galaxien, Sternhaufen, Mond und Planeten im eigenen Astrofoto messen – im Browser, mit optionalem Online-Solving durch SkySolver (Testversion).">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cdefs%3E%3ClinearGradient id='lsmBg' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%231D3566'/%3E%3Cstop offset='1' stop-color='%230A1328'/%3E%3C/linearGradient%3E%3CradialGradient id='lsmGlow' cx='0.5' cy='0.5' r='0.5'%3E%3Cstop offset='0' stop-color='%23FFF1CC'/%3E%3Cstop offset='0.3' stop-color='%23A9C2FF' stop-opacity='0.85'/%3E%3Cstop offset='1' stop-color='%235B7CE0' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect x='0' y='0' width='256' height='256' rx='56' ry='56' fill='url(%23lsmBg)'/%3E%3Ccircle cx='52' cy='62' r='2.5' fill='%23FFFFFF' fill-opacity='0.8'/%3E%3Ccircle cx='196' cy='40' r='3' fill='%23FFFFFF' fill-opacity='0.8'/%3E%3Ccircle cx='32' cy='132' r='2' fill='%23FFFFFF' fill-opacity='0.7'/%3E%3Ccircle cx='226' cy='168' r='2' fill='%23FFFFFF' fill-opacity='0.7'/%3E%3Cg transform='translate(128 128) scale(0.9) rotate(-34) translate(-128 -128)'%3E%3Cellipse cx='128' cy='116' rx='88' ry='32' fill='url(%23lsmGlow)'/%3E%3Cellipse cx='128' cy='116' rx='88' ry='32' fill='none' stroke='%23A9C2FF' stroke-opacity='0.5' stroke-width='3'/%3E%3Cpath d='M44 116 C 70 86, 108 88, 128 116 C 148 144, 186 146, 212 116' fill='none' stroke='%23D6E4FF' stroke-opacity='0.85' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='128' cy='116' r='12' fill='%23FFF1CC'/%3E%3Cline x1='42' y1='170' x2='214' y2='170' stroke='%23FFB547' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='42' y1='154' x2='42' y2='186' stroke='%23FFB547' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='214' y1='154' x2='214' y2='186' stroke='%23FFB547' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='128' y1='162' x2='128' y2='178' stroke='%23FFB547' stroke-width='5' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E">
 <script>try{var _t=localStorage.getItem("lsmTheme");if(_t!=="light"&&_t!=="dark")_t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",_t)}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
 <style>
@@ -102,8 +102,9 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .ml .x{padding:1px 7px;font-size:12px;line-height:1.4}
 td details summary{cursor:pointer;color:var(--a);font-size:12px}td details div{margin-top:4px;font-size:12px;color:var(--m);line-height:1.45}
 </style></head><body><div class="w">
-<header class="hd"><div class="brand"><svg class="logo" viewBox="0 0 256 256" aria-hidden="true"><defs><linearGradient id="lsmLogoBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D3566"/><stop offset="1" stop-color="#0A1328"/></linearGradient><radialGradient id="lsmLogoGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFF1CC"/><stop offset="0.3" stop-color="#A9C2FF" stop-opacity="0.85"/><stop offset="1" stop-color="#5B7CE0" stop-opacity="0"/></radialGradient></defs><rect width="256" height="256" rx="56" fill="url(#lsmLogoBg)"/><circle cx="52" cy="62" r="2.5" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="196" cy="40" r="3" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="32" cy="132" r="2" fill="#FFFFFF" fill-opacity="0.7"/><circle cx="226" cy="168" r="2" fill="#FFFFFF" fill-opacity="0.7"/><g transform="translate(128 128) scale(0.9) rotate(-34) translate(-128 -128)"><ellipse cx="128" cy="116" rx="88" ry="32" fill="url(#lsmLogoGlow)"/><ellipse cx="128" cy="116" rx="88" ry="32" fill="none" stroke="#A9C2FF" stroke-opacity="0.5" stroke-width="3"/><path d="M44 116 C 70 86, 108 88, 128 116 C 148 144, 186 146, 212 116" fill="none" stroke="#D6E4FF" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round"/><circle cx="128" cy="116" r="12" fill="#FFF1CC"/><line x1="42" y1="170" x2="214" y2="170" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="42" y1="154" x2="42" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="214" y1="154" x2="214" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="128" y1="162" x2="128" y2="178" stroke="#FFB547" stroke-width="5" stroke-linecap="round"/></g></svg><div><h1>LocalSizeMeasurer Web</h1><p class="sub">Größe von Himmelsobjekten im eigenen Astrofoto messen · Deine Bilddaten bleiben im Browser</p></div></div>
+<header class="hd"><div class="brand"><svg class="logo" viewBox="0 0 256 256" aria-hidden="true"><defs><linearGradient id="lsmLogoBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D3566"/><stop offset="1" stop-color="#0A1328"/></linearGradient><radialGradient id="lsmLogoGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFF1CC"/><stop offset="0.3" stop-color="#A9C2FF" stop-opacity="0.85"/><stop offset="1" stop-color="#5B7CE0" stop-opacity="0"/></radialGradient></defs><rect width="256" height="256" rx="56" fill="url(#lsmLogoBg)"/><circle cx="52" cy="62" r="2.5" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="196" cy="40" r="3" fill="#FFFFFF" fill-opacity="0.8"/><circle cx="32" cy="132" r="2" fill="#FFFFFF" fill-opacity="0.7"/><circle cx="226" cy="168" r="2" fill="#FFFFFF" fill-opacity="0.7"/><g transform="translate(128 128) scale(0.9) rotate(-34) translate(-128 -128)"><ellipse cx="128" cy="116" rx="88" ry="32" fill="url(#lsmLogoGlow)"/><ellipse cx="128" cy="116" rx="88" ry="32" fill="none" stroke="#A9C2FF" stroke-opacity="0.5" stroke-width="3"/><path d="M44 116 C 70 86, 108 88, 128 116 C 148 144, 186 146, 212 116" fill="none" stroke="#D6E4FF" stroke-opacity="0.85" stroke-width="5" stroke-linecap="round"/><circle cx="128" cy="116" r="12" fill="#FFF1CC"/><line x1="42" y1="170" x2="214" y2="170" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="42" y1="154" x2="42" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="214" y1="154" x2="214" y2="186" stroke="#FFB547" stroke-width="8" stroke-linecap="round"/><line x1="128" y1="162" x2="128" y2="178" stroke="#FFB547" stroke-width="5" stroke-linecap="round"/></g></svg><div><h1>LocalSizeMeasurer Web</h1><p class="sub">SkySolver-Testversion · Lokal messen oder eine Bildkopie zum Online-Solving senden</p></div></div>
 <button id="thm" class="thm" type="button" title="Design wechseln"></button></header>
+<div class="box y"><div><b>Testversion v1.5.0-test</b> · Dieser Branch ergänzt optionales SkySolver-Solving. Die bisherige App bleibt separat verfügbar. <a href="https://astromatz.github.io/localsizemeasurer/" target="_blank" rel="noopener">Bisherige Version öffnen</a></div></div>
 <div class="st" id="st"></div>
 
 <div class="card" id="s1"><h2>1 · Bild prüfen</h2><div class="cols"><div>
@@ -121,7 +122,17 @@ td details summary{cursor:pointer;color:var(--a);font-size:12px}td details div{m
 </div><div class="side"><h3 class="sh">Prüfungen</h3><div id="c1"></div></div></div></div>
 
 <div class="card hide" id="s2"><h2 class="hx"><span>2 · Optik</span><span class="pf"><select id="ldP" title="Gespeichertes Optik-Profil laden"><option value="">Profil laden …</option></select><button id="svP" type="button" title="Aktuelle Optik als Profil im Browser speichern">Profil speichern</button></span></h2><div class="cols"><div>
-<section class="sec"><h3 class="sh">Teleskop</h3>
+<section class="sec"><h3 class="sh">Maßstab mit SkySolver bestimmen <span class="opt">(optional)</span></h3>
+<p class="hint">Online-Kalibrierung ersetzt die nötigen Optikangaben. Alternativ kannst du unten Brennweite und Kamera oder eine bekannte Bildskala eingeben.</p>
+<label for="svKind">Was zeigt dein Bild?</label><select id="svKind"><option value="stars">Sternfeld / Deep-Sky</option><option value="moon">Mond (Scheibe oder Ausschnitt)</option><option value="other">Sonne / Planet ohne Sternfeld – manuell</option></select>
+<p id="svHelp" class="hint"></p>
+<p class="why"><b>Nur bei Klick wird eine Bildkopie an skysolver.app übertragen.</b> Sie wird aus dem angezeigten Bild ohne Messungen und ohne die Metadaten der Originaldatei erzeugt und bei Bedarf verkleinert. Laut Anbieter werden Bilder und Ergebnisse nicht gespeichert. <a href="https://skysolver.app/de/api-docs" target="_blank" rel="noopener">Über die API</a></p>
+<div class="tb" style="margin-top:10px"><button id="svStart" class="pr" type="button" disabled>Bildkopie senden und lösen</button><button id="svStop" type="button" class="hide">Abbrechen</button></div>
+<p id="svStatus" class="echo" role="status" aria-live="polite" aria-atomic="true"></p>
+<div id="svResult" class="hide"><div class="live"><div>Automatische Kalibrierung<b id="svValue"></b></div></div><p id="svMeta" class="hint"></p>
+<label class="chk" style="margin-top:8px"><input type="checkbox" id="svUse"><span id="svUseLabel">Diese Kalibrierung für die Messung verwenden</span></label></div>
+</section>
+<section class="sec"><h3 class="sh">Teleskop <span class="opt">(optional mit Online-Kalibrierung)</span></h3>
 <div class="row r3"><div><label for="fl">Brennweite</label><div class="u"><input id="fl" class="in" inputmode="decimal" placeholder="z. B. 480"><span>mm</span></div><p class="hint">Native Brennweite des Teleskops.</p></div>
 <div><label for="acc">Reducer / Flattener / Extender</label><div class="u"><input id="acc" class="in" value="1" inputmode="decimal"><span>×</span></div><p class="hint">z. B. 0,8 · 1 = ohne</p></div>
 <div><label for="bar">Barlow</label><div class="u"><input id="bar" class="in" value="1" inputmode="decimal"><span>×</span></div><p class="hint">z. B. 2 · 1 = ohne</p></div></div></section>
@@ -134,10 +145,10 @@ td details summary{cursor:pointer;color:var(--a);font-size:12px}td details div{m
 </div>
 <p class="hint"><span id="pmTxt"></span> <button type="button" class="lnk" id="pmT"></button><input type="hidden" id="pm" value="d"></p>
 </section>
-<section class="sec"><h3 class="sh">Kontrolle mit Plate-Solve <span class="opt">(optional)</span></h3>
+<section class="sec"><h3 class="sh">Bekannte Bildskala manuell eingeben <span class="opt">(optional)</span></h3>
 <div class="row r3"><div><label for="ps">Bildskala aus dem Plate-Solve</label><div class="u"><input id="ps" class="in" inputmode="decimal" placeholder="z. B. 1,62"><span>″/px</span></div></div>
 <div class="wide"><label class="chk" style="margin-top:36px"><input type="checkbox" id="psUse" class="in" disabled> Diese Bildskala für die Messung verwenden</label></div></div>
-<p class="hint">Wert aus ImageSolver, ASTAP oder astrometry.net abtippen – die Bilddatei trägt ihn nicht. Verlässlich nur, wenn die Lösung zu genau diesem Bild gehört (nach dem letzten Skalieren oder Zuschneiden). Noch nicht gelöst? <a href="https://nova.astrometry.net/upload" target="_blank" rel="noopener">Kostenlos bei nova.astrometry.net</a> (außerhalb dieser App).</p></section>
+<p class="hint">Wert aus ImageSolver, ASTAP oder astrometry.net übernehmen. Die App liest ihn nicht aus der Bilddatei. Verlässlich nur, wenn die Lösung zu genau diesem Bild gehört (nach dem letzten Skalieren oder Zuschneiden). Noch nicht gelöst? <a href="https://nova.astrometry.net/upload" target="_blank" rel="noopener">Kostenlos bei nova.astrometry.net</a> (außerhalb dieser App).</p></section>
 </div><div class="side"><h3 class="sh">Abgeleitete Werte</h3><div class="live" id="lv2"></div><h3 class="sh">Prüfungen</h3><div id="c2"></div></div></div></div>
 
 <div class="card hide" id="s3"><h2>3 · Entfernung</h2><div class="cols"><div>
@@ -159,6 +170,7 @@ td details summary{cursor:pointer;color:var(--a);font-size:12px}td details div{m
 <div><label>… oder in AE</label><div class="u"><input id="dau" class="in" inputmode="decimal"><span>AE</span></div><p class="hint">Beide Felder rechnen sich gegenseitig um. Tippen schaltet auf „Freie Eingabe“.</p></div>
 <div id="erw2"><label>Fehlerangabe</label><div class="u"><input id="er2" class="in" inputmode="decimal" value="5"><span>%</span></div><p class="why">Nur bei freier Eingabe: Woher kommt dein Wert und wie genau ist er?</p></div>
 </div>
+<div id="moonInfo" class="box i hide"><div>Die aktive Mondkalibrierung bestimmt die projizierten Kilometerwerte direkt. Die Entfernung dient dabei nur der ungefähren Winkelanzeige; sie verändert die Kilometerwerte nicht. Strecken und Flächen auf der gekrümmten Mondoberfläche werden nicht berechnet. Der Dienst liefert keine numerische Messunsicherheit.</div></div>
 <div id="solDesc" class="box i"></div>
 </div>
 </div><div class="side"><h3 class="sh">Hinweise</h3>
@@ -187,14 +199,14 @@ td details summary{cursor:pointer;color:var(--a);font-size:12px}td details div{m
 <div class="nav"><button id="bk">← Zurück</button><button id="nx" class="pr">Weiter →</button></div>
 
 <div class="card hide" id="s5"><h2>5 · Hinweise</h2>
-<div class="ft"><b>LocalSizeMeasurer Web v1.4.1</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet exakt nach 2 · d · tan(θ/2). Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
+<div class="ft"><b>LocalSizeMeasurer Web v1.5.0-test</b> – Browser-Version des PixInsight-Scripts LocalSizeMeasurer. Die Ergebnisse sind projizierte Größen, also die Ausdehnung senkrecht zur Sichtlinie, berechnet nach 2 · d · tan(θ/2). Bei aktiver Mondkalibrierung werden projizierte Kilometerwerte direkt aus km/Pixel berechnet; dies sind keine Oberflächenstrecken. Entfernungen und Katalogwerte sind Richtwerte mit Unsicherheit.<br><br>
 <b>Credits:</b> Idee und ursprünglicher Excel-Rechner von Rainer und Daniel – <a href="https://www.youtube.com/watch?v=s6AZzTCcYxc" target="_blank" rel="noopener">„Rechner! Ausdehnung pro Pixel in Kilometer bzw. Lichtjahre bei Mond Krater oder Planeten bestimmen“</a> (YouTube). Danke und Gruß an die beiden!<br><br>
-<b>Datenschutz:</b> Die App verarbeitet Bilder und Eingaben ausschließlich in deinem Browser. Sie überträgt keine Daten, setzt keine Cookies und lädt keine externen Dienste. Gespeicherte Bilder mit Messungen erzeugt der Browser direkt auf deinem Rechner. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
+<b>Datenschutz:</b> Ohne Online-Solving verarbeitet die App Bilder und Eingaben ausschließlich in deinem Browser. Erst mit „Bildkopie senden und lösen“ überträgt sie eine gegebenenfalls verkleinerte PNG-Kopie ohne Messungen und ohne die Metadaten der Originaldatei an skysolver.app. Dort wird auch deine IP-Adresse technisch übermittelt. Laut SkySolver werden Bilder, Sternlisten und Ergebnisse nicht gespeichert oder protokolliert; siehe <a href="https://skysolver.app/de/api-docs" target="_blank" rel="noopener">Anbieterangaben</a>. Ohne diesen Klick wird keine Verbindung zu SkySolver aufgebaut. Die App setzt keine Cookies. Gespeicherte Bilder mit Messungen erzeugt der Browser direkt auf deinem Rechner. Gespeicherte Optik-Profile liegen nur im lokalen Speicher deines Browsers und lassen sich dort jederzeit löschen. Auch die Wahl zwischen hellem und dunklem Design liegt nur im lokalen Speicher deines Browsers. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter (GitHub Pages) technisch bedingt Zugriffsdaten wie die IP-Adresse; dafür gilt die Datenschutzerklärung von GitHub.</div>
 </div>
 </div>
 <script>
 // ===== Daten =====
-var VERSION="1.4";
+var VERSION="1.5.0-test";
 // Kameras: [Hersteller, Modell, Pixel horizontal, Pixelgröße µm (0 = aus Sensorbreite berechnen), Sensorbreite mm (0 = nicht nötig), Typ c/m, Hinweis]
 // Geprüft 11/2026 gegen Hersteller-, Handbuch- und Händlerangaben. Astrokameras: Pixelgröße laut Hersteller.
 // Foto-Kameras: Pixelgröße = Sensorbreite ÷ Pixelzahl (Hersteller nennen sie meist nicht).
@@ -311,6 +323,171 @@ function PN(s,grp){ // Portiert aus LocalSizeMeasurer 2.2 (parseNumber)
  return Number(t)}
 var N=function(i){return PN($(i).value,false)};  // Optik: 3.75 ist eine Dezimalzahl
 var S={cat:null,step:0,img:null,orig:null,shapes:[],tool:"l",space:false,v:{s:1,x:0,y:0},cur:null},COL=["#e3b341","#4cc2e8","#e8863d","#d479d4","#7fd08c","#e8e8e6"];
+
+// ===== SkySolver (Testversion; ausschließlich nach ausdrücklichem Klick) =====
+var SV={serial:0,working:false,controller:null,result:null,message:"",level:"i",retryAt:{stars:0,moon:0},wake:null};
+var LSMSolver={
+ api:"https://skysolver.app/api/v1",
+ positive:function(n){return typeof n==="number"&&Number.isFinite(n)&&n>0},
+ geometry:function(w,h,kind,factor){
+  if(!this.positive(w)||!this.positive(h)||!Number.isInteger(w)||!Number.isInteger(h))throw Error("Ungültige Bildabmessungen.");
+  var limit=kind==="moon"?2048:3000,r=Math.min(1,limit/w,limit/h)*(factor||1);
+  return {w:Math.min(limit,Math.ceil(w*r)),h:Math.min(limit,Math.ceil(h*r)),factor:r,drawW:w*r,drawH:h*r};
+ },
+ normalise:function(data,kind,copy){
+  if(!data||data.solved!==true)throw Error(kind==="moon"?"Keine sichere Mondlösung gefunden. Versuche einen größeren Ausschnitt oder verwende die Optikangaben.":"Keine Sternfeld-Lösung gefunden. Versuche ein Bild mit mehr erkennbaren Sternen oder verwende die Optikangaben.");
+  if(data.width!==copy.w||data.height!==copy.h)throw Error("Die Lösung passt nicht zur übertragenen Bildgröße. Sie wird nicht verwendet.");
+  if(!this.positive(copy.factor)||copy.factor>1)throw Error("Ungültiger Skalierungsfaktor.");
+  if(kind==="moon"){
+   if(data.verdict!=="verified")throw Error("Der Mond wurde nur vermutet, aber nicht sicher bestätigt. Diese Kalibrierung wird nicht übernommen. Versuche einen größeren Ausschnitt oder verwende die Optikangaben.");
+   if(!this.positive(data.scale_km_px)||!data.view||!this.positive(data.view.R))throw Error("Die Mondlösung enthält keinen gültigen Maßstab.");
+   if(Math.abs(data.scale_km_px*data.view.R/1737.4-1)>.01)throw Error("Radius und Maßstab der Mondlösung widersprechen sich. Sie wird nicht verwendet.");
+   return {kind:"moon",kmPx:data.scale_km_px*copy.factor,raw:data};
+  }
+  if(kind!=="stars"||!this.positive(data.scale_arcsec))throw Error("Die Sternfeld-Lösung enthält keinen gültigen Maßstab.");
+  if(data.projection)throw Error("Für dieses Panorama oder Fisheye-Bild reicht ein einheitlicher Maßstab nicht aus. Die Lösung wird nicht für die Messung übernommen.");
+  return {kind:"stars",scale:data.scale_arcsec*copy.factor,raw:data};
+ },
+ retryMs:function(header,body,now){
+  var seconds=Number(header);
+  if(header&&Number.isFinite(seconds)&&seconds>=0)return Math.min(3600000,Math.ceil(seconds*1000));
+  var when=header?Date.parse(header):NaN;
+  if(Number.isFinite(when))return Math.min(3600000,Math.max(1000,when-now));
+  if(body&&typeof body.retry_after==="number"&&Number.isFinite(body.retry_after)&&body.retry_after>=0)return Math.min(3600000,Math.ceil(body.retry_after*1000));
+  return 60000;
+ }
+};
+function solverCurrent(){
+ var r=SV.result;
+ if(!r||!S.img||r.img!==S.img||!$("svUse").checked)return null;
+ if(r.kind==="moon"&&($("ot").value!=="s"||+$("sb").value!==0))return null;
+ return r;
+}
+function solverNote(level,text){SV.level=level;SV.message=text;solverRender()}
+function solverCancel(quiet){
+ SV.serial++;if(SV.controller)SV.controller.abort();SV.controller=null;SV.working=false;
+ if(!quiet)solverNote("i","Solving abgebrochen. Du kannst erneut starten oder die Optikangaben verwenden.");
+}
+function solverNewImage(){
+ solverCancel(true);SV.result=null;SV.message="";$("svUse").checked=false;
+ $("ps").value="";$("psUse").checked=false;S.orig=null;S.cur=null;
+ S.loadId=(S.loadId||0)+1;return S.loadId;
+}
+function solverRender(){
+ var kind=$("svKind").value,r=SV.result,supported=kind!=="other",remaining=Math.max(0,Math.ceil(((SV.retryAt[kind]||0)-Date.now())/1000));
+ $("svStart").disabled=!S.img||!!S.img.demo||!!S.loading||SV.working||!supported||remaining>0;
+ $("svStart").textContent=SV.working?"Solving läuft …":remaining?"Erneut möglich in "+remaining+" s":"Bildkopie senden und lösen";
+ $("svStop").classList.toggle("hide",!SV.working);$("svKind").disabled=SV.working;
+ $("svHelp").textContent=kind==="moon"?"Mondscheibe oder Mond-Ausschnitt: Nur eine sicher bestätigte Lösung wird übernommen. Kilometerwerte sind projizierte Größen, keine Strecken auf der gekrümmten Oberfläche."
+  :kind==="other"?"SkySolver bietet keinen eigenen Solver für Sonne oder Planeten ohne Sterne. Verwende unten Brennweite und Kamera oder eine bekannte Bildskala. Bei sichtbarem Sternfeld kannst du stattdessen „Sternfeld / Deep-Sky“ wählen."
+  :"Für Bilder mit erkennbaren Sternen, auch für Sonnensystem-Objekte vor einem Sternfeld. Der Maßstab gilt näherungsweise für das gesamte Bild; bei großen Bildfeldern kann er örtlich abweichen.";
+ $("svStatus").textContent=S.img&&S.img.demo?"Das generierte Beispielbild hat keine echte Himmelsposition. Bitte zum Solving ein eigenes Bild laden.":SV.message;
+ $("svStatus").style.color=SV.level==="r"?"var(--r)":SV.level==="g"?"var(--g)":"var(--m)";
+ $("svResult").classList.toggle("hide",!r);
+ if(r){
+  var compatible=r.img===S.img&&(r.kind!=="moon"||($("ot").value==="s"&&+$("sb").value===0));
+  $("svUse").disabled=!compatible;if(!compatible)$("svUse").checked=false;
+  $("svValue").textContent=r.kind==="moon"?fx(r.kmPx,6)+" km/px · Mond, sicher bestätigt":fx(r.scale,6)+" ″/px · Sternfeld";
+  $("svMeta").textContent=r.kind==="moon"?"Kalibrierung aus dem Mondradius (1.737,4 km). Die Entfernung in Schritt 3 dient nur der Winkelanzeige. Eine numerische Messunsicherheit liefert der Dienst nicht."
+   :"Auf die Auflösung des geladenen Bildes umgerechnet. "+(r.raw.stats&&Number.isFinite(r.raw.stats.matches)?r.raw.stats.matches+" zugeordnete Sterne. ":"")+"Wert in der Bildmitte; keine Garantie für einen überall identischen Maßstab.";
+  $("svUseLabel").textContent=compatible?"Diese Kalibrierung für die Messung verwenden":"Mondkalibrierung nur mit Objektart „Mond / Planet / Sonne“ und Himmelskörper „Mond“ verwendbar";
+ }
+ if(SV.wake){clearTimeout(SV.wake);SV.wake=null}
+ if(remaining&&!SV.working)SV.wake=setTimeout(solverRender,1000);
+}
+function solverReadBlob(blob){
+ return new Promise(function(resolve,reject){var reader=new FileReader();
+  reader.onload=function(){resolve(reader.result)};reader.onerror=function(){reject(Error("Die Bildkopie konnte nicht gelesen werden."))};reader.readAsDataURL(blob)});
+}
+async function solverPrepare(img,kind,current){
+ var canvas=document.createElement("canvas"),factor=1;
+ try{
+  for(var i=0;i<7;i++){
+   if(!current())return null;
+   var copy=LSMSolver.geometry(img.w,img.h,kind,factor);
+   if(copy.w<8||copy.h<8)throw Error("Das Bild ist für den Solver zu schmal oder zu klein (mindestens 8 × 8 Pixel).");
+   canvas.width=copy.w;canvas.height=copy.h;var ctx=canvas.getContext("2d");
+   if(!ctx||canvas.width!==copy.w||canvas.height!==copy.h)throw Error("Die Bildkopie konnte im Browser nicht erzeugt werden.");
+   ctx.fillStyle="#000000";ctx.fillRect(0,0,copy.w,copy.h);
+   // Ein einziger isotroper Faktor; gerundete Canvas-Ränder verzerren das Bild nicht.
+   ctx.drawImage(img.el,0,0,copy.drawW,copy.drawH);
+   var blob=await new Promise(function(resolve,reject){
+    canvas.toBlob(function(b){b?resolve(b):reject(Error("Die PNG-Bildkopie konnte nicht erzeugt werden."))},"image/png");
+   });
+   if(!current())return null;
+   if(blob.size<=19000000){copy.image=await solverReadBlob(blob);return current()?copy:null}
+   factor*=.75;
+  }
+  throw Error("Die Bildkopie ist zu groß. Bitte eine kleinere Bilddatei verwenden.");
+ }finally{canvas.width=canvas.height=1}
+}
+async function solverStart(){
+ var kind=$("svKind").value,img=S.img;
+ if(SV.working||S.loading||!img||img.demo||kind==="other"||Date.now()<(SV.retryAt[kind]||0))return;
+ if(typeof fetch!=="function"||typeof AbortController!=="function"){solverNote("r","Dieser Browser unterstützt das Online-Solving nicht. Bitte einen aktuellen Browser oder die manuellen Eingaben verwenden.");return}
+ solverCancel(true);var id=SV.serial,controller=new AbortController(),timer=null,timedOut=false;
+ SV.controller=controller;SV.working=true;
+ function current(){return id===SV.serial&&img===S.img}
+ solverNote("i","Bildkopie wird im Browser vorbereitet …");
+ try{
+  var copy=await solverPrepare(img,kind,current);if(!copy||!current())return;
+  solverNote("i","Bildkopie wird an SkySolver gesendet und gelöst …");
+  timer=setTimeout(function(){timedOut=true;controller.abort()},65000);
+  var response=await fetch(LSMSolver.api+(kind==="moon"?"/solve/moon":"/solve/image"),{
+   method:"POST",mode:"cors",credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store",
+   headers:{"Content-Type":"application/json"},body:JSON.stringify(kind==="moon"?{image:copy.image}:{image:copy.image,time_limit_ms:12000}),signal:controller.signal
+  });
+  var data;try{data=await response.json()}catch(e){if(controller.signal.aborted)throw e;throw Error("SkySolver hat keine lesbare Antwort geliefert. Bitte später erneut versuchen.")}
+  if(!current())return;
+  if(controller.signal.aborted)throw Error("Solving abgebrochen.");
+  if(response.status===429){
+   var delay=LSMSolver.retryMs(response.headers.get("Retry-After"),data,Date.now());
+   SV.retryAt[kind]=Date.now()+Math.max(1000,delay);
+   throw Error(data&&data.error==="busy"?"SkySolver ist gerade ausgelastet. Bitte nach der angezeigten Wartezeit erneut versuchen.":"Das Anfragekontingent ist vorübergehend aufgebraucht. Bitte nach der angezeigten Wartezeit erneut versuchen.");
+  }
+  if(!response.ok){
+   var errors={400:"Die Bildkopie wurde vom Dienst nicht akzeptiert.",413:"Die Bildkopie überschreitet eine Grenze des Dienstes.",422:"Der Dienst hat die Anfrage nicht akzeptiert.",503:"SkySolver ist momentan nicht verfügbar."};
+   throw Error((errors[response.status]||"SkySolver meldet einen Serverfehler.")+" Die Optikangaben oder eine manuelle Bildskala bleiben nutzbar.");
+  }
+  var result=LSMSolver.normalise(data,kind,copy);result.img=img;
+  if(!current())return;
+  if(kind==="moon"){
+   // Nach der Antwort ausdrücklich das gemessene Objekt festlegen, nicht aus km/px einen Sternmaßstab machen.
+   solverSelectMoon();
+  }
+  SV.result=result;$("svUse").checked=true;$("psUse").checked=false;
+  S.orig=S.orig===null?"unk":S.orig;
+  solverNote("g","Kalibrierung bestimmt und für dieses Bild aktiviert.");upd();
+ }catch(e){
+  if(!current())return;
+  solverNote("r",timedOut?"Zeitüberschreitung bei SkySolver. Bitte später erneut versuchen oder die Optikangaben verwenden."
+   :controller.signal.aborted?"Solving abgebrochen.":e instanceof TypeError?"SkySolver ist nicht erreichbar. Prüfe die Internetverbindung und versuche es später erneut.":e.message||"Das Online-Solving ist fehlgeschlagen.");
+ }finally{
+  if(timer)clearTimeout(timer);
+  if(current()){SV.working=false;SV.controller=null;solverRender()}
+ }
+}
+function solverSelectMoon(){
+ if($("ot").value!=="s"||+$("sb").value!==0)$("stg").value="1";
+ $("ot").value="s";$("sb").value="0";S.cat=null;$("cat").value="";catBox();setSolar();
+}
+function solverInit(){
+ $("svStart").onclick=solverStart;$("svStop").onclick=function(){solverCancel(false)};
+ $("svKind").onchange=function(){
+  solverCancel(true);SV.message="";SV.result=null;$("svUse").checked=false;
+  if(this.value==="moon")solverSelectMoon()
+  upd();
+ };
+ $("svUse").onchange=function(){if(this.checked)$("psUse").checked=false;upd()};
+ $("psUse").addEventListener("change",function(){if(this.checked)$("svUse").checked=false;upd()});
+ $("ps").addEventListener("input",function(){$("svUse").checked=false;upd()});
+ ["ot","sb"].forEach(function(id){$(id).addEventListener("change",function(){
+  if(SV.working&&$("svKind").value==="moon"&&($("ot").value!=="s"||+$("sb").value!==0))solverCancel(false);
+  if(SV.result&&SV.result.kind==="moon"&&($("ot").value!=="s"||+$("sb").value!==0)){$("svUse").checked=false}
+  upd();
+ })});
+}
+
 // ===== Zahlenformate (deutsch, mit Tsd./Mio./Mrd. und Exponent) =====
 function fmt(n,s){return isFinite(n)?n.toLocaleString("de-DE",{maximumSignificantDigits:s||4}):"–"}
 function fx(v,d){return isFinite(v)?v.toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d}):"–"}
@@ -453,30 +630,44 @@ function fitsImg(b,pos,K,dims,bp){var W=dims[0],H=dims[1],P=dims.length>2?dims[2
  img.note="FITS "+(bp<0?(-bp)+" Bit Gleitkomma":bp+" Bit Ganzzahl")+", "+(nc===3?"RGB":"Graustufen")+(P>3||P===2?" (nur "+(nc===3?"die ersten 3 Ebenen":"die erste Ebene")+" von "+P+")":"")+(bp!==8?", für die Anzeige auf 8 Bit reduziert":"");
  img.bayer=nc===1&&!!K.BAYERPAT;return img}
 // ===== Bild =====
-function sample(){var c=document.createElement("canvas");c.width=1600;c.height=1000;var g=c.getContext("2d");g.fillStyle="#02030a";g.fillRect(0,0,1600,1000);
+function sample(){solverNewImage();S.loading=false;var c=document.createElement("canvas");c.width=1600;c.height=1000;var g=c.getContext("2d");g.fillStyle="#02030a";g.fillRect(0,0,1600,1000);
 [[800,500,420,"110,60,160"],[950,560,260,"200,70,110"],[640,420,230,"60,110,200"]].forEach(function(n){var r=g.createRadialGradient(n[0],n[1],10,n[0],n[1],n[2]);r.addColorStop(0,"rgba("+n[3]+",.75)");r.addColorStop(1,"rgba("+n[3]+",0)");g.fillStyle=r;g.fillRect(0,0,1600,1000)});
 var x=42;function rnd(){x=(x*16807)%2147483647;return x/2147483647}
 for(var i=0;i<900;i++){var r=Math.pow(rnd(),4)*2.6+.4,a=.3+rnd()*.7;g.fillStyle="rgba(255,"+(220+rnd()*35|0)+",230,"+a+")";g.beginPath();g.arc(rnd()*1600,rnd()*1000,r,0,7);g.fill()}
-S.img={el:c,w:1600,h:1000,name:"Beispielbild (generiert, nur zum Ausprobieren)"};S.shapes=[];info();upd()}
+S.img={el:c,w:1600,h:1000,name:"Beispielbild (generiert, nur zum Ausprobieren)",demo:true};S.shapes=[];info();upd()}
 function msg(t){var e=$("imginfo");e.textContent=t;e.style.color="var(--r)"}
-function loadFile(f){if(!f)return;var e=$("imginfo");e.style.color="";e.textContent="Lade "+f.name+" …";
-var ext=((f.name.match(/\.([^.]+)$/)||[])[1]||"").toLowerCase(),
- kind=/^tiff?$/.test(ext)||f.type==="image/tiff"?"tif":/^(fits?|fts)$/.test(ext)||f.type==="image/fits"?"fits":/^xisf$/.test(ext)?"xisf":(/^image\/(jpeg|png|gif|webp|bmp)/.test(f.type)||/^(jpe?g|png|gif|webp|bmp)$/.test(ext))?"web":"";
-if(kind==="xisf"){msg("XISF kann der Browser nicht lesen. Bitte in PixInsight das gestreckte Bild als TIFF, FITS oder PNG speichern.");return}
-if(!kind){msg("Format nicht unterstützt ("+(f.type||f.name)+"). Bitte JPG, PNG, TIFF oder FITS verwenden.");return}
-if(kind!=="web"){e.textContent="Lade "+f.name+" … große TIFF- und FITS-Dateien brauchen einige Sekunden.";var rd=f.arrayBuffer?f.arrayBuffer():new Promise(function(ok,ko){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=function(){ko(Err("Datei konnte nicht gelesen werden."))};r.readAsArrayBuffer(f)});
- rd.then(function(buf){return new Promise(function(ok){setTimeout(function(){ok(buf)},20)})})
- .then(function(buf){return kind==="tif"?readTIFF(buf):readFITS(buf)})
- .then(function(r){S.img={el:r.c,w:r.w,h:r.h,name:f.name,note:r.note,dark:r.dark,bayer:!!r.bayer};S.shapes=[];info();upd()})
- .catch(function(x){msg((x instanceof RangeError?"Zu wenig Arbeitsspeicher für dieses Bild.":x&&x.message||"Unbekannter Fehler beim Lesen.")+" (Datei: "+f.name+")")});
- return}
-var fr=new FileReader();
-fr.onerror=function(){msg("Datei konnte nicht gelesen werden.")};
-fr.onload=function(){var im=new Image();
-im.onload=function(){try{S.img={el:im,w:im.naturalWidth,h:im.naturalHeight,name:f.name};S.shapes=[];e.style.color="";info();upd()}catch(x){msg("Fehler nach dem Laden: "+x.message)}};
-im.onerror=function(){msg("Der Browser konnte das Bild nicht dekodieren (zu groß, beschädigt oder falsches Format).")};
-im.src=fr.result};
-fr.readAsDataURL(f)}
+async function loadFile(f){
+ if(!f)return;
+ var ticket=solverNewImage();S.loading=true;solverRender();
+ var e=$("imginfo");e.style.color="";e.textContent="Lade "+f.name+" …";
+ try{
+  var ext=((f.name.match(/\.([^.]+)$/)||[])[1]||"").toLowerCase(),
+   kind=/^tiff?$/.test(ext)||f.type==="image/tiff"?"tif":/^(fits?|fts)$/.test(ext)||f.type==="image/fits"?"fits":/^xisf$/.test(ext)?"xisf":(/^image\/(jpeg|png|gif|webp|bmp)/.test(f.type)||/^(jpe?g|png|gif|webp|bmp)$/.test(ext))?"web":"";
+  if(kind==="xisf")throw Error("XISF kann der Browser nicht lesen. Bitte in PixInsight das gestreckte Bild als TIFF, FITS oder PNG speichern.");
+  if(!kind)throw Error("Format nicht unterstützt ("+(f.type||f.name)+"). Bitte JPG, PNG, TIFF oder FITS verwenden.");
+  var image;
+  if(kind==="web"){
+   image=await new Promise(function(resolve,reject){var fr=new FileReader();
+    fr.onerror=function(){reject(Error("Datei konnte nicht gelesen werden."))};
+    fr.onload=function(){var im=new Image();
+     im.onload=function(){resolve({el:im,w:im.naturalWidth,h:im.naturalHeight,name:f.name})};
+     im.onerror=function(){reject(Error("Der Browser konnte das Bild nicht dekodieren (zu groß, beschädigt oder falsches Format)."))};im.src=fr.result};
+    fr.readAsDataURL(f);
+   });
+  }else{
+   e.textContent="Lade "+f.name+" … große TIFF- und FITS-Dateien brauchen einige Sekunden.";
+   var buf=await(f.arrayBuffer?f.arrayBuffer():new Promise(function(resolve,reject){var fr=new FileReader();fr.onload=function(){resolve(fr.result)};fr.onerror=function(){reject(Error("Datei konnte nicht gelesen werden."))};fr.readAsArrayBuffer(f)}));
+   await new Promise(function(resolve){setTimeout(resolve,20)});
+   if(ticket!==S.loadId)return;
+   var r=kind==="tif"?await readTIFF(buf):readFITS(buf);
+   image={el:r.c,w:r.w,h:r.h,name:f.name,note:r.note,dark:r.dark,bayer:!!r.bayer};
+  }
+  if(ticket!==S.loadId)return;
+  S.img=image;S.shapes=[];e.style.color="";info();upd();
+ }catch(x){
+  if(ticket===S.loadId)msg((x instanceof RangeError?"Zu wenig Arbeitsspeicher für dieses Bild.":x&&x.message||"Unbekannter Fehler beim Lesen.")+" (Datei: "+f.name+")");
+ }finally{if(ticket===S.loadId){S.loading=false;solverRender()}}
+}
 function info(){var p=$("pv");if(!S.img){$("imginfo").textContent="Noch kein Bild geladen.";p.classList.add("hide");return}
 $("imginfo").style.color="";$("imginfo").textContent=S.img.name+": "+S.img.w.toLocaleString("de-DE")+" × "+S.img.h.toLocaleString("de-DE")+" px"+(S.img.note?" · "+S.img.note:"");p.classList.remove("hide");p.width=360;p.height=Math.max(1,Math.round(360*S.img.h/S.img.w));p.getContext("2d").drawImage(S.img.el,0,0,p.width,p.height)}
 // ===== Berechnung =====
@@ -490,9 +681,11 @@ if(S.orig==="yes"&&o.spOk)o.rsrc="Original: Sensorbreite ÷ Bildbreite";
 if(S.orig==="crop"){o.ratio=1;o.rsrc="Zuschnitt (Maßstab unverändert)"}
 if(S.orig==="unk"){o.ratio=1;o.rsrc="Pixelgröße 1:1 angenommen (ungeprüft)"}
 o.epx=o.px*o.ratio;o.scOpt=ARC/1000*o.epx/o.efl;
-o.ps=N("ps");o.psOk=o.ps>0;o.psUse=o.psOk&&$("psUse").checked;
-o.sc=o.psUse?o.ps:o.scOpt;o.scSrc=o.psUse?"Plate-Solve":"Brennweite und Pixelgröße";
-o.unv=S.orig==="unk"&&!o.psUse;
+o.auto=solverCurrent();o.moonUse=!!(o.auto&&o.auto.kind==="moon");
+o.ps=o.auto&&o.auto.kind==="stars"?o.auto.scale:N("ps");o.psOk=Number.isFinite(o.ps)&&o.ps>0;
+o.psUse=!o.moonUse&&o.psOk&&(!!o.auto||$("psUse").checked);
+o.sc=o.psUse?o.ps:o.scOpt;o.scSrc=o.psUse?(o.auto?"SkySolver · Sternfeld":"Plate-Solve (manuell)"):"Brennweite und Pixelgröße";
+o.unv=S.orig==="unk"&&!o.psUse&&!o.moonUse;
 o.dev=o.psOk&&o.scOpt>0?Math.abs(o.scOpt-o.ps)/o.ps*100:NaN;
 o.fov=o.cw*o.sc/3600;
 if($("ot").value==="s"){var b=BODY[+$("sb").value]||BODY[0],st=$("stg").value;
@@ -502,9 +695,13 @@ if($("ot").value==="s"){var b=BODY[+$("sb").value]||BODY[0],st=$("stg").value;
 }else{var d=PN($("d").value,true),u=$("du").value;
  o.dkm=u==="Lj"?d*KMLY:u==="pc"?d*LYPC*KMLY:u==="km"?d:d*KMAU;
  var e=(PN($("er").value,false)||0)/100;o.dLo=o.dkm*(1-e);o.dHi=o.dkm*(1+e);o.span="± "+fmt(e*100)+" %"}
-o.dly=o.dkm/KMLY;return o}
+if(o.moonUse){
+ o.kmPx=o.auto.kmPx;o.sc=o.dkm>0?2*Math.atan(o.kmPx/(2*o.dkm))*ARC:NaN;
+ o.scSrc="SkySolver · Mond";o.span="Mondkalibrierung; keine bezifferte Messunsicherheit";
+}
+o.fov=o.cw*o.sc/3600;o.dly=o.dkm/KMLY;return o}
 function proj(d,th){if(!(th>0))return 0;return th>=Math.PI?d*th:2*d*Math.tan(th/2)}  // exakt wie im Script
-function size(o,px){var th=px*o.sc/ARC;return {k:proj(o.dkm,th),lo:proj(o.dLo,th),hi:proj(o.dHi,th),th:th,as:px*o.sc}}
+function size(o,px){var th=px*o.sc/ARC;if(o.moonUse)return{k:px*o.kmPx,lo:NaN,hi:NaN,th:th,as:px*o.sc};return {k:proj(o.dkm,th),lo:proj(o.dLo,th),hi:proj(o.dHi,th),th:th,as:px*o.sc}}
 function SOL(){return $("ot").value==="s"}
 function fSize(k){return SOL()?fKm(k):fLy(k/KMLY)}
 function fArea(k){var r=k/2,km2=Math.PI*r*r;return SOL()?fKm2(km2):fLy2(km2/KMLY/KMLY)}
@@ -524,12 +721,12 @@ if(S.img&&S.img.bayer)L("y","Der FITS-Header nennt ein Bayer-Muster (BAYERPAT) b
 if(S.orig===null)L("r","Schritt 1: „Unverändertes Originalbild?“ ist nicht beantwortet.",1);
 if(S.orig==="no"&&!$("chgT").value)L("r","Schritt 1: Bitte angeben, was am Bild verändert wurde.",1);
 if(o.unv)L("y","Maßstab ungeprüft: Ob das Bild gebinnt, skaliert oder gedrizzelt wurde, ist unbekannt. Die App rechnet mit der Pixelgröße 1:1. Abhilfe: in Schritt 2 den Maßstab aus einem Plate-Solve eintragen und verwenden.",1);
-if(S.orig==="no"&&$("chgT").value&&!$("cropToo").checked&&!(N("fF")>0)&&!(N("fW")>0))L("y","Kein Faktor und keine Originalbreite angegeben – es gilt der Breitenvergleich mit dem Sensor.",1);
-if(S.orig==="no"&&$("cropToo").checked&&!(N("fF")>0))L("r","Bei zusätzlichem Zuschnitt bitte den Faktor angeben (die Originalbreite reicht nicht, weil sie sich auf das ungeschnittene Bild bezieht).",1);
-if(!(o.sc>0)){var miss=[];if(!(o.fl>0))miss.push("Brennweite");if(!(o.px>0))miss.push(o.pm==="d"?"Pixelgröße":"Sensorbreite und Sensor-Pixelbreite");
+if(!o.psUse&&!o.moonUse&&S.orig==="no"&&$("chgT").value&&!$("cropToo").checked&&!(N("fF")>0)&&!(N("fW")>0))L("y","Kein Faktor und keine Originalbreite angegeben – es gilt der Breitenvergleich mit dem Sensor.",1);
+if(!o.psUse&&!o.moonUse&&S.orig==="no"&&$("cropToo").checked&&!(N("fF")>0))L("r","Bei zusätzlichem Zuschnitt bitte den Faktor angeben (die Originalbreite reicht nicht, weil sie sich auf das ungeschnittene Bild bezieht).",1);
+if(!(o.sc>0)&&!o.moonUse){var miss=[];if(!(o.fl>0))miss.push("Brennweite");if(!(o.px>0))miss.push(o.pm==="d"?"Pixelgröße":"Sensorbreite und Sensor-Pixelbreite");
  L("r","Für den Maßstab fehlt noch: "+(miss.length?miss.join(", "):"Optik/Kamera unvollständig")+".",2);return a}
 var r=o.sp/o.cw;
-if(!o.spOk&&o.pm==="d")L("i","Ohne Sensor-Pixelbreite kann die App Binning, Skalierung und Zuschnitt nicht gegen den Sensor prüfen. Bei „unverändert“ oder „nur zugeschnitten“ gilt die Pixelgröße 1:1.",2);
+if(!o.psUse&&!o.moonUse&&!o.spOk&&o.pm==="d")L("i","Ohne Sensor-Pixelbreite kann die App Binning, Skalierung und Zuschnitt nicht gegen den Sensor prüfen. Bei „unverändert“ oder „nur zugeschnitten“ gilt die Pixelgröße 1:1.",2);
 if(o.spOk&&S.img){
 if(!(o.cw<=o.sp*1.02)&&!($("chgT").value==="drz"||$("chgT").value==="scale"))L("y","Das Bild ist breiter als der Sensor – Drizzle oder Hochskalierung?",1);
 if((S.orig==="yes"||S.orig==="unk")&&Math.abs(r-1)>.02)L("y","Bildbreite ("+o.cw+" px) passt nicht zur Sensorbreite ("+o.sp+" px) – Bild skaliert oder gebinnt? Falls es nur zugeschnitten wurde, wähle oben „Nur zugeschnitten“.",1);
@@ -538,14 +735,14 @@ if(S.orig==="crop"){if(o.cw>o.sp*1.02)L("y","Das Bild ist breiter als der Sensor
 if(S.orig==="no"&&$("cropToo").checked&&N("fF")>0){var ex=o.sp/N("fF");if(o.cw>ex*1.02)L("y","Das Bild ist breiter als nach dem Faktor zu erwarten ("+fmt(ex)+" px) – wurde es wirklich nur zugeschnitten?",1);else L("g","Zuschnitt zusätzlich zum Faktor: erwartete volle Breite "+fmt(ex)+" px, Bild "+o.cw+" px ("+fmt(o.cw/ex*100)+" %). Der Maßstab folgt dem Faktor.",1)}
 if(S.orig==="no"&&!$("cropToo").checked&&N("fF")>0&&Math.abs(r/N("fF")-1)>.05&&Math.abs(r-1)>.02)L("y","Dein Faktor ("+fmt(N("fF"))+") passt nicht zum Breitenverhältnis ("+fmt(r)+") – bitte prüfen. Falls das Bild zusätzlich zugeschnitten wurde: Haken „Zusätzlich zugeschnitten“ setzen.",1);
 }
-if(o.psOk){if(o.ps<.01||o.ps>1000)L("y","Plate-Solve-Skala "+fmt(o.ps)+" ″/px ist unplausibel – Einheit prüfen (Bogensekunden pro Pixel).",2);
+if(!o.moonUse&&o.psOk){if(o.ps<.01||o.ps>1000)L("y","Plate-Solve-Skala "+fmt(o.ps)+" ″/px ist unplausibel – Einheit prüfen (Bogensekunden pro Pixel).",2);
  else if(o.scOpt>0){if(o.dev>2){var q=o.ps/o.scOpt,cause="";
    [2,3,4].forEach(function(f){if(Math.abs(q/f-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu Binning "+f+"×"+f+(f===2?" oder Super-Pixel-Debayer":"")+". In Schritt 1 nicht angegeben?"});
    if(Math.abs(q/.5-1)<.03)cause=" Faktor "+fx(q,2)+" – passend zu 2×-Drizzle oder Hochskalierung. In Schritt 1 nicht angegeben?";
    L("y","Brennweite und Pixelgröße ergeben "+fx(o.scOpt,4)+" ″/px, der Plate-Solve "+fx(o.ps,4)+" ″/px – Abweichung "+fx(o.dev,1)+" %."+cause+" Mögliche Ursachen: Binning, Debayer (Super-Pixel), Resampling, Drizzle, Reducer. Außerdem möglich: Das Bild wurde beim Export kleiner skaliert als das für den Plate-Solve genutzte Bild. "+(o.psUse?"Die Plate-Solve-Skala wird verwendet; sie ist nur verlässlich, wenn die Lösung nach dem letzten Skalieren oder Zuschneiden erstellt wurde und sich auf exakt dieses Bild bezieht.":"Die Plate-Solve-Skala wird NICHT verwendet – die Messwerte sind womöglich falsch."),2)}
   else L("g","Plate-Solve und Optik stimmen überein (Abweichung "+fx(o.dev,2)+" %).",2)}}
-var scLo=$("ot").value==="s"?.05:.3;if(o.sc<scLo||o.sc>10)L("y","Maßstab "+fmt(o.sc)+" ″/px ist ungewöhnlich (erwartet "+fmt(scLo)+"–10 für diese Objektart) – Brennweite/Pixelgröße in falscher Einheit?",2);
-if(!o.psUse){if(o.px<.3||o.px>50)L("y","Pixelgröße "+fmt(o.px)+" µm liegt außerhalb des Plausibilitätsbereichs (0,3–50) – µm statt mm?",2);else if(o.px<1||o.px>20)L("y","Pixelgröße "+fmt(o.px)+" µm ist für Astrokameras ungewöhnlich (üblich 1–20) – bitte prüfen.",2);
+var scLo=$("ot").value==="s"?.05:.3;if(o.sc<scLo||o.sc>10)L("y","Maßstab "+fmt(o.sc)+" ″/px ist ungewöhnlich (erwartet "+fmt(scLo)+"–10 für diese Objektart) – "+(o.auto?"bitte Bildauflösung und Lösung prüfen.":"Brennweite/Pixelgröße in falscher Einheit?"),2);
+if(!o.psUse&&!o.moonUse){if(o.px<.3||o.px>50)L("y","Pixelgröße "+fmt(o.px)+" µm liegt außerhalb des Plausibilitätsbereichs (0,3–50) – µm statt mm?",2);else if(o.px<1||o.px>20)L("y","Pixelgröße "+fmt(o.px)+" µm ist für Astrokameras ungewöhnlich (üblich 1–20) – bitte prüfen.",2);
 if(o.fl>0&&o.fl<5)L("y","Brennweite "+fmt(o.fl)+" mm ist unplausibel – Meter statt Millimeter eingegeben?",2);else if(o.fl>20000)L("y","Brennweite "+fmt(o.fl)+" mm ist unplausibel hoch – Einheit prüfen.",2);else if(o.fl>=5&&o.fl<100)L("i","Brennweite "+fmt(o.fl)+" mm: Weitwinkel- oder Objektivaufnahme – plausibel, aber ungewöhnlich für Teleskope.",2)}
 var R={n:[100,3e4],o:[100,2e4],k:[5e3,15e4],g:[1e5,1e11],s:[0,1e-3]},t=$("ot").value,rg=R[t];
 if(!(o.dkm>0))L("r","Entfernung fehlt oder ist keine gültige Zahl – Schritt 3 ausfüllen. Ohne Entfernung gibt es kein Ergebnis.",3);else if(o.dly>2e10)L("y","Entfernung "+fmt(o.dly)+" Lj liegt jenseits des beobachtbaren Universums – Einheit prüfen.",3);else if(t==="s"){var bd=BODY[+$("sb").value]||BODY[0];
@@ -553,7 +750,7 @@ if(!(o.dkm>0))L("r","Entfernung fehlt oder ist keine gültige Zahl – Schritt 3
   if(o.dkm<lo||o.dkm>hi)L("y","Entfernung "+fmt(o.dkm,4)+" km liegt außerhalb des Bereichs für „"+bd[0]+"“ ("+fmt(bd[1],4)+" – "+fmt(bd[3],4)+" km) – Einheit oder Himmelskörper korrekt?",3)}
  else if(o.dkm<1000||o.dkm>1e11)L("y","Entfernung "+fmt(o.dkm,4)+" km ist für ein Sonnensystem-Objekt ungewöhnlich.",3)}
 else if(o.dly<rg[0]||o.dly>rg[1])L("y","Entfernung "+fmt(o.dly)+" Lj liegt außerhalb des Erwartungsbereichs ("+fmt(rg[0])+"–"+fmt(rg[1])+" Lj) für diese Objektart – Rückfrage: Einheit oder Objektart korrekt?",3);
-if(o.dHi>0&&o.dHi/o.dkm>=1.5)L("y","Die Entfernungsspanne ist sehr weit – das Ergebnis ist nur eine grobe Größenordnung.",3);
+if(!o.moonUse&&o.dHi>0&&o.dHi/o.dkm>=1.5)L("y","Die Entfernungsspanne ist sehr weit – das Ergebnis ist nur eine grobe Größenordnung.",3);
 S.shapes.forEach(function(s){if(len(s)<5&&!a.some(function(x){return /5 px/.test(x.m)}))L("y","Eine Messung ist unter 5 px – von Bildrauschen dominiert.",4)});
 if(!a.some(function(x){return x.l==="r"||x.l==="y"}))L("g","Alle Konsistenzprüfungen bestanden.",0);return a}
 // ===== Status-Darstellung =====
@@ -572,16 +769,19 @@ function show(id,a,st){var h="",m={},any=0;
 function len(s){var d=Math.hypot(s.b.x-s.a.x,s.b.y-s.a.y);return s.t==="c"?2*d:d}
 // ===== UI =====
 function ok1(){return !!S.img&&S.orig!==null&&!(S.orig==="no"&&!$("chgT").value)}
-function stBar(){var o=calc(),dn=[ok1(),o.sc>0,o.dkm>0,false,false];
+function stBar(){var o=calc(),dn=[ok1(),o.sc>0||o.moonUse,o.dkm>0,false,false];
 $("st").innerHTML=["Bild prüfen","Optik","Entfernung","Messen","Hinweise"].map(function(t,i){var a=i===S.step,d=dn[i]&&!a;
  return '<button type="button" class="'+(a?"on":d?"done":"")+'" data-g="'+i+'"'+(a?' aria-current="step"':'')+'><span class="n">'+(d?CHK:(i+1))+'</span><span>'+t+'</span></button>'}).join("")}
-function upd(){var o=calc(),tiles=[["Effektive Brennweite",fmt(o.efl)+" mm"]];
-if(o.pm==="c")tiles.push(["Pixelgröße (Sensor)",fmt(o.px)+" µm"]);
-tiles.push(["Effektive Pixelgröße",fmt(o.epx)+" µm<span class=\"src\">"+(o.psUse?"durch Plate-Solve berücksichtigt":o.rsrc)+"</span>"]);
-if(o.psOk){tiles.push(["Maßstab aus Optik",fx(o.scOpt,4)+" ″/px"]);tiles.push(["Maßstab aus Plate-Solve",fx(o.ps,4)+" ″/px"])}
-tiles.push(["Verwendeter Maßstab",fx(o.sc,4)+" ″/px<span class=\"src\">Quelle: "+o.scSrc+"</span>"]);
-if(S.img)tiles.push(["Bildfeld (Breite)",fAng(o.fov*3600)]);
+function upd(){var o=calc(),tiles=[];
+if(o.efl>0)tiles.push(["Effektive Brennweite",fmt(o.efl)+" mm"]);
+if(o.pm==="c"&&o.px>0)tiles.push(["Pixelgröße (Sensor)",fmt(o.px)+" µm"]);
+if(o.epx>0)tiles.push(["Effektive Pixelgröße",fmt(o.epx)+" µm<span class=\"src\">"+(o.auto?"Online-Kalibrierung hat Vorrang":o.psUse?"durch Plate-Solve berücksichtigt":o.rsrc)+"</span>"]);
+if(o.psOk&&!o.moonUse){if(o.scOpt>0)tiles.push(["Maßstab aus Optik",fx(o.scOpt,4)+" ″/px"]);tiles.push(["Maßstab aus Plate-Solve",fx(o.ps,4)+" ″/px"])}
+if(o.moonUse)tiles.push(["Projizierte Mondskala",fx(o.kmPx,6)+" km/px"]);
+tiles.push([o.moonUse?"Winkelmaßstab (aus Entfernung)":"Verwendeter Maßstab",(o.sc>0?fx(o.sc,4)+" ″/px":"–")+"<span class=\"src\">"+(o.moonUse?"Entfernung nur für Winkelanzeige":"Quelle: "+o.scSrc)+"</span>"]);
+if(S.img&&o.fov>0)tiles.push(["Bildfeld (Breite)",fAng(o.fov*3600)]);
 $("lv2").innerHTML=tiles.map(function(x){return "<div>"+x[0]+"<b>"+x[1]+"</b></div>"}).join("");
+$("moonInfo").classList.toggle("hide",!o.moonUse);
 var isS=$("ot").value==="s";$("sbw").style.display=isS?"":"none";$("dsw").style.display=isS?"none":"";
  var _b=BODY[+$("sb").value]||BODY[0],_free=(_b[1]===1000);
  $("stg").disabled=_free;if(_free)$("stg").value="f";
@@ -600,7 +800,7 @@ $("pmTxt").textContent=_d?"Die Sensor-Pixelbreite dient der Prüfung auf Binning
 var _psOk=N("ps")>0;$("psUse").disabled=!_psOk;if(!_psOk)$("psUse").checked=false;
 var c=checks();show("c1",c,1);show("c2",c,2);show("c3",c,3);$("chg").classList.toggle("hide",S.orig!=="no");$("fWw").style.display=$("cropToo").checked?"none":"";
 document.querySelectorAll("[data-o]").forEach(function(b){b.classList.toggle("sel",b.dataset.o===S.orig)});
-stBar();
+stBar();solverRender();
 if(S.step===3){drawAll();results(c)}}
 function go(n){n=Math.max(0,Math.min(4,n));if(n>0&&!S.img){msg("Bitte zuerst ein Bild laden oder das Beispielbild verwenden.");n=0}
 if(n>0&&n<4&&!ok1()){n=0;if(S.step===0){upd();$("c1").scrollIntoView({block:"nearest"});return}}
@@ -656,19 +856,20 @@ document.addEventListener("keydown",function(e){if(S.step!==3||e.ctrlKey||e.meta
  else if(k==="ArrowLeft"){S.v.x+=40;drawAll()}else if(k==="ArrowRight"){S.v.x-=40;drawAll()}else if(k==="ArrowUp"){S.v.y+=40;drawAll()}else if(k==="ArrowDown"){S.v.y-=40;drawAll()}
  else h=false;if(h)e.preventDefault()});
 function results(c){var o=calc(),ok=o.sc>0&&o.dkm>0;$("res").innerHTML=S.shapes.length&&ok?"<table><tr><th></th><th>Art</th><th>Pixel</th><th>Winkel</th><th>Größe (Spanne)</th><th>Fläche (Kreis)</th><th>Details</th></tr>"+S.shapes.map(function(s,i){var px=len(s),z=size(o,px),ci=s.t==="c";
-return '<tr><td><span class="sw" style="background:'+s.col+'"></span>#'+(i+1)+"</td><td>"+(ci?"Kreis Ø":"Linie")+"</td><td>"+fx(px,1)+"</td><td>"+fAng(z.as)+"</td><td><b>"+fSize(z.k)+"</b><br>("+fSize(z.lo)+" – "+fSize(z.hi)+")</td><td>"+(ci?fArea(z.k):"–")+"</td><td><details data-i=\""+i+"\""+(s.op?" open":"")+"><summary>anzeigen</summary><div>"+details(z.k,ci)+"</div></details></td></tr>"}).join("")+"</table>":'<p class="hint">'+(ok?"Noch keine Messung.":"Ohne gültigen Maßstab und Entfernung gibt es keine Ergebnisse – siehe Schritte 2 und 3.")+'</p>';
+return '<tr><td><span class="sw" style="background:'+s.col+'"></span>#'+(i+1)+"</td><td>"+(ci?"Kreis Ø":"Linie")+"</td><td>"+fx(px,1)+"</td><td>"+fAng(z.as)+"</td><td><b>"+fSize(z.k)+"</b><br>("+(o.moonUse?"keine bezifferte Unsicherheit":fSize(z.lo)+" – "+fSize(z.hi))+")</td><td>"+(ci?fArea(z.k):"–")+"</td><td><details data-i=\""+i+"\""+(s.op?" open":"")+"><summary>anzeigen</summary><div>"+details(z.k,ci)+"</div></details></td></tr>"}).join("")+"</table>":'<p class="hint">'+(ok?"Noch keine Messung.":"Ohne gültigen Maßstab und Entfernung gibt es keine Ergebnisse – siehe Schritte 2 und 3.")+'</p>';
 $("ml").innerHTML=S.shapes.length?S.shapes.map(function(s,i){var z=size(o,len(s));return '<li><span class="sw" style="background:'+s.col+'"></span><span class="n">#'+(i+1)+'</span><span class="k">'+(s.t==="c"?"Kreis Ø":"Linie")+'</span><b>'+(ok?fSize(z.k):fx(len(s),1)+" px")+'</b><button type="button" class="x" data-del="'+i+'" title="Messung #'+(i+1)+' löschen" aria-label="Messung #'+(i+1)+' löschen">×</button></li>'}).join(""):'<li class="dim">Noch keine Messung.</li>';
 var lpp=size(o,1).k;$("gl").innerHTML=o.sc>0?'<span>Maßstab <b>'+fx(o.sc,4)+' ″/px</b></span><span><b>'+(o.dkm>0?(SOL()?fmt(lpp,4)+' km/px':fmt(lpp/KMLY,4)+' Lj/px'):'–')+'</b></span><span>Entfernung <b>'+(o.dkm>0?(SOL()?fKm(o.dkm):fLy(o.dly)):'fehlt')+'</b></span><span>Quelle: '+o.scSrc+(o.unv?' · <span class="uv">Maßstab ungeprüft</span>':'')+'</span><span><button type="button" class="lk" data-g="1">Optik ändern</button> · <button type="button" class="lk" data-g="2">Entfernung ändern</button></span>':'<span>Kein gültiger Maßstab – <button type="button" class="lk" data-g="1">Optik ergänzen</button></span>';
 var bs=basis(o);
-$("sum").innerHTML='<div class="box i">'+IC.i+'<div>Dein Ergebnis beruht auf: Maßstab <b>'+fx(o.sc,4)+' ″/px</b> ('+bs.sc+'), Entfernung <b>'+(SOL()?fKm(o.dkm):fLy(o.dly))+'</b> ('+o.span+', '+(S.cat!=null&&!SOL()?'Katalogwert, Quelle: '+DSO[S.cat][3]+' – bitte prüfen':'Eingabe von dir')+'), Bild <b>'+bs.ch+'</b>.'+(o.unv?' <b class="pfx" style="color:var(--y)">Maßstab ungeprüft.</b>':'')+' Größen exakt nach 2 · d · tan(θ/2).</div></div>'+c.map(row).join("")}
+$("sum").innerHTML='<div class="box i">'+IC.i+'<div>Dein Ergebnis beruht auf: Maßstab <b>'+fx(o.sc,4)+' ″/px</b> ('+bs.sc+'), Entfernung <b>'+(SOL()?fKm(o.dkm):fLy(o.dly))+'</b> ('+o.span+', '+(S.cat!=null&&!SOL()?'Katalogwert, Quelle: '+DSO[S.cat][3]+' – bitte prüfen':'Eingabe von dir')+'), Bild <b>'+bs.ch+'</b>.'+(o.unv?' <b class="pfx" style="color:var(--y)">Maßstab ungeprüft.</b>':'')+' Größen nach 2 · d · tan(θ/2).</div></div>'+c.map(row).join("");
+if(o.moonUse)$("sum").innerHTML='<div class="box i">'+IC.i+'<div><b>Projizierte Mondgrößen</b> aus '+fmt(o.kmPx,6)+' km/px (SkySolver, sicher bestätigt). Keine Strecken oder Flächen auf der gekrümmten Mondoberfläche; besonders am Rand verkürzt die Projektion Strukturen. Keine bezifferte Messunsicherheit. Entfernung '+fKm(o.dkm)+' nur für die ungefähre Winkelanzeige.</div></div>'+c.map(row).join("")}
 // ===== Bild mit Messungen speichern =====
 function basis(o){return{
  ch:S.orig==="yes"?"unverändert":S.orig==="crop"?"zugeschnitten (Maßstab unverändert)":S.orig==="no"?"verändert (Faktor "+fmt(o.ratio)+", "+o.rsrc+($("cropToo").checked?", zusätzlich zugeschnitten":"")+")":S.orig==="unk"?"Zustand unbekannt (Pixelgröße 1:1 angenommen)":"nicht angegeben",
- sc:(o.psUse?"aus Plate-Solve":fmt(o.efl)+" mm eff. Brennweite, "+fmt(o.epx)+" µm eff. Pixel")+(o.unv?", MASSSTAB UNGEPRÜFT":""),
- dist:(SOL()?fKm(o.dkm):fLy(o.dly))+" ("+o.span+", "+(S.cat!=null&&!SOL()?"Katalogwert, Quelle: "+DSO[S.cat][3]:"Eingabe")+")"}}
+ sc:(o.moonUse?"SkySolver · Mond, "+fmt(o.kmPx,6)+" km/px (projiziert; keine Oberflächenstrecke)":o.psUse?o.scSrc:fmt(o.efl)+" mm eff. Brennweite, "+fmt(o.epx)+" µm eff. Pixel")+(o.unv?", MASSSTAB UNGEPRÜFT":""),
+ dist:(SOL()?fKm(o.dkm):fLy(o.dly))+" ("+(o.moonUse?"nur zur Winkelanzeige":o.span)+", "+(S.cat!=null&&!SOL()?"Katalogwert, Quelle: "+DSO[S.cat][3]:"Eingabe")+")"}}
 function scaleBar(R,o,avoidW){var g=R.g,k=R.k,u=SOL()?["km",1]:(size(o,R.W*.18).k/KMLY>=.01?["Lj",KMLY]:["AE",KMAU]);
  var val=size(o,R.W*.18).k/u[1];if(!(val>0))return;var nc=Math.pow(10,Math.floor(Math.log10(val))),m=val/nc;nc*=m>=5?5:m>=2?2:1;
- var px=2*Math.atan(nc*u[1]/(2*o.dkm))*ARC/o.sc;if(!(px>2))return;
+ var px=o.moonUse?nc*u[1]/o.kmPx:2*Math.atan(nc*u[1]/(2*o.dkm))*ARC/o.sc;if(!(px>2))return;
  var lab=fmt(nc,4)+" "+u[0]+"  ·  "+fAng(px*o.sc);g.font="bold "+(13*k)+"px system-ui,sans-serif";var tw=g.measureText(lab).width,bw=Math.max(px,tw)+20*k,bh=44*k;
  var x=R.W-bw-12*k,y=R.H-bh-12*k;if(avoidW&&avoidW+20*k>x)y=12*k;
  g.fillStyle="rgba(8,9,11,.85)";g.fillRect(x,y,bw,bh);var bx=x+bw-10*k-px,by=y+bh-12*k;
@@ -679,7 +880,7 @@ function exportCanvas(op){var o=calc(),W=S.img.w,H=S.img.h,k=Math.max(1,Math.max
  if(!x)throw Err("Das Bild ist zu groß für den Browser.");c.width=W;c.height=H;
  var lines=[],fs=12*k,lh=18*k,bh=0;
  if(op.ban){var bs=basis(o),d=new Date();x.font=fs+"px system-ui,sans-serif";
-  lines=wrapTxt(x,["LocalSizeMeasurer Web v"+VERSION,S.img.name,d.toLocaleDateString("de-DE"),"Maßstab "+fx(o.sc,4)+" ″/px ("+bs.sc+")","Entfernung "+bs.dist,"Bild "+bs.ch,"Bildfeld "+fAng(o.fov*3600)+" breit","Projizierte Größen nach 2 · d · tan(θ/2)"],W-24*k);
+  lines=wrapTxt(x,["LocalSizeMeasurer Web v"+VERSION,S.img.name,d.toLocaleDateString("de-DE"),"Maßstab "+fx(o.sc,4)+" ″/px ("+bs.sc+")","Entfernung "+bs.dist,"Bild "+bs.ch,"Bildfeld "+fAng(o.fov*3600)+" breit",o.moonUse?"Projizierte Mondgrößen aus km/px; keine Oberflächenstrecken; Unsicherheit nicht beziffert":"Projizierte Größen nach 2 · d · tan(θ/2)"],W-24*k);
   bh=Math.round(lines.length*lh+16*k)}
  c.height=H+bh;if(c.height!==H+bh||c.width!==W)throw Err("Das Bild ist zu groß für den Browser.");
  x.fillStyle="#08090b";x.fillRect(0,0,W,H+bh);x.drawImage(S.img.el,0,0,W,H);
@@ -741,7 +942,7 @@ $("st").onclick=function(e){var b=e.target.closest("[data-g]");if(b)go(+b.datase
 $("gl").onclick=function(e){var b=e.target.closest("[data-g]");if(b)go(+b.dataset.g)};
 $("ml").onclick=function(e){var b=e.target.closest("[data-del]");if(b)delM(+b.dataset.del)};
 $("res").addEventListener("toggle",function(e){var d=e.target;if(d.tagName==="DETAILS"&&S.shapes[+d.dataset.i])S.shapes[+d.dataset.i].op=d.open},true);
-$("nx").onclick=function(){var o=calc();if(S.step===0&&S.img&&!ok1()){upd();$("c1").scrollIntoView({block:"nearest"});return}if(S.step===1&&!(o.sc>0)){upd();$("c2").scrollIntoView({block:"nearest"});return}if(S.step===2&&!(o.dkm>0)){upd();$("c3").scrollIntoView({block:"nearest"});return}go(S.step+1)};$("bk").onclick=function(){go(S.step-1)};
+$("nx").onclick=function(){var o=calc();if(S.step===0&&S.img&&!ok1()){upd();$("c1").scrollIntoView({block:"nearest"});return}if(S.step===1&&!(o.sc>0)&&!o.moonUse){upd();$("c2").scrollIntoView({block:"nearest"});return}if(S.step===2&&!(o.dkm>0)){upd();$("c3").scrollIntoView({block:"nearest"});return}go(S.step+1)};$("bk").onclick=function(){go(S.step-1)};
 var CAMI={},h="<option value=''>– Kamera wählen –</option>";
 Object.keys(CAMS).forEach(function(k){h+="<optgroup label='"+k+"'>";CAMS[k].forEach(function(c){var id=c[0]+" "+c[1];
  CAMI[id]={m:c[0],n:c[1],w:c[2],px:c[3]>0?c[3]:Math.round(c[4]/c[2]*1e6)/1000,sw:c[4],ow:c[3]>0,c:c[5],note:c[6]};
@@ -795,5 +996,5 @@ $("svP").onclick=function(){var n=prompt("Profilname:");if(!n)return;try{var p=p
 $("ldP").onchange=function(){var p=profs()[this.value];if(p){for(var k in p)if($(k))$(k).value=p[k];if(!$("cam").value&&(N("pxd")>0||N("sw")>0))$("cam").value="m";camCheck();camInfo();upd()}};
 try{fillP()}catch(e){}
 window.onresize=function(){if(S.step===3)fit()};
-info();go(0);
+solverInit();info();go(0);
 </script></body></html>
