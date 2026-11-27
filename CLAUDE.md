@@ -1,5 +1,20 @@
 # CLAUDE.md – LocalSizeMeasurer (LSM)
 
+## Abweichender Stand dieses Testbranches
+
+Branch `codex/skysolver-test`: Web-App **v1.5.0-test**, optionale SkySolver-Integration. Die folgenden historischen Angaben „kein Upload / keine Astrometrie“ beschreiben die bisherige Hauptversion und gelten hier nur ohne aktives Online-Solving. Der Nutzer hat diese Testintegration ausdrücklich beauftragt.
+
+- `main`, GitHub-Pages-Einstellung, PixInsight-Script und Update-Pakete nicht verändern oder mergen.
+- Alles bleibt in der eigenständig lokal nutzbaren `index.html`.
+- Sternfelder: `POST /api/v1/solve/image`, PNG-Kopie mit maximal 3000 Pixeln auf der langen Seite; Maßstab mit dem exakten isotropen Kopierfaktor auf Originalpixel umrechnen.
+- Mond: `POST /api/v1/solve/moon`, maximal 2048 Pixel. Nur `verified` akzeptieren. `scale_km_px` niemals mit Bogensekunden/Pixel verwechseln. Direkte projizierte Kilometergrößen, keine selenografischen Oberflächenstrecken. Entfernung nur für ungefähre Winkelanzeige; keine erfundene numerische Unsicherheit.
+- Sonne/Planeten ohne Sternfeld: manuelle Optik/Bildskala. Keine automatische Unterstützung vortäuschen.
+- Keine Anfrage vor explizitem Klick; keine Originalmetadaten hochladen. Bilder/Kalibrierungen nicht im lokalen Speicher ablegen.
+- Bildwechsel verwirft jede Kalibrierung und bricht laufende Anfragen ab. Generationsnummern schützen vor verspäteten Antworten und Datei-Ladevorgängen.
+- `node --test tests/skysolver.test.cjs`: Regressionen mit simulierten DOM-/Canvas-/API-Schnittstellen. Echte Browser-/API-Tests siehe `TESTING_SKYSOLVER.md`.
+
+---
+
 Diese Datei übergibt den Projektstand aus dem claude.ai-Projekt „LSM“ an Claude Code.
 Stand: 21.11.2026 (Script v2.4.2, Web v1.4.1)
 

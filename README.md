@@ -2,6 +2,14 @@
 
 # LocalSizeMeasurer
 
+> **Testbranch: SkySolver · Web v1.5.0-test**
+>
+> Diese Version liegt ausschließlich auf `codex/skysolver-test`. `main`, die veröffentlichte GitHub-Pages-App und das PixInsight-Script bleiben unverändert.
+>
+> **Zum Ausprobieren:** [index.html dieses Branches öffnen](https://github.com/astromatz/localsizemeasurer/blob/codex/skysolver-test/index.html), über **Download raw file** herunterladen und lokal per Doppelklick im Browser öffnen. Für das Online-Solving ist eine Internetverbindung nötig.
+>
+> Anleitung, Grenzen und Prüffälle: [TESTING_SKYSOLVER.md](TESTING_SKYSOLVER.md).
+
 **Wie groß ist das, was ich da fotografiert habe, wirklich?**
 
 LocalSizeMeasurer ist ein Script für [PixInsight](https://pixinsight.com). Du ziehst damit Linien oder Kreise über ein Objekt in deinem Astrofoto. Das Script rechnet daraus die tatsächliche Ausdehnung aus, in Lichtjahren bei Nebeln und Galaxien und in Kilometern bei Mond, Sonne und Planeten.
@@ -88,15 +96,18 @@ Details stehen in der Dokumentation.
 
 ## Web-App
 
-**LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight: https://astromatz.github.io/localsizemeasurer/
-Aktuelle Version **v1.4.1**, noch in der Testphase. Der Browser-Tab zeigt das Icon von LocalSizeMeasurer.
+**LocalSizeMeasurer Web** misst wie das Script, braucht aber kein PixInsight. Dieser Branch enthält **v1.5.0-test mit optionalem SkySolver**. Die bisherige Version **v1.4.1** bleibt unter https://astromatz.github.io/localsizemeasurer/ erreichbar. Der Browser-Tab zeigt das Icon von LocalSizeMeasurer.
 
-- **Bild bleibt bei dir:** Das Bild wird nur im Browser verarbeitet, nichts wird hochgeladen.
+- **Lokal oder optional online:** Messen und Export laufen im Browser. Erst mit „Bildkopie senden und lösen“ wird eine gegebenenfalls verkleinerte PNG-Kopie ohne Messungen und ohne Metadaten der Originaldatei an SkySolver geschickt. Laut Anbieter werden Bilder und Ergebnisse nicht gespeichert.
+- **Sternfeld-Solving:** Bestimmt den Winkelmaßstab, rechnet ihn auf die Originalauflösung zurück und verwendet ihn statt der Optikangaben. Der Wert gilt in der Bildmitte; bei größeren Bildfeldern kann der lokale Maßstab abweichen. Panorama-/Fisheye-Projektionslösungen werden nicht als konstante Kalibrierung übernommen.
+- **Mond-Solving:** Eigener Endpunkt, ausschließlich sicher bestätigte Lösungen. Die projizierten Kilometerwerte werden direkt aus km/Pixel berechnet. Keine Oberflächenstrecken; der Abstand in Schritt 3 dient nur der ungefähren Winkelanzeige. Eine numerische Messunsicherheit wird nicht behauptet.
+- **Sonne und Planeten:** Ohne Sternfeld gibt es keinen passenden SkySolver-Endpunkt. Optikangaben oder manuelle Bildskala bleiben verfügbar; bei sichtbaren Sternen kann Sternfeld-Solving versucht werden.
+- **Bildwechsel:** Automatische und manuelle Kalibrierungen werden verworfen. Verspätete Antworten und veraltete Ladevorgänge können kein neues Bild überschreiben.
 - **Vier Schritte:** Bild prüfen → Optik → Entfernung → Messen. Ein fünfter Reiter „Hinweise“ enthält Version, Credits und Datenschutz.
 - **Messen:** Die Linie ist voreingestellt. Verschieben mit der mittleren Maustaste oder Leertaste + Ziehen. Rechts stehen Live-Werte, die Messliste (einzeln löschbar) und die Messgrundlage, darüber Maßstab, Lj/px bzw. km/px und Entfernung mit Links zum Ändern.
 - **Bildzustand ist Pflicht:** Schritt 1 fragt, ob das Bild verändert wurde. Bei „Weiß ich nicht“ wird das Ergebnis als „Maßstab ungeprüft“ gekennzeichnet, solange kein Plate-Solve-Wert verwendet wird.
 - **Kameraliste:** Rund 60 Astro-, Spiegelreflex- und Systemkameras tragen Pixelgröße und Sensorbreite automatisch ein. Andere Kameras gibst du von Hand ein.
-- **Prüfungen:** Die App vergleicht Bild- und Sensorbreite und erkennt so Binning, Skalierung, Super-Pixel-Debayer und Zuschnitt. Optional gleicht sie mit deinem Plate-Solve-Wert ab.
+- **Prüfungen:** Die App vergleicht Bild- und Sensorbreite und prüft auf Binning, Skalierung, Super-Pixel-Debayer und Zuschnitt. Optional gleicht sie mit einem Plate-Solve-Wert ab. Aktive Online-Kalibrierung hat Vorrang; Kamera und Brennweite sind dann optional.
 - **Entfernung:** Du trägst sie selbst ein oder übernimmst sie aus dem eingebauten Deepsky-Katalog. Für Mond, Sonne und Planeten gibt es Stufen von Erdnähe bis Erdferne.
 - **Hell oder dunkel:** Das Design ist umschaltbar. Optik-Profile werden lokal im Browser gespeichert.
 
@@ -106,7 +117,7 @@ Aktuelle Version **v1.4.1**, noch in der Testphase. Der Browser-Tab zeigt das Ic
 
 **Unterschiede zum Script:** Die Web-App liest keine FITS-Header und keine Plate-Solve-Daten aus der Datei. Brennweite, Kamera und Bearbeitungsschritte gibst du deshalb selbst an. Eine Online-Entfernungssuche gibt es nicht.
 
-**Offline nutzen:** `index.html` herunterladen und per Doppelklick öffnen.
+**Lokal nutzen:** `index.html` dieses Branches herunterladen und per Doppelklick öffnen. Messen mit Optikangaben und Export funktionieren offline; SkySolver benötigt Internet. GitHub Pages bleibt auf der bisherigen Version – die Pages-Einstellung zum Testen nicht verändern.
 
 ## Feedback
 
@@ -125,3 +136,9 @@ Script und Web-App sind mit Unterstützung von KI („Vibe Coding“) entstanden
 ## Lizenz
 
 MIT-Lizenz – siehe [LICENSE](LICENSE). Du darfst das Script frei nutzen, verändern und weitergeben, solange der Urheberhinweis erhalten bleibt. Es gibt keine Gewähr für die Richtigkeit der Ergebnisse.
+
+## Automatische Tests der SkySolver-Integration
+
+Mit Node.js ab Version 18: `node --test tests/skysolver.test.cjs`.
+
+Die Tests führen das vollständige App-Script mit nachgebildeten DOM-, Canvas- und API-Schnittstellen aus. Sie senden keine Bilder ins Internet. Sie prüfen Berechnung, Zustände, Abbruch, Zeitüberschreitung, Bildwechsel und Fehlermeldungen. Echte Bilddekodierung, visuelle Darstellung und Live-Solving müssen zusätzlich im Browser geprüft werden; siehe [Testanleitung](TESTING_SKYSOLVER.md).

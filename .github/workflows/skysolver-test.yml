@@ -1,0 +1,27 @@
+name: SkySolver test branch
+
+on:
+  push:
+    branches:
+      - codex/skysolver-test
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the exact test commit
+        env:
+          TEST_COMMIT: ${{ github.sha }}
+          TEST_REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          git init .
+          git remote add origin "$TEST_REPOSITORY_URL"
+          git fetch --depth 1 origin "$TEST_COMMIT"
+          git checkout --detach FETCH_HEAD
+      - name: Run regression tests without external dependencies
+        run: node --test tests/skysolver.test.cjs
